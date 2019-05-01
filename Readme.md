@@ -1,7 +1,8 @@
 # Личный проект «Шесть городов» [![Build status][travis-image]][travis-url]
 
 * Студент: [Вадим Корабельник](https://up.htmlacademy.ru/react/1/user/20008).
-* Наставник: `Неизвестно`.
+* Наставник: [Андрей Фидельман](https://htmlacademy.ru/profile/id773165).
+
 
 ---
 
