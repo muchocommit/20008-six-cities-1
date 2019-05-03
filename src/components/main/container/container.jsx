@@ -121,5 +121,7 @@ export const Container = (props) => {
 };
 
 Container.propTypes = {
-  names: PropTypes.number
+  names: PropTypes.arrayOf(
+      PropTypes.string
+  )
 };
