@@ -11,6 +11,7 @@ Thumbs.db
 *.log*
 node_modules/
 materials/
+dist/
 
 # Папка с собранными файлами проекта
 build/
