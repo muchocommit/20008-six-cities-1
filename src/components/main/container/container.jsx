@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import {Card} from '../card/card.jsx';
 
 export const Container = (props) => {
+  const handler = (e) => e.preventDefault();
   const {names} = props;
 
   return (
@@ -106,7 +107,7 @@ export const Container = (props) => {
                 </ul>
               </form>
               <div className="cities__places-list places__list tabs__content">
-                {names.map((it, i) => <Card key={i} name={it} />)}
+                {names.map((it, i) => <Card key={i} name={it} clickHandler={handler}/>)}
               </div>
             </section>
             <div className="cities__right-section">
@@ -123,5 +124,5 @@ export const Container = (props) => {
 Container.propTypes = {
   names: PropTypes.arrayOf(
       PropTypes.string
-  )
+  ).isRequired
 };
