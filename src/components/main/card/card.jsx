@@ -1,24 +1,26 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-export const Card = ({name, clickHandler}) => {
+import {getRating} from '../../../assets/handler';
+
+const Card = ({offer, clickHandler, index}) => {
 
   return (
     <article className="cities__place-card place-card">
       <div className="place-card__mark">
-        <span>Premium</span>
+        <span>{offer.mark}</span>
       </div>
       <div className="cities__image-wrapper place-card__image-wrapper">
         <a href="#">
-          <img className="place-card__image" src="img/apartment-01.jpg" width="260" height="200"
+          <img className="place-card__image" src={offer.src} width="260" height="200"
             alt="Place image" />
         </a>
       </div>
       <div className="place-card__info">
         <div className="place-card__price-wrapper">
           <div className="place-card__price">
-            <b className="place-card__price-value">&euro;120</b>
-            <span className="place-card__price-text">&#47;&nbsp;night</span>
+            <b className="place-card__price-value">&euro;{offer.price.value}</b>
+            <span className="place-card__price-text">&#47;&nbsp;{offer.price.period}</span>
           </div>
           <button className="place-card__bookmark-button button" type="button">
             <svg className="place-card__bookmark-icon" width="18" height="19">
@@ -29,20 +31,33 @@ export const Card = ({name, clickHandler}) => {
         </div>
         <div className="place-card__rating rating">
           <div className="place-card__stars rating__stars">
-            <span style={{width: `93%`}}></span>
+            <span style={{width: `${getRating(offer.ratings)}%`}}></span>
             <span className="visually-hidden">Rating</span>
           </div>
         </div>
         <h2 className="place-card__name">
-          <a className="place-card__link" href="#" onClick={clickHandler}>{name}</a>
+          <a className="place-card__link" href="#" onClick={clickHandler} data-index={index}>{offer.name}</a>
         </h2>
-        <p className="place-card__type">Apartment</p>
+        <p className="place-card__type">{offer.type}</p>
       </div>
     </article>
   );
 };
 
 Card.propTypes = {
-  name: PropTypes.string.isRequired,
-  clickHandler: PropTypes.func.isRequired
+  offer: PropTypes.shape({
+    mark: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
+    src: PropTypes.string.isRequired,
+    type: PropTypes.string.isRequired,
+    ratings: PropTypes.arrayOf(PropTypes.oneOf([1, 2, 3, 4, 5])).isRequired,
+    price: PropTypes.shape({
+      period: PropTypes.string.isRequired,
+      value: PropTypes.number.isRequired
+    })
+  }),
+  clickHandler: PropTypes.func.isRequired,
+  index: PropTypes.number.isRequired
 };
+
+export default Card;
