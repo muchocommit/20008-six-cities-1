@@ -1,8 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-export const Card = (props) => {
-  const {name, clickHandler} = props;
+export const Card = ({name, clickHandler}) => {
 
   return (
     <article className="cities__place-card place-card">
