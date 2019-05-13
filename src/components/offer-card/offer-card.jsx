@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import {getRating} from '../../../assets/handler';
+import {getRating} from '../../assets/handler';
 
-const Card = ({offer, clickHandler, index}) => {
+const OfferCard = ({offer, mouseOverHandler, index}) => {
 
   return (
     <article className="cities__place-card place-card">
@@ -36,7 +36,7 @@ const Card = ({offer, clickHandler, index}) => {
           </div>
         </div>
         <h2 className="place-card__name">
-          <a className="place-card__link" href="#" onClick={clickHandler} data-index={index}>{offer.name}</a>
+          <a className="place-card__link" href="#" onMouseOver={mouseOverHandler} data-index={index}>{offer.name}</a>
         </h2>
         <p className="place-card__type">{offer.type}</p>
       </div>
@@ -44,7 +44,7 @@ const Card = ({offer, clickHandler, index}) => {
   );
 };
 
-Card.propTypes = {
+OfferCard.propTypes = {
   offer: PropTypes.shape({
     mark: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
@@ -56,8 +56,8 @@ Card.propTypes = {
       value: PropTypes.number.isRequired
     })
   }),
-  clickHandler: PropTypes.func.isRequired,
+  mouseOverHandler: PropTypes.func.isRequired,
   index: PropTypes.number.isRequired
 };
 
-export default Card;
+export default OfferCard;

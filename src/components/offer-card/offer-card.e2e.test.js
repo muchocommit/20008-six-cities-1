@@ -1,7 +1,7 @@
 import React from 'react';
-import Enzyme, {shallow} from 'enzyme';
-import Adapter from 'enzyme-adapter-react-16';
-import Card from './card.jsx';
+import Enzyme, {shallow} from 'enzyme/build';
+import Adapter from 'enzyme-adapter-react-16/build';
+import OfferCard from './offer-card.jsx';
 
 Enzyme.configure({adapter: new Adapter()});
 
@@ -25,9 +25,9 @@ it(`Should work correctly on button click`, () => {
   const handler = jest.fn();
   const {offer} = mock;
 
-  const app = shallow(<Card
+  const app = shallow(<OfferCard
     offer={offer}
-    clickHandler={handler}
+    mouseOverHandler={handler}
     index={1}
   />);
 
