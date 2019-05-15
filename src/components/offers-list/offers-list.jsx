@@ -1,9 +1,9 @@
-import React, {Component} from 'react';
+import React, {PureComponent} from 'react';
 import PropTypes from 'prop-types';
 
 import OfferCard from '../offer-card/offer-card.jsx';
 
-class OffersList extends Component {
+class OffersList extends PureComponent {
   constructor(props) {
     super(props);
 
@@ -13,6 +13,7 @@ class OffersList extends Component {
   }
 
   _getOffer() {
+
     const handler = (e) => {
       const {target} = e;
       this.setState({

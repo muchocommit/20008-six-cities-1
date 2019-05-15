@@ -1,5 +1,5 @@
 import React from 'react';
-import Enzyme, {shallow} from 'enzyme/build';
+import Enzyme, {mount} from 'enzyme/build';
 import Adapter from 'enzyme-adapter-react-16/build';
 import OfferCard from './offer-card.jsx';
 
@@ -24,15 +24,17 @@ const mock = {
 it(`Should work correctly on button click`, () => {
   const handler = jest.fn();
   const {offer} = mock;
+  const index = 2;
 
-  const app = shallow(<OfferCard
+  const app = mount(<OfferCard
     offer={offer}
     mouseOverHandler={handler}
-    index={1}
+    index={index}
   />);
 
-  const startButton = app.find(`a.place-card__link`);
-  startButton.simulate(`click`);
+  const button = app.find(`img.place-card__image`);
+  button.simulate(`click`);
 
-  expect(handler).toHaveBeenCalledTimes(1);
+  app.update();
+  expect(app.state(`activeCard`)).toEqual(index.toString());
 });

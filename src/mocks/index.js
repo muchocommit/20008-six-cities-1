@@ -15,7 +15,7 @@ export default [
   {
     mark: `Premium`,
     name: `Wood and stone place`,
-    src: `img/apartment-01.jpg`,
+    src: `img/apartment-02.jpg`,
     type: `Apartment`,
     ratings: [
       3, 5, 4, 2, 4, 5, 5, 5
@@ -28,7 +28,7 @@ export default [
   {
     mark: `Premium`,
     name: `Nice, cozy, warm big bed`,
-    src: `img/apartment-01.jpg`,
+    src: `img/apartment-03.jpg`,
     type: `Apartment`,
     ratings: [
       3, 5, 4, 2, 4, 5, 5, 5
