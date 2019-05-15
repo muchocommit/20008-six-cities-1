@@ -10,22 +10,16 @@ export default class OfferCard extends PureComponent {
     this.state = {
       activeCard: null
     };
+
+    this._handleClick = this._handleClick.bind(this);
   }
 
-  _getCard() {
+  render() {
     const {
       offer,
       mouseOverHandler,
       index
     } = this.props;
-
-    const handler = (e) => {
-      const {target} = e;
-
-      this.setState({
-        activeCard: target.dataset.index
-      });
-    };
 
     return (
       <article className="cities__place-card place-card">
@@ -35,7 +29,7 @@ export default class OfferCard extends PureComponent {
         <div className="cities__image-wrapper place-card__image-wrapper">
           <a href="#">
             <img className="place-card__image" src={offer.src} width="260" height="200"
-              alt="Place image" onClick={handler} data-index={index} />
+              alt="Place image" onClick={this._handleClick} data-index={index} />
           </a>
         </div>
         <div className="place-card__info">
@@ -66,8 +60,12 @@ export default class OfferCard extends PureComponent {
     );
   }
 
-  render() {
-    return this._getCard();
+  _handleClick(e) {
+    const {target} = e;
+
+    this.setState({
+      activeCard: target.dataset.index
+    });
   }
 }
 

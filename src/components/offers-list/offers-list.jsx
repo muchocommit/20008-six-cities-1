@@ -10,33 +10,35 @@ class OffersList extends PureComponent {
     this.state = {
       activeOffer: null
     };
+
+    this._handleMouseOver = this._handleMouseOver.bind(this);
+  }
+
+  render() {
+    return (
+      <div className="cities__places-list places__list tabs__content">
+        {this._getOffer()}
+      </div>);
+  }
+
+  _handleMouseOver(e) {
+    const {target} = e;
+
+    this.setState({
+      activeOffer: target.dataset.index
+    });
   }
 
   _getOffer() {
-
-    const handler = (e) => {
-      const {target} = e;
-      this.setState({
-        activeOffer: target.dataset.index
-      });
-    };
     const {offers} = this.props;
 
     return offers.map((it, i) =>
       <OfferCard
         key={i}
         offer={it}
-        mouseOverHandler={handler}
+        mouseOverHandler={this._handleMouseOver}
         index={i}
       />);
-  }
-
-  render() {
-
-    return (
-      <div className="cities__places-list places__list tabs__content">
-        {this._getOffer()}
-      </div>);
   }
 }
 
