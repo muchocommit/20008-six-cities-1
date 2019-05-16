@@ -1,6 +1,6 @@
 import React from 'react';
 import renderer from 'react-test-renderer';
-import App from '../app/app.jsx';
+import OffersList from './offers-list.jsx';
 
 const mock = {
   offers: [
@@ -63,7 +63,7 @@ it(`App correctly renders after relaunch`, () => {
 
   const {offers} = mock;
   const tree = renderer
-    .create(<App
+    .create(<OffersList
       offers={offers}/>)
     .toJSON();
 
