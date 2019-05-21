@@ -6,6 +6,10 @@ import Map from './../map/map.jsx';
 
 const App = ({offers}) => {
 
+  const getLocations = (array) => {
+    return array.map((it) => it.location);
+  };
+
   return (
     <div>
       <div style={{display: `none`}}>
@@ -112,7 +116,11 @@ const App = ({offers}) => {
             </section>
             <div className="cities__right-section">
               <section className="cities__map map">
-                <Map />
+                <Map
+                  locations={getLocations(offers)}
+                  id={`map`}
+                />
+
               </section>
             </div>
           </div>

@@ -1,28 +1,59 @@
-import React, {PureComponent} from 'react';
-// import PropTypes from 'prop-types';
+import React, {PureComponent, createRef} from 'react';
+import PropTypes from 'prop-types';
 
-import L from 'leaflet';
+import {MapParams} from '../../data';
+import leaflet from 'leaflet';
 
 export default class Map extends PureComponent {
   constructor(props) {
     super(props);
 
+    this._mapRef = createRef();
   }
 
   render() {
-    return (<div id="map"></div>);
+    return (
+      <div ref={this._mapRef}></div>
+    );
   }
 
   componentDidMount() {
-    const map = L.map(`${`map`}`).setView([51.505, -0.09], 13);
+    const {locations, id} = this.props;
+    const currentMap = this._mapRef.current;
 
-    L.tileLayer(`https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png`, {
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
+    currentMap.id = id;
+
+    const {
+      ZOOM, CITY, ICON, TILE_LAYER
+    } = MapParams;
+
+    const icon = leaflet.icon({
+      iconUrl: ICON.URL,
+      iconSize: ICON.SIZE
+    });
+
+
+    const map = leaflet.map(currentMap, {
+      center: CITY,
+      zoom: ZOOM,
+      zoomControl: false,
+      marker: true
+    }).setView(CITY, ZOOM);
+
+
+    leaflet.tileLayer(TILE_LAYER.URL, {
+      attribution: TILE_LAYER.OPTIONS.ATTRIBUTION
     })
       .addTo(map);
+
+    for (const location of [...locations]) {
+      leaflet.marker(location, {icon}).addTo(map);
+    }
   }
 }
-//
-// Map.propTypes = {
-//   id: PropTypes.string.isRequired
-// };
+
+Map.propTypes = {
+  id: PropTypes.string.isRequired,
+  locations: PropTypes.arrayOf(
+      PropTypes.arrayOf(PropTypes.number)).isRequired
+};
