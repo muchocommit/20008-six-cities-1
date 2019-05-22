@@ -46,9 +46,8 @@ export default class Map extends PureComponent {
     })
       .addTo(map);
 
-    for (const location of [...locations]) {
-      leaflet.marker(location, {icon}).addTo(map);
-    }
+    [...locations].forEach((it) =>
+      leaflet.marker(it, {icon}).addTo(map));
   }
 }
 
