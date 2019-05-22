@@ -15,7 +15,10 @@ const mock = {
       price: {
         period: `night`,
         value: 110
-      }
+      },
+      location: [
+        52.369553943508, 4.85309666406198
+      ]
     },
     {
       mark: `Premium`,
@@ -28,7 +31,10 @@ const mock = {
       price: {
         period: `night`,
         value: 100
-      }
+      },
+      location: [
+        52.369553943508, 4.85309666406198
+      ]
     },
     {
       mark: `Poorest quality`,
@@ -41,7 +47,10 @@ const mock = {
       price: {
         period: `night`,
         value: 90
-      }
+      },
+      location: [
+        52.369553943508, 4.85309666406198
+      ]
     },
     {
       mark: `Premium`,
@@ -54,7 +63,10 @@ const mock = {
       price: {
         period: `night`,
         value: 115
-      }
+      },
+      location: [
+        52.369553943508, 4.85309666406198
+      ]
     }
   ]
 };
@@ -64,7 +76,15 @@ it(`App correctly renders after relaunch`, () => {
   const {offers} = mock;
   const tree = renderer
     .create(<App
-      offers={offers}/>)
+      offers={offers}/>, {
+      createNodeMock: () => {
+        const el = document.createElement(`div`);
+        el.id = `map`;
+        el.style.height = `400px`;
+
+        return el;
+      }
+    })
     .toJSON();
 
   expect(tree).toMatchSnapshot();

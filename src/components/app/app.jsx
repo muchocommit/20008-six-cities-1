@@ -2,8 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import OffersList from '../offers-list/offers-list.jsx';
+import Map from './../map/map.jsx';
 
 const App = ({offers}) => {
+
+  const getLocations = (array) => {
+    return array.map((it) => it.location);
+  };
 
   return (
     <div>
@@ -110,7 +115,13 @@ const App = ({offers}) => {
 
             </section>
             <div className="cities__right-section">
-              <section className="cities__map map"></section>
+              <section className="cities__map map">
+                <Map
+                  locations={getLocations(offers)}
+                  id={`map`}
+                />
+
+              </section>
             </div>
           </div>
         </div>
