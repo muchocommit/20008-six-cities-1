@@ -1,5 +1,9 @@
 export const TOP_RATING = 5;
 
+export const Cities = [
+  `Paris`, `Cologne`, `Brussels`, `Amsterdam`, `Hamburg`, `Dusseldorf`
+];
+
 export const MapParams = {
   ZOOM: 11,
   CITY: [52.38333, 4.9],
