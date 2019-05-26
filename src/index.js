@@ -1,13 +1,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import offers from './mocks'
+import cities from './mocks'
 import App from './components/app/app.jsx';
 
 const init = () => {
-  ReactDOM.render(
+
+
+    ReactDOM.render(
       <App
-      offers={offers}/>,
+      cities={cities}/>,
       document.getElementById(`root`)
   );
 };

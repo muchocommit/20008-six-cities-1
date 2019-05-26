@@ -32,7 +32,7 @@ class OffersList extends PureComponent {
   _getOffer() {
     const {offers} = this.props;
 
-    return offers.map((it, i) =>
+    return offers[0].map((it, i) =>
       <OfferCard
         key={i}
         offer={it}

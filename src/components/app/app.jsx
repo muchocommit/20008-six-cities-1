@@ -10,12 +10,22 @@ class App extends Component {
 
   }
 
-  static getLocations(offers) {
-    return offers.map((it) => it.location)
+  static formatObjectArray(array, key) {
+    switch (key) {
+      case `LOCATION`:
+        return array.map((it) => it.offers.location);
+
+      case `CITIES`:
+        return array.map((it) => it.city);
+
+      case `OFFERS`:
+        return array.map((it) => it.offers);
+    }
+    return array;
   }
 
   render() {
-    const {offers} = this.props;
+    const {cities} = this.props;
 
     return (
       <div>
@@ -117,14 +127,14 @@ class App extends Component {
                   </ul>
                 </form>
 
-                <OffersList offers={offers}
+                <OffersList offers={App.formatObjectArray(cities, `OFFERS`)}
                 />
 
               </section>
               <div className="cities__right-section">
                 <section className="cities__map map">
                   <Map
-                    locations={App.getLocations(offers)}
+                    locations={App.formatObjectArray(cities, `LOCATION`)}
                     id={`map`}
                   />
 
@@ -140,7 +150,7 @@ class App extends Component {
 }
 
 App.propTypes = {
-  offers: PropTypes.array.isRequired
+  cities: PropTypes.array.isRequired
 };
 
 export default App;
