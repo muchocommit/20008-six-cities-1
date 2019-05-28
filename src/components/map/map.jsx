@@ -8,7 +8,20 @@ export default class Map extends PureComponent {
   constructor(props) {
     super(props);
 
+    this._markerGroup = null;
     this._mapRef = createRef();
+  }
+
+  set markerGroup(object) {
+    this._markerGroup = object;
+  }
+
+  get markerGroup() {
+    if (this._markerGroup &&
+      typeof this._markerGroup === `object`) {
+      return this._markerGroup;
+    }
+    return {};
   }
 
   render() {
@@ -18,13 +31,10 @@ export default class Map extends PureComponent {
   }
 
   componentDidMount() {
-    console.log(this.props);
-
     const {locations, id} = this.props;
     const currentMap = this._mapRef.current;
 
     currentMap.id = id;
-
     const {
       ZOOM, CITY, ICON, TILE_LAYER
     } = MapParams;
@@ -33,7 +43,6 @@ export default class Map extends PureComponent {
       iconUrl: ICON.URL,
       iconSize: ICON.SIZE
     });
-
 
     const map = leaflet.map(currentMap, {
       center: CITY,
@@ -48,8 +57,25 @@ export default class Map extends PureComponent {
     })
       .addTo(map);
 
+    this.markerGroup = leaflet.layerGroup().addTo(map);
+
     [...locations].forEach((it) =>
-      leaflet.marker(it, {icon}).addTo(map));
+      leaflet.marker(it, {icon}).addTo(this.markerGroup));
+  }
+
+  componentDidUpdate() {
+    const {locations} = this.props;
+
+    const {ICON} = MapParams;
+    const icon = leaflet.icon({
+      iconUrl: ICON.URL,
+      iconSize: ICON.SIZE
+    });
+
+    this.markerGroup.clearLayers();
+
+    [...locations].forEach((it) =>
+      leaflet.marker(it, {icon}).addTo(this.markerGroup));
   }
 }
 

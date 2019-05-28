@@ -14,13 +14,6 @@ class OffersList extends PureComponent {
     this._handleMouseOver = this._handleMouseOver.bind(this);
   }
 
-  render() {
-    return (
-      <div className="cities__places-list places__list tabs__content">
-        {this._getOffer()}
-      </div>);
-  }
-
   _handleMouseOver(e) {
     const {target} = e;
 
@@ -29,16 +22,23 @@ class OffersList extends PureComponent {
     });
   }
 
-  _getOffer() {
+  _getOffers() {
     const {offers} = this.props;
 
-    return offers[0].map((it, i) =>
+    return offers.map((it, i) =>
       <OfferCard
         key={i}
         offer={it}
         mouseOverHandler={this._handleMouseOver}
         index={i}
       />);
+  }
+
+  render() {
+    return (
+      <div className="cities__places-list places__list tabs__content">
+        {this._getOffers()}
+      </div>);
   }
 }
 
