@@ -7,8 +7,21 @@ const ActionCreator = {
     return {
       type: `CHANGE_CITY`,
       payload: city
-    }
+    };
   }
+};
+
+const getOffers = (cities) => {
+  return cities.map((it) => it.offers);
+};
+
+const getLocationsByCity = (cities, city) => {
+  return getOffers(cities)[city].map(
+      (it) => it.location);
+};
+
+const getOffersByCity = (cities, city) => {
+  return getOffers(cities)[city];
 };
 
 const reducer = (state = initialState, action) => {
@@ -18,8 +31,13 @@ const reducer = (state = initialState, action) => {
     });
   }
 
-
   return state;
 };
 
-export {reducer};
+export {
+  reducer,
+  ActionCreator,
+  getLocationsByCity,
+  getOffersByCity,
+  getOffers
+};

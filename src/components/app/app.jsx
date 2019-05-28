@@ -1,35 +1,23 @@
 import React, {Component, Fragment} from 'react';
+import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
+import * as Action from '../../reducers/reducer';
 import CitiesList from '../cities-list/cities-list.jsx';
 import OffersList from '../offers-list/offers-list.jsx';
 import Map from './../map/map.jsx';
 
 class App extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      city: 0
-    }
-  }
-
-  static _getOffers(cities) {
-    return cities.map((it) => it.offers)
-  }
-
   _getComponent(key) {
-    const city = this.state.city;
-    const {cities} = this.props;
+    const city = this.props.city || 0;
+    const {cities, onHandleTabClick} = this.props;
 
     switch (key) {
       case `LOCATIONS`:
-        const locations = App._getOffers(cities)[city].map(
-          (it) => it.location);
 
         return (
           <Map
-            locations={locations}
+            locations={Action.getLocationsByCity(cities, city)}
             id={`map`}
           />);
 
@@ -39,17 +27,12 @@ class App extends Component {
         return (
           <CitiesList
             cityNames={cityNames}
-            handleTabClick={(activeCity) => {
-
-              this.setState({
-                city: activeCity
-              })
-            }}
+            handleTabClick={(activeCity) => onHandleTabClick(activeCity)}
           />);
 
       case `OFFERS`:
         return (
-          <OffersList offers={App._getOffers(cities)[city]}
+          <OffersList offers={Action.getOffersByCity(cities, city)}
           />);
     }
 
@@ -74,10 +57,10 @@ class App extends Component {
               <span className="places__sorting-caption">Sort by</span>
               <span className="places__sorting-type" tabIndex="0">
                     Popular
-                  <svg className="places__sorting-arrow" width="7" height="4">
-                    <use xlinkHref="#icon-arrow-select"></use>
-                  </svg>
-                </span>
+                <svg className="places__sorting-arrow" width="7" height="4">
+                  <use xlinkHref="#icon-arrow-select"></use>
+                </svg>
+              </span>
               <ul className="places__options places__options--custom places__options--opened">
                 <li className="places__option places__option--active" tabIndex="0">Popular</li>
                 <li className="places__option" tabIndex="0">Price: low to high</li>
@@ -97,7 +80,7 @@ class App extends Component {
           </div>
         </div>
       </div>
-    </Fragment>)
+    </Fragment>);
   }
 
   render() {
@@ -115,7 +98,7 @@ class App extends Component {
             </symbol>
             <symbol id="icon-star" viewBox="0 0 13 12">
               <path fillRule="evenodd" clipRule="evenodd"
-                    d="M6.5 9.644L10.517 12 9.451 7.56 13 4.573l-4.674-.386L6.5 0 4.673 4.187 0 4.573 3.549 7.56 2.483 12 6.5 9.644z"></path>
+                d="M6.5 9.644L10.517 12 9.451 7.56 13 4.573l-4.674-.386L6.5 0 4.673 4.187 0 4.573 3.549 7.56 2.483 12 6.5 9.644z"></path>
             </symbol>
           </svg>
         </div>
@@ -152,7 +135,21 @@ class App extends Component {
 }
 
 App.propTypes = {
-  cities: PropTypes.array.isRequired
+  cities: PropTypes.array.isRequired,
+  city: PropTypes.number.isRequired,
+  onHandleTabClick: PropTypes.func.isRequired
 };
 
-export default App;
+const mapStateToProps = (state, ownProps) => Object.assign(
+    {}, ownProps, {city: state.city});
+
+const mapDispatchToProps = (dispatch) => ({
+
+  onHandleTabClick: (activeCity) => {
+    dispatch(Action.ActionCreator.changeCity(activeCity));
+  }
+});
+
+export {App};
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);

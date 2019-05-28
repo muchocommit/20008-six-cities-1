@@ -17,7 +17,7 @@ export default class CityTab extends PureComponent {
   _onCityTabClick() {
 
     this.props.onCityTabClick();
-    this.setState({isActive: !this.state.isActive})
+    this.setState({isActive: !this.state.isActive});
 
   }
 
@@ -25,9 +25,9 @@ export default class CityTab extends PureComponent {
     const tab = this._tabRef.current;
 
     if (this.props.isActive) {
-      tab.className=`locations__item-link tabs__item--active`
+      tab.className = `locations__item-link tabs__item--active`;
     } else {
-      tab.className=`locations__item-link tabs__item`
+      tab.className = `locations__item-link tabs__item`;
     }
   }
 
@@ -37,9 +37,9 @@ export default class CityTab extends PureComponent {
     return (
       <li className="locations__item">
         <a className={`locations__item-link tabs__item`}
-           href="#"
-           onClick={this._onCityTabClick}
-           ref={this._tabRef}
+          href="#"
+          onClick={this._onCityTabClick}
+          ref={this._tabRef}
         >
           <span>{city}</span>
         </a>

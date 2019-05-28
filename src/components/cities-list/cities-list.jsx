@@ -29,8 +29,7 @@ export default class CitiesList extends PureComponent {
           });
         }}
         city={it}
-      />,
-    );
+      />);
   }
 
   render() {
@@ -43,6 +42,6 @@ export default class CitiesList extends PureComponent {
 }
 
 CitiesList.propTypes = {
-  cityNames: PropTypes.array.isRequired,
+  cityNames: PropTypes.arrayOf(PropTypes.string).isRequired,
   handleTabClick: PropTypes.func.isRequired
 };
