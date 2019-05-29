@@ -1,7 +1,7 @@
 export const TOP_RATING = 5;
 
 export const MapParams = {
-  ZOOM: 11,
+  ZOOM: 5,
   CITY: [52.38333, 4.9],
   ICON: {
     URL: `img/pin.svg`,
