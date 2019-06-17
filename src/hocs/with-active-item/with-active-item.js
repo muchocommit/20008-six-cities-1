@@ -15,7 +15,7 @@ const withActiveItem = (Component) => {
 
       return (<Component
         {...this.props}
-        reActivate={this.setState({isActive: !this.state.isActive})}
+        reActivate={() => this.setState({isActive: !this.state.isActive})}
       />)
     }
   }
