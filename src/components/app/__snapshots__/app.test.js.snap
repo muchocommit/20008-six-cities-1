@@ -270,6 +270,8 @@ exports[`App correctly renders after relaunch 1`] = `
           >
             <article
               className="cities__place-card place-card"
+              data-index={0}
+              onMouseEnter={[Function]}
             >
               <div
                 className="place-card__mark"
@@ -287,9 +289,7 @@ exports[`App correctly renders after relaunch 1`] = `
                   <img
                     alt="Place image"
                     className="place-card__image"
-                    data-index={0}
                     height="200"
-                    onClick={[Function]}
                     src="img/apartment-01.jpg"
                     width="260"
                   />
@@ -362,9 +362,7 @@ exports[`App correctly renders after relaunch 1`] = `
                 >
                   <a
                     className="place-card__link"
-                    data-index={0}
                     href="#"
-                    onMouseOver={[Function]}
                   >
                     Warm sandwiches at hand
                   </a>
@@ -378,6 +376,8 @@ exports[`App correctly renders after relaunch 1`] = `
             </article>
             <article
               className="cities__place-card place-card"
+              data-index={1}
+              onMouseEnter={[Function]}
             >
               <div
                 className="place-card__mark"
@@ -395,9 +395,7 @@ exports[`App correctly renders after relaunch 1`] = `
                   <img
                     alt="Place image"
                     className="place-card__image"
-                    data-index={1}
                     height="200"
-                    onClick={[Function]}
                     src="img/apartment-02.jpg"
                     width="260"
                   />
@@ -470,9 +468,7 @@ exports[`App correctly renders after relaunch 1`] = `
                 >
                   <a
                     className="place-card__link"
-                    data-index={1}
                     href="#"
-                    onMouseOver={[Function]}
                   >
                     Luxurious hotel
                   </a>
@@ -486,6 +482,8 @@ exports[`App correctly renders after relaunch 1`] = `
             </article>
             <article
               className="cities__place-card place-card"
+              data-index={2}
+              onMouseEnter={[Function]}
             >
               <div
                 className="place-card__mark"
@@ -503,9 +501,7 @@ exports[`App correctly renders after relaunch 1`] = `
                   <img
                     alt="Place image"
                     className="place-card__image"
-                    data-index={2}
                     height="200"
-                    onClick={[Function]}
                     src="img/apartment-02.jpg"
                     width="260"
                   />
@@ -578,9 +574,7 @@ exports[`App correctly renders after relaunch 1`] = `
                 >
                   <a
                     className="place-card__link"
-                    data-index={2}
                     href="#"
-                    onMouseOver={[Function]}
                   >
                     Tunnel complex with millions of skeletons
                   </a>

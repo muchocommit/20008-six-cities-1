@@ -7,19 +7,22 @@ class OffersList extends PureComponent {
   constructor(props) {
     super(props);
 
-    this.state = {
-      activeOffer: null
-    };
-
     this._handleMouseOver = this._handleMouseOver.bind(this);
   }
 
   _handleMouseOver(e) {
-    const {target} = e;
+    let {target} = e;
+    const {activateItem} = this.props;
 
-    this.setState({
-      activeOffer: target.dataset.index
-    });
+    while (target !== `ARTICLE`) {
+      if (target.parentNode.dataset.index) {
+
+        activateItem(target.parentNode.dataset.index);
+        return;
+      }
+
+      target = target.parentNode;
+    }
   }
 
   _getOffers() {
@@ -43,6 +46,7 @@ class OffersList extends PureComponent {
 }
 
 OffersList.propTypes = {
+  activateItem: PropTypes.func.isRequired,
   offers: PropTypes.array.isRequired
 };
 

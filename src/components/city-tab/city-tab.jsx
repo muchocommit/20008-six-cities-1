@@ -7,13 +7,18 @@ export default class CityTab extends PureComponent {
 
     this._tabRef = createRef();
 
+    this.state = {
+      isActive: props.isActive
+    };
+
     this._onCityTabButtonClick = this._onCityTabButtonClick.bind(this);
   }
 
   _onCityTabButtonClick() {
 
     this.props.onCityTabButtonClick();
-    this.props.reActivate();
+    this.setState({isActive: !this.state.isActive});
+
   }
 
   _activateTab() {
@@ -51,7 +56,6 @@ export default class CityTab extends PureComponent {
 }
 
 CityTab.propTypes = {
-  reActivate: PropTypes.func.isRequired,
   isActive: PropTypes.bool.isRequired,
   onCityTabButtonClick: PropTypes.func.isRequired,
   city: PropTypes.string.isRequired

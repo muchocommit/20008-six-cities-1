@@ -1,5 +1,4 @@
 import React, {PureComponent} from 'react';
-import PropTypes from "prop-types";
 
 const withActiveItem = (Component) => {
   class WithActiveItem extends PureComponent {
@@ -7,22 +6,24 @@ const withActiveItem = (Component) => {
       super(props);
 
       this.state = {
-        isActive: props.isActive
-      }
+        activeItem: null
+      };
     }
 
     render() {
-
       return (<Component
         {...this.props}
-        reActivate={() => this.setState({isActive: !this.state.isActive})}
+        activateItem={(i) => this.setState({activeItem: i})}
+
+        isActive={(i) => {
+          return i === this.state.activeItem ||
+          (i === 0 && this.state.activeItem === null)
+        }}
       />)
     }
   }
 
-  WithActiveItem.propTypes = {
-    isActive: PropTypes.bool.isRequired
-  };
+  WithActiveItem.propTypes = {};
   return WithActiveItem;
 };
 

@@ -3,34 +3,31 @@ import PropTypes from 'prop-types';
 
 import CityTab from './../city-tab/city-tab.jsx';
 
-import withActiveItem from './../../hocs/with-active-item/with-active-item';
-
-const CityTabWrapped = withActiveItem(CityTab);
-
 export default class CitiesList extends PureComponent {
   constructor(props) {
     super(props);
 
     this.state = {
-      activeTab: null
+      activeItem: null
     };
   }
 
   _getTabs() {
-    const {cityNames, handleTabClick} = this.props;
+    const {
+      cityNames,
+      handleTabClick,
+      activateItem,
+      isActive} = this.props;
 
     return cityNames.map((it, i) =>
-      <CityTabWrapped
+      <CityTab
         key={`city-${i}`}
-        isActive={i === this.state.activeTab ||
-        (i === 0 && this.state.activeTab === null)}
+        isActive={isActive(i)}
 
         onCityTabButtonClick={() => {
           handleTabClick(i);
 
-          this.setState({
-            activeTab: i
-          });
+          activateItem(i);
         }}
         city={it}
       />);
@@ -46,6 +43,8 @@ export default class CitiesList extends PureComponent {
 }
 
 CitiesList.propTypes = {
+  activateItem: PropTypes.func.isRequired,
+  isActive: PropTypes.func.isRequired,
   cityNames: PropTypes.arrayOf(PropTypes.string).isRequired,
   handleTabClick: PropTypes.func.isRequired
 };

@@ -6,12 +6,6 @@ import {getRating} from '../../assets/handler';
 export default class OfferCard extends PureComponent {
   constructor(props) {
     super(props);
-
-    // this.state = {
-    //   activeCard: null
-    // };
-    //
-    // this._handleClick = this._handleClick.bind(this);
   }
 
   render() {
@@ -22,14 +16,14 @@ export default class OfferCard extends PureComponent {
     } = this.props;
 
     return (
-      <article className="cities__place-card place-card">
+      <article className="cities__place-card place-card" onMouseEnter={mouseOverHandler} data-index={index}>
         <div className="place-card__mark">
           <span>{offer.mark}</span>
         </div>
         <div className="cities__image-wrapper place-card__image-wrapper">
           <a href="#">
             <img className="place-card__image" src={offer.src} width="260" height="200"
-              alt="Place image" data-index={index} />
+              alt="Place image" />
           </a>
         </div>
         <div className="place-card__info">
@@ -52,21 +46,13 @@ export default class OfferCard extends PureComponent {
             </div>
           </div>
           <h2 className="place-card__name">
-            <a className="place-card__link" href="#" onMouseOver={mouseOverHandler} data-index={index}>{offer.name}</a>
+            <a className="place-card__link" href="#">{offer.name}</a>
           </h2>
           <p className="place-card__type">{offer.type}</p>
         </div>
       </article>
     );
   }
-
-  // _handleClick(e) {
-  //   const {target} = e;
-  //
-  //   this.setState({
-  //     activeCard: target.dataset.index
-  //   });
-  // }
 }
 
 OfferCard.propTypes = {

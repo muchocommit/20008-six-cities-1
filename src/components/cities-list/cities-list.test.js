@@ -13,6 +13,8 @@ it(`CitiesList renders correctly after launch`, () => {
 
   const tree = renderer
     .create(<CitiesList
+      activateItem={jest.fn()}
+      isActive={jest.fn()}
       cityNames={names}
       handleTabClick={jest.fn()}
     />, {

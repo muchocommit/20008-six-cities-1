@@ -16,5 +16,4 @@ it(`CityTab renders correctly after launch`, () => {
     .toJSON();
 
   expect(tree).toMatchSnapshot();
-
 });
