@@ -8,13 +8,12 @@ const mock = {
 };
 
 it(`CitiesList renders correctly after launch`, () => {
-
   const {names} = mock;
 
   const tree = renderer
     .create(<CitiesList
       activateItem={jest.fn()}
-      isActive={jest.fn()}
+      isActiveItem={() => true}
       cityNames={names}
       handleTabClick={jest.fn()}
     />, {
@@ -24,5 +23,4 @@ it(`CitiesList renders correctly after launch`, () => {
     .toJSON();
 
   expect(tree).toMatchSnapshot();
-
 });

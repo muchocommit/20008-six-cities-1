@@ -15,7 +15,7 @@ const withActiveItem = (Component) => {
         {...this.props}
         activateItem={(i) => this.setState({activeItem: i})}
 
-        isActive={(i) => {
+        isActiveItem={(i) => {
           return i === this.state.activeItem ||
           (i === 0 && this.state.activeItem === null)
         }}

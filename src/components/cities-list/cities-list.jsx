@@ -17,12 +17,12 @@ export default class CitiesList extends PureComponent {
       cityNames,
       handleTabClick,
       activateItem,
-      isActive} = this.props;
+      isActiveItem} = this.props;
 
     return cityNames.map((it, i) =>
       <CityTab
         key={`city-${i}`}
-        isActive={isActive(i)}
+        isActive={isActiveItem(i)}
 
         onCityTabButtonClick={() => {
           handleTabClick(i);
@@ -44,7 +44,7 @@ export default class CitiesList extends PureComponent {
 
 CitiesList.propTypes = {
   activateItem: PropTypes.func.isRequired,
-  isActive: PropTypes.func.isRequired,
+  isActiveItem: PropTypes.func.isRequired,
   cityNames: PropTypes.arrayOf(PropTypes.string).isRequired,
   handleTabClick: PropTypes.func.isRequired
 };
