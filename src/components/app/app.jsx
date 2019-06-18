@@ -7,6 +7,10 @@ import CitiesList from '../cities-list/cities-list.jsx';
 import OffersList from '../offers-list/offers-list.jsx';
 import Map from './../map/map.jsx';
 
+import withActiveItem from './../../hocs/with-active-item/with-active-item';
+const CitiesListWrapped = withActiveItem(CitiesList);
+const OffersListWrapped = withActiveItem(OffersList);
+
 class App extends Component {
   _getComponent(key) {
     const city = this.props.city || 0;
@@ -25,14 +29,14 @@ class App extends Component {
         const cityNames = cities.map((it) => it.city);
 
         return (
-          <CitiesList
+          <CitiesListWrapped
             cityNames={cityNames}
             handleTabClick={(activeCity) => onHandleTabClick(activeCity)}
           />);
 
       case `OFFERS`:
         return (
-          <OffersList offers={Action.getOffersByCity(cities, city)}
+          <OffersListWrapped offers={Action.getOffersByCity(cities, city)}
           />);
     }
 
@@ -135,8 +139,8 @@ class App extends Component {
 }
 
 App.propTypes = {
+  city: PropTypes.number,
   cities: PropTypes.array.isRequired,
-  city: PropTypes.number.isRequired,
   onHandleTabClick: PropTypes.func.isRequired
 };
 

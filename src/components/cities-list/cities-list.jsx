@@ -8,25 +8,26 @@ export default class CitiesList extends PureComponent {
     super(props);
 
     this.state = {
-      activeTab: null
+      activeItem: null
     };
   }
 
   _getTabs() {
-    const {cityNames, handleTabClick} = this.props;
+    const {
+      cityNames,
+      handleTabClick,
+      activateItem,
+      isActiveItem} = this.props;
 
     return cityNames.map((it, i) =>
       <CityTab
         key={`city-${i}`}
-        isActive={i === this.state.activeTab ||
-        (i === 0 && this.state.activeTab === null)}
+        isActive={isActiveItem(i)}
 
-        onCityTabClick={() => {
+        onCityTabButtonClick={() => {
           handleTabClick(i);
 
-          this.setState({
-            activeTab: i
-          });
+          activateItem(i);
         }}
         city={it}
       />);
@@ -42,6 +43,8 @@ export default class CitiesList extends PureComponent {
 }
 
 CitiesList.propTypes = {
+  activateItem: PropTypes.func.isRequired,
+  isActiveItem: PropTypes.func.isRequired,
   cityNames: PropTypes.arrayOf(PropTypes.string).isRequired,
   handleTabClick: PropTypes.func.isRequired
 };

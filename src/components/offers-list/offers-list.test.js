@@ -64,6 +64,7 @@ it(`App correctly renders after relaunch`, () => {
   const {offers} = mock;
   const tree = renderer
     .create(<OffersList
+      activateItem={jest.fn()}
       offers={offers}/>)
     .toJSON();
 

@@ -11,12 +11,12 @@ export default class CityTab extends PureComponent {
       isActive: props.isActive
     };
 
-    this._onCityTabClick = this._onCityTabClick.bind(this);
+    this._onCityTabButtonClick = this._onCityTabButtonClick.bind(this);
   }
 
-  _onCityTabClick() {
+  _onCityTabButtonClick() {
 
-    this.props.onCityTabClick();
+    this.props.onCityTabButtonClick();
     this.setState({isActive: !this.state.isActive});
 
   }
@@ -38,7 +38,7 @@ export default class CityTab extends PureComponent {
       <li className="locations__item">
         <a className={`locations__item-link tabs__item`}
           href="#"
-          onClick={this._onCityTabClick}
+          onClick={this._onCityTabButtonClick}
           ref={this._tabRef}
         >
           <span>{city}</span>
@@ -57,6 +57,6 @@ export default class CityTab extends PureComponent {
 
 CityTab.propTypes = {
   isActive: PropTypes.bool.isRequired,
-  onCityTabClick: PropTypes.func.isRequired,
+  onCityTabButtonClick: PropTypes.func.isRequired,
   city: PropTypes.string.isRequired
 };

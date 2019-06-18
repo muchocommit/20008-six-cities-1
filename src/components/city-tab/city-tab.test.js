@@ -7,7 +7,7 @@ it(`CityTab renders correctly after launch`, () => {
   const tree = renderer
     .create(<CityTab
       isActive={true}
-      onCityTabClick={jest.fn()}
+      onCityTabButtonClick={jest.fn()}
       city={`Manila`}
     />, {
       createNodeMock: () => {
@@ -16,5 +16,4 @@ it(`CityTab renders correctly after launch`, () => {
     .toJSON();
 
   expect(tree).toMatchSnapshot();
-
 });
