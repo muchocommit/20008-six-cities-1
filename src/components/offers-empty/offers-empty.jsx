@@ -1,6 +1,6 @@
 import React from 'react';
 
-const OffersEmpty = () => {
+export const OffersEmpty = () => {
 
   return (
     <div className="cities__places-container cities__places-container--empty container">
@@ -15,5 +15,3 @@ const OffersEmpty = () => {
     </div>
   );
 };
-
-export default {OffersEmpty};
