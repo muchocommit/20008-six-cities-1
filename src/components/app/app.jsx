@@ -16,15 +16,10 @@ class App extends Component {
   _getContainer() {
     const {cities, city} = this.props;
 
-    // Logic to check if the number of offers is not 0
     const offers = Action.getOffersByCity(cities, city);
-
     if (offers.length === 0) {
 
-      return (
-        <>
-          <OffersEmpty />
-        </>);
+      return (<OffersEmpty />);
     }
     return (<div className="cities__places-container container">
       <section className="cities__places places">
@@ -74,8 +69,6 @@ class App extends Component {
 
       case `CITY_NAMES`:
         const cityNames = cities.map((it) => it.city);
-        // Initiate empty page if city === 0
-        // Get activeCity and use it to count offers
         return (
           <CitiesListWrapped
             cityNames={cityNames}
@@ -160,13 +153,12 @@ class App extends Component {
 App.propTypes = {
   city: PropTypes.number.isRequired,
   cities: PropTypes.array.isRequired,
-  offers: PropTypes.number.isRequired,
   onHandleTabClick: PropTypes.func.isRequired
 };
 
 const mapStateToProps = (state, ownProps) => Object.assign(
     {}, ownProps, {
-      city: state.city, offers: state.offers});
+      city: state.city});
 
 const mapDispatchToProps = (dispatch) => ({
   onHandleTabClick: (activeCity) => {
