@@ -13,7 +13,7 @@ const ActionCreator = {
   countOffers: (offers) => {
     return {
       type: `COUNT_OFFERS`,
-      payload: offers.length
+      payload: offers
     };
   }
 };
@@ -35,11 +35,11 @@ const reducer = (state = initialState, action) => {
   switch (action.type) {
     case `CHANGE_CITY`:
       return Object.assign({}, state, {
-        city: action.payload})
+        city: action.payload});
 
     case `COUNT_OFFERS`:
       return Object.assign({}, state, {
-        offers: action.payload})
+        offers: action.payload});
 
     default:
       return state;

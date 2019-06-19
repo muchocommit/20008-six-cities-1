@@ -6,6 +6,7 @@ import * as Action from '../../reducers/reducer';
 import CitiesList from '../cities-list/cities-list.jsx';
 import OffersList from '../offers-list/offers-list.jsx';
 import Map from './../map/map.jsx';
+import OffersEmpty from '../offers-empty/offers-empty.jsx'
 
 import withActiveItem from './../../hocs/with-active-item/with-active-item';
 const CitiesListWrapped = withActiveItem(CitiesList);
@@ -13,11 +14,54 @@ const OffersListWrapped = withActiveItem(OffersList);
 
 class App extends Component {
   _getContainer() {
+    const {cities, city} = this.props;
 
+    // Logic to check if the number of offers is not 0
+    const offers = Action.getOffersByCity(cities, city);
+
+    if (offers.length === 0) {
+
+      return (
+        <>
+          <OffersEmpty />
+        </>);
+    }
+    return (<div className="cities__places-container container">
+      <section className="cities__places places">
+        <h2 className="visually-hidden">Places</h2>
+        <b className="places__found">312 places to stay in Amsterdam</b>
+        <form className="places__sorting" action="#" method="get">
+          <span className="places__sorting-caption">Sort by</span>
+          <span className="places__sorting-type" tabIndex="0">
+                      Popular
+                  <svg className="places__sorting-arrow" width="7" height="4">
+                    <use xlinkHref="#icon-arrow-select"></use>
+                  </svg>
+                </span>
+          <ul className="places__options places__options--custom places__options--opened">
+            <li className="places__option places__option--active" tabIndex="0">Popular</li>
+            <li className="places__option" tabIndex="0">Price: low to high</li>
+            <li className="places__option" tabIndex="0">Price: high to low</li>
+            <li className="places__option" tabIndex="0">Top rated first</li>
+          </ul>
+        </form>
+
+        {this._getComponent(`OFFERS`, offers)}
+
+      </section>
+      <div className="cities__right-section">
+
+        <section className="cities__map map">
+          {this._getComponent(`LOCATIONS`)}
+        </section>
+      </div>
+    </div>);
   }
-  _getComponent(key) {
-    const city = this.props.city || 0;
-    const {cities, onHandleTabClick} = this.props;
+  _getComponent(key, offers = void (0)) {
+    const {
+      cities,
+      onHandleTabClick,
+      city} = this.props;
 
     switch (key) {
       case `LOCATIONS`:
@@ -30,7 +74,6 @@ class App extends Component {
 
       case `CITY_NAMES`:
         const cityNames = cities.map((it) => it.city);
-
         // Initiate empty page if city === 0
         // Get activeCity and use it to count offers
         return (
@@ -41,7 +84,7 @@ class App extends Component {
 
       case `OFFERS`:
         return (
-          <OffersListWrapped offers={Action.getOffersByCity(cities, city)}
+          <OffersListWrapped offers={offers}
           />);
     }
 
@@ -58,36 +101,7 @@ class App extends Component {
           </section>
         </div>
         <div className="cities__places-wrapper">
-          <div className="cities__places-container container">
-            <section className="cities__places places">
-              <h2 className="visually-hidden">Places</h2>
-              <b className="places__found">312 places to stay in Amsterdam</b>
-              <form className="places__sorting" action="#" method="get">
-                <span className="places__sorting-caption">Sort by</span>
-                <span className="places__sorting-type" tabIndex="0">
-                      Popular
-                  <svg className="places__sorting-arrow" width="7" height="4">
-                    <use xlinkHref="#icon-arrow-select"></use>
-                  </svg>
-                </span>
-                <ul className="places__options places__options--custom places__options--opened">
-                  <li className="places__option places__option--active" tabIndex="0">Popular</li>
-                  <li className="places__option" tabIndex="0">Price: low to high</li>
-                  <li className="places__option" tabIndex="0">Price: high to low</li>
-                  <li className="places__option" tabIndex="0">Top rated first</li>
-                </ul>
-              </form>
-
-              {this._getComponent(`OFFERS`)}
-
-            </section>
-            <div className="cities__right-section">
-
-              <section className="cities__map map">
-                {this._getComponent(`LOCATIONS`)}
-              </section>
-            </div>
-          </div>
+          {this._getContainer()}
         </div>
       </>);
   }
@@ -141,16 +155,12 @@ class App extends Component {
       </div>
     );
   }
-
-  componentDidMount() {
-    // Get container with current city
-
-  }
 }
 
 App.propTypes = {
-  city: PropTypes.number,
+  city: PropTypes.number.isRequired,
   cities: PropTypes.array.isRequired,
+  offers: PropTypes.number.isRequired,
   onHandleTabClick: PropTypes.func.isRequired
 };
 
@@ -159,7 +169,6 @@ const mapStateToProps = (state, ownProps) => Object.assign(
       city: state.city, offers: state.offers});
 
 const mapDispatchToProps = (dispatch) => ({
-
   onHandleTabClick: (activeCity) => {
     dispatch(Action.ActionCreator.changeCity(activeCity));
   }
