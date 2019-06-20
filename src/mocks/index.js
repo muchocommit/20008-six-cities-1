@@ -2,54 +2,7 @@ export default [
   {
     city: `Paris`,
     offers: [
-      {
-        mark: `Pizza lover's place`,
-        name: `Warm sandwiches at hand`,
-        src: `img/apartment-01.jpg`,
-        type: `Hut`,
-        ratings: [
-          3, 5, 4, 2, 4, 5, 5, 5, 2
-        ],
-        price: {
-          period: `night`,
-          value: 10
-        },
-        location: [
-          48.886575, 2.344352
-        ]
-      },
-      {
-        mark: `Premium`,
-        name: `Luxurious hotel`,
-        src: `img/apartment-02.jpg`,
-        type: `Suite`,
-        ratings: [
-          5, 5, 4, 5, 4, 5, 5, 5
-        ],
-        price: {
-          period: `night`,
-          value: 200
-        },
-        location: [
-          48.886152, 2.338151
-        ]
-      },
-      {
-        mark: `Goth`,
-        name: `Tunnel complex with millions of skeletons`,
-        src: `img/apartment-02.jpg`,
-        type: `Catacombs`,
-        ratings: [
-          5, 5, 4, 5, 4, 5, 5, 5
-        ],
-        price: {
-          period: `night`,
-          value: 1500
-        },
-        location: [
-          48.833944, 2.333221
-        ]
-      }
+
     ]
   },
 
