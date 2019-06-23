@@ -4,14 +4,6 @@ import PropTypes from 'prop-types';
 import CityTab from './../city-tab/city-tab.jsx';
 
 export default class CitiesList extends PureComponent {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      activeItem: null
-    };
-  }
-
   _getTabs() {
     const {
       cityNames,

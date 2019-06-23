@@ -25,7 +25,7 @@ const getOffersByCity = (cities, city) => {
 };
 
 const reducer = (state = initialState, action) => {
-  if (action.type) {
+  if (action.type === `CHANGE_CITY`) {
     return Object.assign({}, state, {
       city: action.payload
     });
