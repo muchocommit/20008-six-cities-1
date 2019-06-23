@@ -16,41 +16,42 @@ class App extends Component {
   _getContainer() {
     const {cities, city} = this.props;
 
-    const offers = Action.getOffersByCity(cities, city);
-    if (offers.length === 0) {
-
-      return (<OffersEmpty />);
-    }
-    return (<div className="cities__places-container container">
-      <section className="cities__places places">
-        <h2 className="visually-hidden">Places</h2>
-        <b className="places__found">312 places to stay in Amsterdam</b>
-        <form className="places__sorting" action="#" method="get">
-          <span className="places__sorting-caption">Sort by</span>
-          <span className="places__sorting-type" tabIndex="0">
-                      Popular
-            <svg className="places__sorting-arrow" width="7" height="4">
-              <use xlinkHref="#icon-arrow-select"></use>
-            </svg>
-          </span>
-          <ul className="places__options places__options--custom places__options--opened">
-            <li className="places__option places__option--active" tabIndex="0">Popular</li>
-            <li className="places__option" tabIndex="0">Price: low to high</li>
-            <li className="places__option" tabIndex="0">Price: high to low</li>
-            <li className="places__option" tabIndex="0">Top rated first</li>
-          </ul>
-        </form>
-
-        {this._getComponent(`OFFERS`, offers)}
-
-      </section>
-      <div className="cities__right-section">
-
-        <section className="cities__map map">
-          {this._getComponent(`LOCATIONS`)}
-        </section>
-      </div>
-    </div>);
+    console.log(cities);
+    // const offers = Action.getOffersByCity(cities, city);
+    // if (offers.length === 0) {
+    //
+    //   return (<OffersEmpty />);
+    // }
+    // return (<div className="cities__places-container container">
+    //   <section className="cities__places places">
+    //     <h2 className="visually-hidden">Places</h2>
+    //     <b className="places__found">312 places to stay in Amsterdam</b>
+    //     <form className="places__sorting" action="#" method="get">
+    //       <span className="places__sorting-caption">Sort by</span>
+    //       <span className="places__sorting-type" tabIndex="0">
+    //                   Popular
+    //         <svg className="places__sorting-arrow" width="7" height="4">
+    //           <use xlinkHref="#icon-arrow-select"></use>
+    //         </svg>
+    //       </span>
+    //       <ul className="places__options places__options--custom places__options--opened">
+    //         <li className="places__option places__option--active" tabIndex="0">Popular</li>
+    //         <li className="places__option" tabIndex="0">Price: low to high</li>
+    //         <li className="places__option" tabIndex="0">Price: high to low</li>
+    //         <li className="places__option" tabIndex="0">Top rated first</li>
+    //       </ul>
+    //     </form>
+    //
+    //     {this._getComponent(`OFFERS`, offers)}
+    //
+    //   </section>
+    //   <div className="cities__right-section">
+    //
+    //     <section className="cities__map map">
+    //       {this._getComponent(`LOCATIONS`)}
+    //     </section>
+    //   </div>
+    // </div>);
   }
   _getComponent(key, offers = void (0)) {
     const {
@@ -68,7 +69,7 @@ class App extends Component {
           />);
 
       case `CITY_NAMES`:
-        const cityNames = cities.map((it) => it.city);
+        const cityNames = [...new Set(cities.map((it) => it.city.name))];
         return (
           <CitiesListWrapped
             cityNames={cityNames}
@@ -158,7 +159,9 @@ App.propTypes = {
 
 const mapStateToProps = (state, ownProps) => Object.assign(
     {}, ownProps, {
-      city: state.city});
+      city: state.city,
+      cities: state.cities
+    });
 
 const mapDispatchToProps = (dispatch) => ({
   onHandleTabClick: (activeCity) => {

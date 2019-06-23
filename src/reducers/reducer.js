@@ -2,18 +2,19 @@ import {ActionType} from '../data';
 
 const initialState = {
   city: 0,
-  cities: []
+  cities: [],
+  isAuthorizationRequired: false
 };
 
 const Operation = {
-  loadCities: () => (dispatch) => {
-    return fetch(`https://es31-server.appspot.com/six-cities`)
-      .then((response) => response.json())
-      .then((cities) => {
-        dispatch(ActionCreator.loadCities(cities));
+  loadCities: () => (dispatch, _getState, api) => {
+    return api.get(`/hotels`)
+      .then((response) => {
+        dispatch(ActionCreator.loadCities(response.data));
       });
-  }
+  },
 };
+
 
 const ActionCreator = {
   loadCities: (cities) => {
@@ -28,7 +29,14 @@ const ActionCreator = {
       type: ActionType.CHANGE_CITY,
       payload: city
     };
-  }
+  },
+
+  requireAuthorization: (status) => {
+    return {
+      type: ActionType.REQUIRE_AUTHORIZATION,
+      payload: status,
+    };
+  },
 };
 
 const getOffers = (cities) => {
@@ -56,6 +64,11 @@ const reducer = (state = initialState, action) => {
       return Object.assign({}, state, {
         city: action.payload
     });
+
+    case ActionType.REQUIRE_AUTHORIZATION:
+      return Object.assign({}, state, {
+        isAuthorizationRequired: action.payload,
+      });
   }
 
   return state;

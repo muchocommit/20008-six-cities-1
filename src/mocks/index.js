@@ -5,7 +5,6 @@ export default [
 
     ]
   },
-
   {
     city: `Cologne`,
     offers: [
