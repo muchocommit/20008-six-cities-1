@@ -1,11 +1,31 @@
+import {ActionType} from '../data';
+
 const initialState = {
-  city: 0
+  city: 0,
+  cities: []
+};
+
+const Operation = {
+  loadCities: () => (dispatch) => {
+    return fetch(`https://es31-server.appspot.com/six-cities`)
+      .then((response) => response.json())
+      .then((cities) => {
+        dispatch(ActionCreator.loadCities(cities));
+      });
+  }
 };
 
 const ActionCreator = {
+  loadCities: (cities) => {
+    return {
+      type: ActionType.LOAD_CITIES,
+      payload: cities
+    }
+  },
+
   changeCity: (city) => {
     return {
-      type: `CHANGE_CITY`,
+      type: ActionType.CHANGE_CITY,
       payload: city
     };
   }
@@ -25,9 +45,16 @@ const getOffersByCity = (cities, city) => {
 };
 
 const reducer = (state = initialState, action) => {
-  if (action.type === `CHANGE_CITY`) {
-    return Object.assign({}, state, {
-      city: action.payload
+  switch (action.type) {
+
+    case ActionType.LOAD_CITIES:
+      return Object.assign({}, state, {
+        cities: action.payload
+      });
+
+    case ActionType.CHANGE_CITY:
+      return Object.assign({}, state, {
+        city: action.payload
     });
   }
 
@@ -39,5 +66,6 @@ export {
   ActionCreator,
   getLocationsByCity,
   getOffersByCity,
-  getOffers
+  getOffers,
+  Operation
 };
