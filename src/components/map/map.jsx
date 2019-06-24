@@ -32,6 +32,7 @@ export default class Map extends PureComponent {
 
   componentDidMount() {
     const {locations, id} = this.props;
+
     const currentMap = this._mapRef.current;
 
     currentMap.id = id;

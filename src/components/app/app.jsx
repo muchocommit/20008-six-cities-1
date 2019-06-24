@@ -42,30 +42,35 @@ class App extends Component {
         {this._getComponent({key: `OFFERS`, offers})}
 
       </section>
-      {/*<div className="cities__right-section">*/}
+      <div className="cities__right-section">
 
-      {/*  <section className="cities__map map">*/}
-      {/*    {this._getComponent({key: `LOCATIONS`})}*/}
-      {/*  </section>*/}
-      {/*</div>*/}
+        <section className="cities__map map">
+          {this._getComponent({key: `LOCATIONS`, offers})}
+        </section>
+      </div>
     </div>);
   }
   _getComponent({key,
     offers = [],
     cityNames = []}) {
-    const {
-      cities,
-      onHandleTabClick,
-      city} = this.props;
+
+    const {onHandleTabClick} = this.props;
 
     switch (key) {
       case `LOCATIONS`:
 
-        return (
-          <Map
-            locations={Action.getLocationsByCity(cities, city)}
-            id={`map`}
-          />);
+        if (offers.length !== 0) {
+          const locations = Action.getLocations(offers);
+          const locationsCoordinates = Action.getLocationsCoordinates(locations);
+
+          return (
+            <Map
+              locations={locationsCoordinates}
+              id={`map`}
+            />);
+        }
+
+        break;
 
       case `CITY_NAMES`:
         return (
@@ -74,18 +79,19 @@ class App extends Component {
             handleTabClick={(activeCity) => onHandleTabClick(activeCity)}
           />);
 
-      case `OFFERS`:
+      default:
         return (
           <OffersListWrapped offers={offers}
           />);
     }
 
-    return cities;
+    return null;
   }
 
   _getScreen() {
     const {cities, city} = this.props;
     const cityNames = [...new Set(cities.map((it) => it.city.name))];
+
     const offers = Action.sortOffersByCityName(cityNames, cities)[city];
 
     return (

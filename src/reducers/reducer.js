@@ -52,8 +52,12 @@ const getOffers = (cities) => {
   return cities.map((it) => it.offers);
 };
 
-const getLocationsByCity = (cities, city) => {
-  return cities[city].map((it) => it.location);
+const getLocations = (offers) => {
+  return offers.map((it) => it.location);
+};
+
+const getLocationsCoordinates = (locations) => {
+  return locations.map((it) => [it.latitude, it.longitude]);
 };
 
 const getOffersByCity = (cities, city) => {
@@ -86,7 +90,8 @@ export {
   reducer,
   ActionCreator,
   sortOffersByCityName,
-  getLocationsByCity,
+  getLocations,
+  getLocationsCoordinates,
   getOffersByCity,
   getOffers,
   Operation
