@@ -39,6 +39,15 @@ const ActionCreator = {
   },
 };
 
+const sortOffersByCityName = (namesArray, citiesArray) => {
+  return namesArray.map((name) => {
+
+    return citiesArray.filter((it) => {
+      return name === it.city.name
+    })
+  })
+};
+
 const getOffers = (cities) => {
   return cities.map((it) => it.offers);
 };
@@ -49,7 +58,7 @@ const getLocationsByCity = (cities, city) => {
 };
 
 const getOffersByCity = (cities, city) => {
-  return getOffers(cities)[city];
+  return cities[city];
 };
 
 const reducer = (state = initialState, action) => {
@@ -77,6 +86,7 @@ const reducer = (state = initialState, action) => {
 export {
   reducer,
   ActionCreator,
+  sortOffersByCityName,
   getLocationsByCity,
   getOffersByCity,
   getOffers,

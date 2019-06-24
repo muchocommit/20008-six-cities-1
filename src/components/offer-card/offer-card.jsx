@@ -41,7 +41,7 @@ export default class OfferCard extends PureComponent {
           </div>
           <div className="place-card__rating rating">
             <div className="place-card__stars rating__stars">
-              <span style={{width: `${getRating(offer.ratings)}%`}}></span>
+              <span style={{width: `${getRating(offer.rating)}%`}}></span>
               <span className="visually-hidden">Rating</span>
             </div>
           </div>
