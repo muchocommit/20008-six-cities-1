@@ -8,6 +8,10 @@ export default class OfferCard extends PureComponent {
     super(props);
   }
 
+  static _getPropertyMark(isPremium) {
+    return isPremium ? `Premium` : `Mid-price`;
+  }
+
   render() {
     const {
       offer,
@@ -18,19 +22,19 @@ export default class OfferCard extends PureComponent {
     return (
       <article className="cities__place-card place-card" onMouseEnter={mouseOverHandler} data-index={index}>
         <div className="place-card__mark">
-          <span>{offer.mark}</span>
+          <span>{OfferCard._getPropertyMark(offer[`is_premium`])}</span>
         </div>
         <div className="cities__image-wrapper place-card__image-wrapper">
           <a href="#">
-            <img className="place-card__image" src={offer.src} width="260" height="200"
+            <img className="place-card__image" src={offer[`preview_image`]} width="260" height="200"
               alt="Place image" />
           </a>
         </div>
         <div className="place-card__info">
           <div className="place-card__price-wrapper">
             <div className="place-card__price">
-              <b className="place-card__price-value">&euro;{offer.price.value}</b>
-              <span className="place-card__price-text">&#47;&nbsp;{offer.price.period}</span>
+              <b className="place-card__price-value">&euro;{offer.price}</b>
+              <span className="place-card__price-text">&#47;&nbsp;night</span>
             </div>
             <button className="place-card__bookmark-button button" type="button">
               <svg className="place-card__bookmark-icon" width="18" height="19">
@@ -46,7 +50,7 @@ export default class OfferCard extends PureComponent {
             </div>
           </div>
           <h2 className="place-card__name">
-            <a className="place-card__link" href="#">{offer.name}</a>
+            <a className="place-card__link" href={`offer/${offer.id}`}>{offer.title}</a>
           </h2>
           <p className="place-card__type">{offer.type}</p>
         </div>
@@ -57,15 +61,13 @@ export default class OfferCard extends PureComponent {
 
 OfferCard.propTypes = {
   offer: PropTypes.shape({
-    mark: PropTypes.string.isRequired,
-    name: PropTypes.string.isRequired,
-    src: PropTypes.string.isRequired,
+    id: PropTypes.number.isRequired,
+    [`is_premium`]: PropTypes.bool.isRequired,
+    [`preview_image`]: PropTypes.string.isRequired,
+    price: PropTypes.number.isRequired,
     type: PropTypes.string.isRequired,
-    ratings: PropTypes.arrayOf(PropTypes.oneOf([1, 2, 3, 4, 5])).isRequired,
-    price: PropTypes.shape({
-      period: PropTypes.string.isRequired,
-      value: PropTypes.number.isRequired
-    })
+    rating: PropTypes.number.isRequired,
+    title: PropTypes.string.isRequired
   }),
   mouseOverHandler: PropTypes.func.isRequired,
   index: PropTypes.number.isRequired

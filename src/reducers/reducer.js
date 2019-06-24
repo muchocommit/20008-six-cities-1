@@ -53,8 +53,7 @@ const getOffers = (cities) => {
 };
 
 const getLocationsByCity = (cities, city) => {
-  return getOffers(cities)[city].map(
-      (it) => it.location);
+  return cities[city].map((it) => it.location);
 };
 
 const getOffersByCity = (cities, city) => {

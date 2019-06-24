@@ -13,16 +13,16 @@ const CitiesListWrapped = withActiveItem(CitiesList);
 const OffersListWrapped = withActiveItem(OffersList);
 
 class App extends Component {
-  _getContainer(offers = void (0)) {
-    if (offers && offers.length === 0) {
+  _getContainer({offers = void (0), cityName}) {
 
+    if (offers && offers.length === 0) {
       return (<OffersEmpty />);
     }
 
     return (<div className="cities__places-container container">
       <section className="cities__places places">
         <h2 className="visually-hidden">Places</h2>
-        <b className="places__found">312 places to stay in Amsterdam</b>
+        <b className="places__found">{`${offers ? `${offers.length} places to stay in ${cityName}` : ``}`}</b>
         <form className="places__sorting" action="#" method="get">
           <span className="places__sorting-caption">Sort by</span>
           <span className="places__sorting-type" tabIndex="0">
@@ -97,7 +97,7 @@ class App extends Component {
           </section>
         </div>
         <div className="cities__places-wrapper">
-          {this._getContainer(offers)}
+          {this._getContainer({offers, cityName: cityNames[city]})}
         </div>
       </>);
   }
