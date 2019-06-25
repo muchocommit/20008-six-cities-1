@@ -39,8 +39,8 @@ const mock = {
       },
       "description": `This is a place for the people who like to blah`,
       "location": {
-        "latitude": 50.945361,
-        "longitude": 6.962974,
+        "latitude": 50.965361,
+        "longitude": 6.972974,
         "zoom": 16
       },
       "id": 1
@@ -50,8 +50,8 @@ const mock = {
       "city": {
         "name": `Some City`,
         "location": {
-          "latitude": 50.938361,
-          "longitude": 6.959974,
+          "latitude": 52.968361,
+          "longitude": 8.959974,
           "zoom": 13
         }
       },
@@ -81,11 +81,11 @@ const mock = {
       },
       "description": `This is a place for the people who like to blah`,
       "location": {
-        "latitude": 50.945361,
-        "longitude": 6.962974,
+        "latitude": 41.945361,
+        "longitude": 2.962974,
         "zoom": 16
       },
-      "id": 1
+      "id": 2
     },
   ]
 };

@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
-import * as Action from '../../reducers/reducer';
+import * as Action from '../../reducers/data/data';
 import CitiesList from '../cities-list/cities-list.jsx';
 import OffersList from '../offers-list/offers-list.jsx';
 import Map from './../map/map.jsx';
@@ -168,8 +168,8 @@ App.propTypes = {
 
 const mapStateToProps = (state, ownProps) => Object.assign(
     {}, ownProps, {
-      city: state.city,
-      cities: state.cities
+      city: state.data.city,
+      cities: state.data.cities
     });
 
 const mapDispatchToProps = (dispatch) => ({
