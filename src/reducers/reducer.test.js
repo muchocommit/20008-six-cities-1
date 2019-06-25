@@ -1,7 +1,11 @@
+import MockAdapter from 'axios-mock-adapter';
+import {createAPI} from './../api';
+import {ActionType} from '../data';
 import {
   getOffers,
   reducer,
-  ActionCreator
+  ActionCreator,
+  Operation
 } from './reducer';
 
 describe(`Business logic is correct`, () => {
@@ -116,30 +120,64 @@ describe(`Business logic is correct`, () => {
 });
 
 describe(`Reducer works correctly`, () => {
-  it(`Returns initial state if none provided`, () => {
-    expect(reducer(undefined, {})).toEqual({city: 0});
+  it(`Returns initial state if undefined state is provided with empty object`, () => {
+    expect(reducer(undefined, {})).toEqual(
+        {city: 0,
+          cities: [],
+          isAuthorizationRequired: false});
   });
 
   it(`Returns modified initial state if action type with payload is provided`, () => {
     expect(reducer(undefined, {
-      type: `CHANGE_CITY`,
+      type: ActionType.CHANGE_CITY,
       payload: 3
-    })).toEqual({city: 3});
+    })).toEqual({city: 3,
+      cities: [],
+      isAuthorizationRequired: false});
   });
 
   it(`Returns modified state if action type with payload is provided`, () => {
     expect(reducer({city: 0}, {
-      type: `CHANGE_CITY`,
+      type: ActionType.CHANGE_CITY,
       payload: 3
-    })).toEqual({city: 3});
+    })).toEqual({
+      city: 3});
+  });
+
+  it(`Should make a correct API call to /hotels`, () => {
+    const dispatch = jest.fn();
+
+    const api = createAPI(dispatch);
+    const apiMock = new MockAdapter(api);
+    const questionLoader = Operation.loadCities();
+
+    apiMock
+      .onGet(`/hotels`)
+      .reply(200, [{fake: true}]);
+
+    return questionLoader(dispatch, jest.fn(), api)
+      .then(() => {
+        expect(dispatch).toHaveBeenCalledTimes(1);
+        expect(dispatch).toHaveBeenNthCalledWith(1, {
+          type: ActionType.LOAD_CITIES,
+          payload: [{fake: true}],
+        });
+      });
   });
 });
 
 describe(`ActionCreator works correctly`, () => {
   it(`Returns object with action type and city index`, () => {
     expect(ActionCreator.changeCity(1000)).toEqual({
-      type: `CHANGE_CITY`,
+      type: ActionType.CHANGE_CITY,
       payload: 1000
+    });
+  });
+
+  it(`Returns object with action type and boolean value on requireAuth call`, () => {
+    expect(ActionCreator.requireAuthorization(false)).toEqual({
+      type: ActionType.REQUIRE_AUTHORIZATION,
+      payload: false
     });
   });
 });

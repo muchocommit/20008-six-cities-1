@@ -10,7 +10,7 @@ exports[`OfferCard renders correctly 1`] = `
     className="place-card__mark"
   >
     <span>
-      Downtown
+      Premium
     </span>
   </div>
   <div
@@ -23,7 +23,7 @@ exports[`OfferCard renders correctly 1`] = `
         alt="Place image"
         className="place-card__image"
         height="200"
-        src=""
+        src="some/src"
         width="260"
       />
     </a>
@@ -41,13 +41,12 @@ exports[`OfferCard renders correctly 1`] = `
           className="place-card__price-value"
         >
           €
-          17
+          10012313
         </b>
         <span
           className="place-card__price-text"
         >
-          / 
-          week
+          / night
         </span>
       </div>
       <button
@@ -79,7 +78,7 @@ exports[`OfferCard renders correctly 1`] = `
         <span
           style={
             Object {
-              "width": "57.78%",
+              "width": "90%",
             }
           }
         />
@@ -95,15 +94,15 @@ exports[`OfferCard renders correctly 1`] = `
     >
       <a
         className="place-card__link"
-        href="#"
+        href="offer/5"
       >
-        Spartan place for saturday hangovers
+        Mock title
       </a>
     </h2>
     <p
       className="place-card__type"
     >
-      Flat
+      apartment
     </p>
   </div>
 </article>

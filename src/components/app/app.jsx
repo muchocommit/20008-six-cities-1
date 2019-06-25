@@ -60,6 +60,7 @@ class App extends Component {
       case `LOCATIONS`:
 
         if (offers.length !== 0) {
+
           const locations = Action.getLocations(offers);
           const locationsCoordinates = Action.getLocationsCoordinates(locations);
 

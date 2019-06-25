@@ -15,13 +15,12 @@ const Operation = {
   },
 };
 
-
 const ActionCreator = {
   loadCities: (cities) => {
     return {
       type: ActionType.LOAD_CITIES,
       payload: cities
-    }
+    };
   },
 
   changeCity: (city) => {
@@ -43,9 +42,9 @@ const sortOffersByCityName = (namesArray, citiesArray) => {
   return namesArray.map((name) => {
 
     return citiesArray.filter((it) => {
-      return name === it.city.name
-    })
-  })
+      return name === it.city.name;
+    });
+  });
 };
 
 const getOffers = (cities) => {
@@ -75,7 +74,7 @@ const reducer = (state = initialState, action) => {
     case ActionType.CHANGE_CITY:
       return Object.assign({}, state, {
         city: action.payload
-    });
+      });
 
     case ActionType.REQUIRE_AUTHORIZATION:
       return Object.assign({}, state, {

@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`App correctly renders after relaunch 1`] = `
+exports[`Offers-list correctly render after relaunch 1`] = `
 <div
   className="cities__places-list places__list tabs__content"
 >
@@ -13,7 +13,7 @@ exports[`App correctly renders after relaunch 1`] = `
       className="place-card__mark"
     >
       <span>
-        Poor Quality
+        Mid-price
       </span>
     </div>
     <div
@@ -26,7 +26,7 @@ exports[`App correctly renders after relaunch 1`] = `
           alt="Place image"
           className="place-card__image"
           height="200"
-          src="test.jpg"
+          src="some/image"
           width="260"
         />
       </a>
@@ -44,13 +44,12 @@ exports[`App correctly renders after relaunch 1`] = `
             className="place-card__price-value"
           >
             €
-            110
+            163
           </b>
           <span
             className="place-card__price-text"
           >
-            / 
-            night
+            / night
           </span>
         </div>
         <button
@@ -82,7 +81,7 @@ exports[`App correctly renders after relaunch 1`] = `
           <span
             style={
               Object {
-                "width": "72%",
+                "width": "90%",
               }
             }
           />
@@ -98,15 +97,15 @@ exports[`App correctly renders after relaunch 1`] = `
       >
         <a
           className="place-card__link"
-          href="#"
+          href="offer/1"
         >
-          Dirty and cold
+          The house among whee 
         </a>
       </h2>
       <p
         className="place-card__type"
       >
-        Hangover suite
+        nest
       </p>
     </div>
   </article>
@@ -119,7 +118,7 @@ exports[`App correctly renders after relaunch 1`] = `
       className="place-card__mark"
     >
       <span>
-        Premium
+        Mid-price
       </span>
     </div>
     <div
@@ -132,7 +131,7 @@ exports[`App correctly renders after relaunch 1`] = `
           alt="Place image"
           className="place-card__image"
           height="200"
-          src="test1.jpg"
+          src="some/image"
           width="260"
         />
       </a>
@@ -150,13 +149,12 @@ exports[`App correctly renders after relaunch 1`] = `
             className="place-card__price-value"
           >
             €
-            100
+            163
           </b>
           <span
             className="place-card__price-text"
           >
-            / 
-            night
+            / night
           </span>
         </div>
         <button
@@ -188,7 +186,7 @@ exports[`App correctly renders after relaunch 1`] = `
           <span
             style={
               Object {
-                "width": "45%",
+                "width": "90%",
               }
             }
           />
@@ -204,227 +202,15 @@ exports[`App correctly renders after relaunch 1`] = `
       >
         <a
           className="place-card__link"
-          href="#"
+          href="offer/1"
         >
-          Wood and stone place
+          The house among whee 
         </a>
       </h2>
       <p
         className="place-card__type"
       >
-        Apartment
-      </p>
-    </div>
-  </article>
-  <article
-    className="cities__place-card place-card"
-    data-index={2}
-    onMouseEnter={[Function]}
-  >
-    <div
-      className="place-card__mark"
-    >
-      <span>
-        Poorest quality
-      </span>
-    </div>
-    <div
-      className="cities__image-wrapper place-card__image-wrapper"
-    >
-      <a
-        href="#"
-      >
-        <img
-          alt="Place image"
-          className="place-card__image"
-          height="200"
-          src="test2.jpg"
-          width="260"
-        />
-      </a>
-    </div>
-    <div
-      className="place-card__info"
-    >
-      <div
-        className="place-card__price-wrapper"
-      >
-        <div
-          className="place-card__price"
-        >
-          <b
-            className="place-card__price-value"
-          >
-            €
-            90
-          </b>
-          <span
-            className="place-card__price-text"
-          >
-            / 
-            night
-          </span>
-        </div>
-        <button
-          className="place-card__bookmark-button button"
-          type="button"
-        >
-          <svg
-            className="place-card__bookmark-icon"
-            height="19"
-            width="18"
-          >
-            <use
-              xlinkHref="#icon-bookmark"
-            />
-          </svg>
-          <span
-            className="visually-hidden"
-          >
-            To bookmarks
-          </span>
-        </button>
-      </div>
-      <div
-        className="place-card__rating rating"
-      >
-        <div
-          className="place-card__stars rating__stars"
-        >
-          <span
-            style={
-              Object {
-                "width": "65%",
-              }
-            }
-          />
-          <span
-            className="visually-hidden"
-          >
-            Rating
-          </span>
-        </div>
-      </div>
-      <h2
-        className="place-card__name"
-      >
-        <a
-          className="place-card__link"
-          href="#"
-        >
-          Lo and behold
-        </a>
-      </h2>
-      <p
-        className="place-card__type"
-      >
-        Pigeon hole
-      </p>
-    </div>
-  </article>
-  <article
-    className="cities__place-card place-card"
-    data-index={3}
-    onMouseEnter={[Function]}
-  >
-    <div
-      className="place-card__mark"
-    >
-      <span>
-        Premium
-      </span>
-    </div>
-    <div
-      className="cities__image-wrapper place-card__image-wrapper"
-    >
-      <a
-        href="#"
-      >
-        <img
-          alt="Place image"
-          className="place-card__image"
-          height="200"
-          src="img/apartment-01.jpg"
-          width="260"
-        />
-      </a>
-    </div>
-    <div
-      className="place-card__info"
-    >
-      <div
-        className="place-card__price-wrapper"
-      >
-        <div
-          className="place-card__price"
-        >
-          <b
-            className="place-card__price-value"
-          >
-            €
-            115
-          </b>
-          <span
-            className="place-card__price-text"
-          >
-            / 
-            night
-          </span>
-        </div>
-        <button
-          className="place-card__bookmark-button button"
-          type="button"
-        >
-          <svg
-            className="place-card__bookmark-icon"
-            height="19"
-            width="18"
-          >
-            <use
-              xlinkHref="#icon-bookmark"
-            />
-          </svg>
-          <span
-            className="visually-hidden"
-          >
-            To bookmarks
-          </span>
-        </button>
-      </div>
-      <div
-        className="place-card__rating rating"
-      >
-        <div
-          className="place-card__stars rating__stars"
-        >
-          <span
-            style={
-              Object {
-                "width": "85%",
-              }
-            }
-          />
-          <span
-            className="visually-hidden"
-          >
-            Rating
-          </span>
-        </div>
-      </div>
-      <h2
-        className="place-card__name"
-      >
-        <a
-          className="place-card__link"
-          href="#"
-        >
-          Nice flat in the city center
-        </a>
-      </h2>
-      <p
-        className="place-card__type"
-      >
-        Apartment
+        nest
       </p>
     </div>
   </article>
