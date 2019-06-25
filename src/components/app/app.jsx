@@ -9,6 +9,8 @@ import Map from './../map/map.jsx';
 import {OffersEmpty} from '../offers-empty/offers-empty.jsx';
 
 import withActiveItem from './../../hocs/with-active-item/with-active-item';
+import {getCity, combineCities} from '../../reducers/data/selectors';
+
 const CitiesListWrapped = withActiveItem(CitiesList);
 const OffersListWrapped = withActiveItem(OffersList);
 
@@ -91,9 +93,7 @@ class App extends Component {
 
   _getScreen() {
     const {cities, city} = this.props;
-    const cityNames = [...new Set(cities.map((it) => it.city.name))];
-
-    const offers = Action.sortOffersByCityName(cityNames, cities)[city];
+    const {cityNames, offers} = cities;
 
     return (
       <>
@@ -162,14 +162,17 @@ class App extends Component {
 
 App.propTypes = {
   city: PropTypes.number.isRequired,
-  cities: PropTypes.array.isRequired,
+  cities: PropTypes.shape({
+    cityNames: PropTypes.arrayOf(PropTypes.string).isRequired,
+    offers: PropTypes.array
+  }),
   onHandleTabClick: PropTypes.func.isRequired
 };
 
 const mapStateToProps = (state, ownProps) => Object.assign(
     {}, ownProps, {
-      city: state.data.city,
-      cities: state.data.cities
+      city: getCity(state),
+      cities: combineCities(state)
     });
 
 const mapDispatchToProps = (dispatch) => ({

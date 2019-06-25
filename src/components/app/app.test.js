@@ -3,7 +3,9 @@ import renderer from 'react-test-renderer';
 import {App} from '../app/app.jsx';
 
 const mock = {
-  cities: [
+  cities: {cityNames: [`Cologne`, `Paris`],
+
+  offers: [
     {
       "city": {
         "name": `Some City`,
@@ -87,7 +89,7 @@ const mock = {
       },
       "id": 2
     },
-  ]
+  ]}
 };
 
 it(`App correctly renders after relaunch`, () => {

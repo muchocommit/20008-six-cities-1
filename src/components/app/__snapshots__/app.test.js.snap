@@ -120,7 +120,20 @@ exports[`App correctly renders after relaunch 1`] = `
               onClick={[Function]}
             >
               <span>
-                Some City
+                Cologne
+              </span>
+            </a>
+          </li>
+          <li
+            className="locations__item"
+          >
+            <a
+              className="locations__item-link tabs__item"
+              href="#"
+              onClick={[Function]}
+            >
+              <span>
+                Paris
               </span>
             </a>
           </li>
@@ -144,7 +157,7 @@ exports[`App correctly renders after relaunch 1`] = `
           <b
             className="places__found"
           >
-            2 places to stay in Some City
+            2 places to stay in Cologne
           </b>
           <form
             action="#"
@@ -401,7 +414,7 @@ exports[`App correctly renders after relaunch 1`] = `
                 >
                   <a
                     className="place-card__link"
-                    href="offer/1"
+                    href="offer/2"
                   >
                     The house among whee 
                   </a>
