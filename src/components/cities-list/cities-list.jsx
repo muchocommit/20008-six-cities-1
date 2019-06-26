@@ -1,7 +1,10 @@
 import React, {PureComponent} from 'react';
 import PropTypes from 'prop-types';
 
+import withTab from './../../hocs/with-tab/with-tab';
 import CityTab from './../city-tab/city-tab.jsx';
+
+const CityTabWrapped = withTab(CityTab);
 
 export default class CitiesList extends PureComponent {
   _getTabs() {
@@ -12,7 +15,7 @@ export default class CitiesList extends PureComponent {
       isActiveItem} = this.props;
 
     return cityNames.map((it, i) =>
-      <CityTab
+      <CityTabWrapped
         key={`city-${i}`}
         isActive={isActiveItem(i)}
 
