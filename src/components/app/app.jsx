@@ -7,9 +7,11 @@ import CitiesList from '../cities-list/cities-list.jsx';
 import OffersList from '../offers-list/offers-list.jsx';
 import Map from './../map/map.jsx';
 import {OffersEmpty} from '../offers-empty/offers-empty.jsx';
+import SignInScreen from '../sign-in/sign-in.jsx';
 
 import withActiveItem from './../../hocs/with-active-item/with-active-item';
 import {getCity, combineCities} from '../../reducers/data/selectors';
+import {getAuthorizationStatus} from '../../reducers/user/selectors';
 
 const CitiesListWrapped = withActiveItem(CitiesList);
 const OffersListWrapped = withActiveItem(OffersList);
@@ -110,9 +112,16 @@ class App extends Component {
   }
 
   render() {
+    const {isAuthorizationRequired} = this.props;
+    if (isAuthorizationRequired) {
+
+      const body = document.getElementById(`root`).parentElement;
+      body.className = `page page--gray page--login`;
+      return (<SignInScreen />);
+    }
 
     return (
-      <div>
+      <>
         <div style={{display: `none`}}>
           <svg xmlns="http://www.w3.org/2000/svg">
             <symbol id="icon-arrow-select" viewBox="0 0 7 4">
@@ -155,7 +164,7 @@ class App extends Component {
         <main className="page__main page__main--index">
           {this._getScreen()}
         </main>
-      </div>
+      </>
     );
   }
 }
@@ -166,13 +175,15 @@ App.propTypes = {
     cityNames: PropTypes.arrayOf(PropTypes.string).isRequired,
     offers: PropTypes.array
   }),
+  isAuthorizationRequired: PropTypes.bool.isRequired,
   onHandleTabClick: PropTypes.func.isRequired
 };
 
 const mapStateToProps = (state, ownProps) => Object.assign(
     {}, ownProps, {
       city: getCity(state),
-      cities: combineCities(state)
+      cities: combineCities(state),
+      isAuthorizationRequired: getAuthorizationStatus(state)
     });
 
 const mapDispatchToProps = (dispatch) => ({

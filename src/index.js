@@ -21,7 +21,6 @@ const init = () => {
       window.__REDUX_DEVTOOLS_EXTENSION__()
     ));
 
-
   store.dispatch(Operation.loadCities());
 
   ReactDOM.render(

@@ -1,7 +1,7 @@
 import {ActionType} from './../../data';
 
 const initialState = {
-  isAuthorizationRequired: false,
+  isAuthorizationRequired: true,
 };
 
 const ActionCreator = {
