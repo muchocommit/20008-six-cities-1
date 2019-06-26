@@ -14,3 +14,9 @@ export const MapParams = {
     }
   }
 };
+
+export const ActionType = {
+  CHANGE_CITY: `CHANGE_CITY`,
+  LOAD_CITIES: `LOAD_CITIES`,
+  REQUIRE_AUTHORIZATION: `REQUIRE_AUTHORIZATION`
+};

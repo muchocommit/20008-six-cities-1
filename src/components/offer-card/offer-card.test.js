@@ -5,17 +5,13 @@ import OfferCard from './offer-card.jsx';
 
 const mock = {
   offer: {
-    mark: `Downtown`,
-    name: `Spartan place for saturday hangovers`,
-    type: `Flat`,
-    src: ``,
-    ratings: [
-      1, 2, 3, 2, 5, 2, 1, 5, 5
-    ],
-    price: {
-      period: `week`,
-      value: 17
-    }
+    id: 5,
+    [`is_premium`]: true,
+    [`preview_image`]: `some/src`,
+    price: 10012313,
+    type: `apartment`,
+    rating: 4.5,
+    title: `Mock title`
   }
 };
 

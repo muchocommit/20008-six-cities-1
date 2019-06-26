@@ -2,33 +2,33 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
-import * as Action from '../../reducers/reducer';
+import * as Action from '../../reducers/data/data';
 import CitiesList from '../cities-list/cities-list.jsx';
 import OffersList from '../offers-list/offers-list.jsx';
 import Map from './../map/map.jsx';
 import {OffersEmpty} from '../offers-empty/offers-empty.jsx';
 
 import withActiveItem from './../../hocs/with-active-item/with-active-item';
+import {getCity, combineCities} from '../../reducers/data/selectors';
+
 const CitiesListWrapped = withActiveItem(CitiesList);
 const OffersListWrapped = withActiveItem(OffersList);
 
 class App extends Component {
-  _getContainer() {
-    const {cities, city} = this.props;
+  _getContainer({offers = void (0), cityName}) {
 
-    const offers = Action.getOffersByCity(cities, city);
-    if (offers.length === 0) {
-
+    if (offers && offers.length === 0) {
       return (<OffersEmpty />);
     }
+
     return (<div className="cities__places-container container">
       <section className="cities__places places">
         <h2 className="visually-hidden">Places</h2>
-        <b className="places__found">312 places to stay in Amsterdam</b>
+        <b className="places__found">{`${offers ? `${offers.length} places to stay in ${cityName}` : ``}`}</b>
         <form className="places__sorting" action="#" method="get">
           <span className="places__sorting-caption">Sort by</span>
           <span className="places__sorting-type" tabIndex="0">
-                      Popular
+                        Popular
             <svg className="places__sorting-arrow" width="7" height="4">
               <use xlinkHref="#icon-arrow-select"></use>
             </svg>
@@ -41,60 +41,70 @@ class App extends Component {
           </ul>
         </form>
 
-        {this._getComponent(`OFFERS`, offers)}
+        {this._getComponent({key: `OFFERS`, offers})}
 
       </section>
       <div className="cities__right-section">
 
         <section className="cities__map map">
-          {this._getComponent(`LOCATIONS`)}
+          {this._getComponent({key: `LOCATIONS`, offers})}
         </section>
       </div>
     </div>);
   }
-  _getComponent(key, offers = void (0)) {
-    const {
-      cities,
-      onHandleTabClick,
-      city} = this.props;
+  _getComponent({key,
+    offers = [],
+    cityNames = []}) {
+
+    const {onHandleTabClick} = this.props;
 
     switch (key) {
       case `LOCATIONS`:
 
-        return (
-          <Map
-            locations={Action.getLocationsByCity(cities, city)}
-            id={`map`}
-          />);
+        if (offers.length !== 0) {
+
+          const locations = Action.getLocations(offers);
+          const locationsCoordinates = Action.getLocationsCoordinates(locations);
+
+          return (
+            <Map
+              locations={locationsCoordinates}
+              id={`map`}
+            />);
+        }
+
+        break;
 
       case `CITY_NAMES`:
-        const cityNames = cities.map((it) => it.city);
         return (
           <CitiesListWrapped
             cityNames={cityNames}
             handleTabClick={(activeCity) => onHandleTabClick(activeCity)}
           />);
 
-      case `OFFERS`:
+      default:
         return (
           <OffersListWrapped offers={offers}
           />);
     }
 
-    return cities;
+    return null;
   }
 
   _getScreen() {
+    const {cities, city} = this.props;
+    const {cityNames, offers} = cities;
+
     return (
       <>
         <h1 className="visually-hidden">Cities</h1>
         <div className="cities tabs">
           <section className="locations container">
-            {this._getComponent(`CITY_NAMES`)}
+            {this._getComponent({key: `CITY_NAMES`, cityNames})}
           </section>
         </div>
         <div className="cities__places-wrapper">
-          {this._getContainer()}
+          {this._getContainer({offers, cityName: cityNames[city]})}
         </div>
       </>);
   }
@@ -152,13 +162,18 @@ class App extends Component {
 
 App.propTypes = {
   city: PropTypes.number.isRequired,
-  cities: PropTypes.array.isRequired,
+  cities: PropTypes.shape({
+    cityNames: PropTypes.arrayOf(PropTypes.string).isRequired,
+    offers: PropTypes.array
+  }),
   onHandleTabClick: PropTypes.func.isRequired
 };
 
 const mapStateToProps = (state, ownProps) => Object.assign(
     {}, ownProps, {
-      city: state.city});
+      city: getCity(state),
+      cities: combineCities(state)
+    });
 
 const mapDispatchToProps = (dispatch) => ({
   onHandleTabClick: (activeCity) => {
