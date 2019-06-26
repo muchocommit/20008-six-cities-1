@@ -18,7 +18,6 @@ export default class CityTab extends PureComponent {
 
     this.props.onCityTabButtonClick();
     this.setState({isActive: !this.state.isActive});
-
   }
 
   _activateTab() {

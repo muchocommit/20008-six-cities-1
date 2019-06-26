@@ -2,7 +2,9 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
-import * as Action from '../../reducers/data/data';
+import * as DataAction from '../../reducers/data/data';
+import * as UserAction from '../../reducers/user/user';
+
 import CitiesList from '../cities-list/cities-list.jsx';
 import OffersList from '../offers-list/offers-list.jsx';
 import Map from './../map/map.jsx';
@@ -64,9 +66,8 @@ class App extends Component {
       case `LOCATIONS`:
 
         if (offers.length !== 0) {
-
-          const locations = Action.getLocations(offers);
-          const locationsCoordinates = Action.getLocationsCoordinates(locations);
+          const locations = DataAction.getLocations(offers);
+          const locationsCoordinates = DataAction.getLocationsCoordinates(locations);
 
           return (
             <Map
@@ -113,13 +114,19 @@ class App extends Component {
 
   render() {
     const {isAuthorizationRequired} = this.props;
+    const body = document.getElementById(`root`).parentElement;
+
     if (isAuthorizationRequired) {
 
-      const body = document.getElementById(`root`).parentElement;
+      const {onAuthorizationScreenSubmit} = this.props;
       body.className = `page page--gray page--login`;
-      return (<SignInScreen />);
+
+      return (
+        <SignInScreen
+          handleSubmit={(submitData) => onAuthorizationScreenSubmit(submitData)}/>);
     }
 
+    body.className = `page page--gray page--main`;
     return (
       <>
         <div style={{display: `none`}}>
@@ -176,6 +183,7 @@ App.propTypes = {
     offers: PropTypes.array
   }),
   isAuthorizationRequired: PropTypes.bool.isRequired,
+  onAuthorizationScreenSubmit: PropTypes.func.isRequired,
   onHandleTabClick: PropTypes.func.isRequired
 };
 
@@ -188,7 +196,11 @@ const mapStateToProps = (state, ownProps) => Object.assign(
 
 const mapDispatchToProps = (dispatch) => ({
   onHandleTabClick: (activeCity) => {
-    dispatch(Action.ActionCreator.changeCity(activeCity));
+    dispatch(DataAction.ActionCreator.changeCity(activeCity));
+  },
+
+  onAuthorizationScreenSubmit: (submitData) => {
+    dispatch(UserAction.Operation.sendCredentials(submitData));
   }
 });
 

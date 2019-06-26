@@ -1,8 +1,59 @@
-import React, {PureComponent} from 'react';
+import React, {createRef, PureComponent} from 'react';
+import PropTypes from 'prop-types';
 
 class SignInScreen extends PureComponent {
-  render() {
+  constructor(props) {
+    super(props);
 
+    this._formRef = createRef();
+    this._submitForm = this._submitForm.bind(this);
+  }
+
+  static formMapper(target) {
+    return {
+      email: (value) => {
+        target.email = value;
+        return target;
+      },
+      password: (value) => {
+        target.password = value;
+        return target;
+      }
+    };
+  }
+
+  static _processForm(formData) {
+    const entry = {
+      'email': ``,
+      'password': ``
+    };
+
+    const FormMapper = SignInScreen.formMapper(entry);
+    for (const pair of formData.entries()) {
+
+      const [property, value] = pair;
+      if (FormMapper[property]) {
+
+        value.trim();
+        FormMapper[property](value);
+      }
+    }
+
+    return entry;
+  }
+
+  _submitForm(e) {
+    e.preventDefault();
+
+    const form = this._formRef.current;
+    const formData = new FormData(form);
+
+    const newData = SignInScreen._processForm(formData);
+    this.props.handleSubmit(newData);
+  }
+
+
+  render() {
     return (
     <>
       <div style={{display: `none`}}>
@@ -48,7 +99,7 @@ class SignInScreen extends PureComponent {
         <div className="page__login-container container">
           <section className="login">
             <h1 className="login__title">Sign in</h1>
-            <form className="login__form form" action="#" method="post">
+            <form className="login__form form" action="#" ref={this._formRef} method="post">
               <div className="login__input-wrapper form__input-wrapper">
                 <label className="visually-hidden">E-mail</label>
                 <input className="login__input form__input" type="email" name="email" placeholder="Email" required="" />
@@ -58,7 +109,8 @@ class SignInScreen extends PureComponent {
                 <input className="login__input form__input" type="password" name="password" placeholder="Password"
                   required="" />
               </div>
-              <button className="login__submit form__submit button" type="submit">Sign in</button>
+              <button className="login__submit form__submit button"
+                      type="submit" onClick={this._submitForm}>Sign in</button>
             </form>
           </section>
           <section className="locations locations--login locations--current">
@@ -73,5 +125,9 @@ class SignInScreen extends PureComponent {
     </>);
   }
 }
+
+SignInScreen.propTypes = {
+  handleSubmit: PropTypes.func.isRequired
+};
 
 export default SignInScreen;

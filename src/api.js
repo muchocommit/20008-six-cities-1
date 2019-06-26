@@ -13,7 +13,7 @@ export const createAPI = (dispatch) => {
     if (err.response.status === 403) {
       dispatch(ActionCreator.requireAuthorization(true));
     }
-    return err;
+    return err.response.status;
   };
 
   api.interceptors.response.use(onSuccess, onFail);
