@@ -110,7 +110,7 @@ class SignInScreen extends PureComponent {
                   required="" />
               </div>
               <button className="login__submit form__submit button"
-                      type="submit" onClick={this._submitForm}>Sign in</button>
+                type="submit" onClick={this._submitForm}>Sign in</button>
             </form>
           </section>
           <section className="locations locations--login locations--current">

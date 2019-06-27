@@ -113,20 +113,19 @@ class App extends Component {
   }
 
   render() {
-    const {isAuthorizationRequired} = this.props;
-    const body = document.getElementById(`root`).parentElement;
+    const {isAuthorizationRequired, bodyElement} = this.props;
 
     if (isAuthorizationRequired) {
 
       const {onAuthorizationScreenSubmit} = this.props;
-      body.className = `page page--gray page--login`;
+      bodyElement.className = `page page--gray page--login`;
 
       return (
         <SignInScreen
           handleSubmit={(submitData) => onAuthorizationScreenSubmit(submitData)}/>);
     }
 
-    body.className = `page page--gray page--main`;
+    bodyElement.className = `page page--gray page--main`;
     return (
       <>
         <div style={{display: `none`}}>
@@ -184,7 +183,8 @@ App.propTypes = {
   }),
   isAuthorizationRequired: PropTypes.bool.isRequired,
   onAuthorizationScreenSubmit: PropTypes.func.isRequired,
-  onHandleTabClick: PropTypes.func.isRequired
+  onHandleTabClick: PropTypes.func.isRequired,
+  bodyElement: PropTypes.object.isRequired
 };
 
 const mapStateToProps = (state, ownProps) => Object.assign(

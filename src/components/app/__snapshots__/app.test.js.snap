@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`App correctly renders after relaunch 1`] = `
-<div>
+Array [
   <div
     style={
       Object {
@@ -41,7 +41,7 @@ exports[`App correctly renders after relaunch 1`] = `
         />
       </symbol>
     </svg>
-  </div>
+  </div>,
   <header
     className="header"
   >
@@ -55,7 +55,8 @@ exports[`App correctly renders after relaunch 1`] = `
           className="header__left"
         >
           <a
-            className="header__logo-link header__logo-link--active"
+            className="header__logo-link"
+            href="main.html"
           >
             <img
               alt="6 cities logo"
@@ -83,9 +84,9 @@ exports[`App correctly renders after relaunch 1`] = `
                   className="header__avatar-wrapper user__avatar-wrapper"
                 />
                 <span
-                  className="header__user-name user__name"
+                  className="header__login"
                 >
-                  Oliver.conner@gmail.com
+                  Sign in
                 </span>
               </a>
             </li>
@@ -93,352 +94,84 @@ exports[`App correctly renders after relaunch 1`] = `
         </nav>
       </div>
     </div>
-  </header>
+  </header>,
   <main
-    className="page__main page__main--index"
+    className="page__main page__main--login"
   >
-    <h1
-      className="visually-hidden"
-    >
-      Cities
-    </h1>
     <div
-      className="cities tabs"
+      className="page__login-container container"
     >
       <section
-        className="locations container"
+        className="login"
       >
-        <ul
-          className="locations__list tabs__list"
+        <h1
+          className="login__title"
         >
-          <li
-            className="locations__item"
+          Sign in
+        </h1>
+        <form
+          action="#"
+          className="login__form form"
+          method="post"
+        >
+          <div
+            className="login__input-wrapper form__input-wrapper"
           >
-            <a
-              className="locations__item-link tabs__item"
-              href="#"
-              onClick={[Function]}
+            <label
+              className="visually-hidden"
             >
-              <span>
-                Cologne
-              </span>
-            </a>
-          </li>
-          <li
-            className="locations__item"
+              E-mail
+            </label>
+            <input
+              className="login__input form__input"
+              name="email"
+              placeholder="Email"
+              required=""
+              type="email"
+            />
+          </div>
+          <div
+            className="login__input-wrapper form__input-wrapper"
           >
-            <a
-              className="locations__item-link tabs__item"
-              href="#"
-              onClick={[Function]}
+            <label
+              className="visually-hidden"
             >
-              <span>
-                Paris
-              </span>
-            </a>
-          </li>
-        </ul>
+              Password
+            </label>
+            <input
+              className="login__input form__input"
+              name="password"
+              placeholder="Password"
+              required=""
+              type="password"
+            />
+          </div>
+          <button
+            className="login__submit form__submit button"
+            onClick={[Function]}
+            type="submit"
+          >
+            Sign in
+          </button>
+        </form>
+      </section>
+      <section
+        className="locations locations--login locations--current"
+      >
+        <div
+          className="locations__item"
+        >
+          <a
+            className="locations__item-link"
+            href="#"
+          >
+            <span>
+              Amsterdam
+            </span>
+          </a>
+        </div>
       </section>
     </div>
-    <div
-      className="cities__places-wrapper"
-    >
-      <div
-        className="cities__places-container container"
-      >
-        <section
-          className="cities__places places"
-        >
-          <h2
-            className="visually-hidden"
-          >
-            Places
-          </h2>
-          <b
-            className="places__found"
-          >
-            2 places to stay in Cologne
-          </b>
-          <form
-            action="#"
-            className="places__sorting"
-            method="get"
-          >
-            <span
-              className="places__sorting-caption"
-            >
-              Sort by
-            </span>
-            <span
-              className="places__sorting-type"
-              tabIndex="0"
-            >
-              Popular
-              <svg
-                className="places__sorting-arrow"
-                height="4"
-                width="7"
-              >
-                <use
-                  xlinkHref="#icon-arrow-select"
-                />
-              </svg>
-            </span>
-            <ul
-              className="places__options places__options--custom places__options--opened"
-            >
-              <li
-                className="places__option places__option--active"
-                tabIndex="0"
-              >
-                Popular
-              </li>
-              <li
-                className="places__option"
-                tabIndex="0"
-              >
-                Price: low to high
-              </li>
-              <li
-                className="places__option"
-                tabIndex="0"
-              >
-                Price: high to low
-              </li>
-              <li
-                className="places__option"
-                tabIndex="0"
-              >
-                Top rated first
-              </li>
-            </ul>
-          </form>
-          <div
-            className="cities__places-list places__list tabs__content"
-          >
-            <article
-              className="cities__place-card place-card"
-              data-index={0}
-              onMouseEnter={[Function]}
-            >
-              <div
-                className="place-card__mark"
-              >
-                <span>
-                  Mid-price
-                </span>
-              </div>
-              <div
-                className="cities__image-wrapper place-card__image-wrapper"
-              >
-                <a
-                  href="#"
-                >
-                  <img
-                    alt="Place image"
-                    className="place-card__image"
-                    height="200"
-                    src="some/image"
-                    width="260"
-                  />
-                </a>
-              </div>
-              <div
-                className="place-card__info"
-              >
-                <div
-                  className="place-card__price-wrapper"
-                >
-                  <div
-                    className="place-card__price"
-                  >
-                    <b
-                      className="place-card__price-value"
-                    >
-                      €
-                      163
-                    </b>
-                    <span
-                      className="place-card__price-text"
-                    >
-                      / night
-                    </span>
-                  </div>
-                  <button
-                    className="place-card__bookmark-button button"
-                    type="button"
-                  >
-                    <svg
-                      className="place-card__bookmark-icon"
-                      height="19"
-                      width="18"
-                    >
-                      <use
-                        xlinkHref="#icon-bookmark"
-                      />
-                    </svg>
-                    <span
-                      className="visually-hidden"
-                    >
-                      To bookmarks
-                    </span>
-                  </button>
-                </div>
-                <div
-                  className="place-card__rating rating"
-                >
-                  <div
-                    className="place-card__stars rating__stars"
-                  >
-                    <span
-                      style={
-                        Object {
-                          "width": "90%",
-                        }
-                      }
-                    />
-                    <span
-                      className="visually-hidden"
-                    >
-                      Rating
-                    </span>
-                  </div>
-                </div>
-                <h2
-                  className="place-card__name"
-                >
-                  <a
-                    className="place-card__link"
-                    href="offer/1"
-                  >
-                    The house among whee 
-                  </a>
-                </h2>
-                <p
-                  className="place-card__type"
-                >
-                  nest
-                </p>
-              </div>
-            </article>
-            <article
-              className="cities__place-card place-card"
-              data-index={1}
-              onMouseEnter={[Function]}
-            >
-              <div
-                className="place-card__mark"
-              >
-                <span>
-                  Mid-price
-                </span>
-              </div>
-              <div
-                className="cities__image-wrapper place-card__image-wrapper"
-              >
-                <a
-                  href="#"
-                >
-                  <img
-                    alt="Place image"
-                    className="place-card__image"
-                    height="200"
-                    src="some/image"
-                    width="260"
-                  />
-                </a>
-              </div>
-              <div
-                className="place-card__info"
-              >
-                <div
-                  className="place-card__price-wrapper"
-                >
-                  <div
-                    className="place-card__price"
-                  >
-                    <b
-                      className="place-card__price-value"
-                    >
-                      €
-                      163
-                    </b>
-                    <span
-                      className="place-card__price-text"
-                    >
-                      / night
-                    </span>
-                  </div>
-                  <button
-                    className="place-card__bookmark-button button"
-                    type="button"
-                  >
-                    <svg
-                      className="place-card__bookmark-icon"
-                      height="19"
-                      width="18"
-                    >
-                      <use
-                        xlinkHref="#icon-bookmark"
-                      />
-                    </svg>
-                    <span
-                      className="visually-hidden"
-                    >
-                      To bookmarks
-                    </span>
-                  </button>
-                </div>
-                <div
-                  className="place-card__rating rating"
-                >
-                  <div
-                    className="place-card__stars rating__stars"
-                  >
-                    <span
-                      style={
-                        Object {
-                          "width": "90%",
-                        }
-                      }
-                    />
-                    <span
-                      className="visually-hidden"
-                    >
-                      Rating
-                    </span>
-                  </div>
-                </div>
-                <h2
-                  className="place-card__name"
-                >
-                  <a
-                    className="place-card__link"
-                    href="offer/2"
-                  >
-                    The house among whee 
-                  </a>
-                </h2>
-                <p
-                  className="place-card__type"
-                >
-                  nest
-                </p>
-              </div>
-            </article>
-          </div>
-        </section>
-        <div
-          className="cities__right-section"
-        >
-          <section
-            className="cities__map map"
-          >
-            <div />
-          </section>
-        </div>
-      </div>
-    </div>
-  </main>
-</div>
+  </main>,
+]
 `;

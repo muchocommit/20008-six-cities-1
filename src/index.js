@@ -23,9 +23,12 @@ const init = () => {
 
   store.dispatch(Operation.loadCities());
 
+  const body = document.getElementById(`root`).parentNode;
+
   ReactDOM.render(
       <Provider store={store}>
         <App
+          bodyElement={body}
           />
       </Provider>,
       document.getElementById(`root`)
