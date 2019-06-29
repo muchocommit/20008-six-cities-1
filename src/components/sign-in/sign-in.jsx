@@ -54,6 +54,7 @@ class SignInScreen extends PureComponent {
 
 
   render() {
+    this.props.bodyElement.className = `page page--gray page--login`;
     return (
     <>
       <div style={{display: `none`}}>
@@ -127,7 +128,8 @@ class SignInScreen extends PureComponent {
 }
 
 SignInScreen.propTypes = {
-  handleSubmit: PropTypes.func.isRequired
+  handleSubmit: PropTypes.func.isRequired,
+  bodyElement: PropTypes.object.isRequired
 };
 
 export default SignInScreen;
