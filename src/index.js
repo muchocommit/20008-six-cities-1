@@ -1,4 +1,5 @@
 import {createStore, applyMiddleware} from 'redux';
+import {NameSpace} from './reducers/name-space';
 import {Provider} from 'react-redux';
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -10,7 +11,9 @@ import {App} from './components/app/app.jsx';
 import withScreenSwitch from './hocs/with-screen-switch/with-screen-switch.js';
 import {createAPI} from './api';
 import reducer from './reducers/reducer';
-import {Operation} from './reducers/data/data';
+import {Operation as DataOperation} from './reducers/data/data';
+import {Operation as UserOperation} from './reducers/user/user';
+import {ActionCreator} from "./reducers/user/user";
 
 const AppWrapped = withScreenSwitch(App);
 
@@ -25,7 +28,12 @@ const init = () => {
       window.__REDUX_DEVTOOLS_EXTENSION__()
       ));
 
-  store.dispatch(Operation.loadCities());
+
+  // if (!store.getState()[NameSpace.USER].credentials.id) {
+  //   store.dispatch(ActionCreator.requireAuthorization(true));
+  // }
+  store.dispatch(DataOperation.loadCities());
+  store.dispatch(UserOperation.checkAuth());
 
   const body = document.getElementById(`root`).parentNode;
 

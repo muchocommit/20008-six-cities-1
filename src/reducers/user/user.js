@@ -1,7 +1,7 @@
 import {ActionType} from './../../data';
 
 const initialState = {
-  isAuthorizationRequired: true,
+  isAuthorizationRequired: false,
   credentials: {}
 };
 
@@ -22,13 +22,30 @@ const ActionCreator = {
 };
 
 const Operation = {
+  checkAuth: () => {
+    return (dispatch, _getState, api) => {
+      return api
+        .get(`/login`)
+        .then((response) => {
+          if (response.status === 200) {
+            dispatch(ActionCreator.sendCredentials(response.data));
+            dispatch(ActionCreator.requireAuthorization(false));
+          } else {
+
+            dispatch(ActionCreator.requireAuthorization(true));
+          }
+        });
+    };
+  },
+
   sendCredentials: (submitData) => (dispatch, _getState, api) => {
     return api.post(`/login`, submitData)
       .then((response) => {
         if (response === 400) {
-          dispatch(ActionCreator.sendCredentials({id: null}));
+          dispatch(ActionCreator.sendCredentials({}));
           dispatch(ActionCreator.requireAuthorization(true));
         } else {
+
 
           dispatch(ActionCreator.sendCredentials(response.data));
           dispatch(ActionCreator.requireAuthorization(false));

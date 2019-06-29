@@ -22,6 +22,7 @@ class App extends Component {
           </svg>
         </div>
 
+        {/** Render Header */}
         <header className="header">
           <div className="container">
             <div className="header__wrapper">

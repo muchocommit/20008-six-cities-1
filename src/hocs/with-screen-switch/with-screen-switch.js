@@ -1,6 +1,6 @@
 import React, {PureComponent} from 'react';
 import {compose} from 'recompose';
-import {Switch, Route} from 'react-router-dom';
+import {BrowserRouter, Switch, Route, Redirect} from 'react-router-dom';
 
 import * as DataAction from '../../reducers/data/data';
 import * as UserAction from '../../reducers/user/user';
@@ -13,13 +13,12 @@ import SignInScreen from './../../components/sign-in/sign-in.jsx';
 
 import withActiveItem from './../../hocs/with-active-item/with-active-item';
 import {getCity, combineCities} from '../../reducers/data/selectors';
-import {getAuthorizationStatus} from '../../reducers/user/selectors';
+import {getAuthorizationStatus, getCredentials} from '../../reducers/user/selectors';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 
 const CitiesListWrapped = withActiveItem(CitiesList);
 const OffersListWrapped = withActiveItem(OffersList);
-
 
 const withScreenSwitch = (Component) => {
   class WithScreenSwitch extends PureComponent {
@@ -28,8 +27,8 @@ const withScreenSwitch = (Component) => {
 
       this._getScreen = this._getScreen.bind(this);
     }
-    _getContainer({offers = void (0), cityName}) {
 
+    _getContainer({offers = void (0), cityName}) {
       if (offers && offers.length === 0) {
         return (<OffersEmpty />);
       }
@@ -103,9 +102,26 @@ const withScreenSwitch = (Component) => {
       return null;
     }
 
+    _getHeader() {
+
+    }
+
     _getScreen() {
-      const {cities, city, bodyElement} = this.props;
+      const {
+        cities,
+        city,
+        bodyElement,
+        isAuthorizationRequired,
+        credentials} = this.props;
       const {cityNames, offers} = cities;
+
+      console.log(credentials)
+
+      if (isAuthorizationRequired) {
+
+        console.log(credentials);
+        return <Redirect to="/login"/>;
+      }
 
       bodyElement.className = `page page--gray page--main`;
       return (
@@ -123,19 +139,20 @@ const withScreenSwitch = (Component) => {
     }
 
     render() {
-
-      // Body element is passed from App
       const {onAuthorizationScreenSubmit, bodyElement} = this.props;
 
-      return <Switch>
-        <Route path="/" exact render={() => <Component
-          {...this.props}
-          renderScreen={this._getScreen}
-        />} />
-        <Route path="/login" render={() => <SignInScreen
-          handleSubmit={(submitData) => onAuthorizationScreenSubmit(submitData)}
-          bodyElement={bodyElement}/>} />
-      </Switch>;
+      // Here can pass props for header render
+      return <BrowserRouter>
+        <Switch>
+          <Route path="/" exact render={() => <Component
+            {...this.props}
+            renderScreen={this._getScreen}
+          />} />
+          <Route path="/login" render={() => <SignInScreen
+            handleSubmit={(submitData) => onAuthorizationScreenSubmit(submitData)}
+            bodyElement={bodyElement}/>} />
+        </Switch>
+      </BrowserRouter>;
     }
   }
 
@@ -148,7 +165,8 @@ const withScreenSwitch = (Component) => {
     isAuthorizationRequired: PropTypes.bool.isRequired,
     onAuthorizationScreenSubmit: PropTypes.func.isRequired,
     onHandleTabClick: PropTypes.func.isRequired,
-    bodyElement: PropTypes.object.isRequired
+    bodyElement: PropTypes.object.isRequired,
+    credentials: PropTypes.object.isRequired
   };
 
   return WithScreenSwitch;
@@ -159,7 +177,8 @@ const mapStateToProps = (state, ownProps) => Object.assign(
   {}, ownProps, {
     city: getCity(state),
     cities: combineCities(state),
-    isAuthorizationRequired: getAuthorizationStatus(state)
+    isAuthorizationRequired: getAuthorizationStatus(state),
+    credentials: getCredentials(state)
   });
 
 const mapDispatchToProps = (dispatch) => ({
