@@ -1,5 +1,6 @@
 import React, {createRef, PureComponent} from 'react';
 import PropTypes from 'prop-types';
+import {Link} from "react-router-dom";
 
 class SignInScreen extends PureComponent {
   constructor(props) {
@@ -110,8 +111,8 @@ class SignInScreen extends PureComponent {
                 <input className="login__input form__input" type="password" name="password" placeholder="Password"
                   required="" />
               </div>
-              <button className="login__submit form__submit button"
-                type="submit" onClick={this._submitForm}>Sign in</button>
+              <Link className="login__submit form__submit button"
+                type="submit" to="/" onClick={this._submitForm}>Sign in</Link>
             </form>
           </section>
           <section className="locations locations--login locations--current">

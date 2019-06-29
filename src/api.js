@@ -8,7 +8,10 @@ export const createAPI = (dispatch) => {
     withCredentials: true,
   });
 
-  const onSuccess = (response) => response;
+  const onSuccess = (response) => {
+    return response;
+
+  };
   const onFail = (err) => {
     if (err.response.status === 403) {
       dispatch(ActionCreator.requireAuthorization(true));

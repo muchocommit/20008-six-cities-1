@@ -33,7 +33,7 @@ const init = () => {
   //   store.dispatch(ActionCreator.requireAuthorization(true));
   // }
   store.dispatch(DataOperation.loadCities());
-  store.dispatch(UserOperation.checkAuth());
+  // store.dispatch(UserOperation.checkAuth());
 
   const body = document.getElementById(`root`).parentNode;
 

@@ -111,17 +111,16 @@ const withScreenSwitch = (Component) => {
         cities,
         city,
         bodyElement,
-        isAuthorizationRequired,
         credentials} = this.props;
       const {cityNames, offers} = cities;
 
+
       console.log(credentials)
 
-      if (isAuthorizationRequired) {
-
-        console.log(credentials);
+      if (!credentials) {
         return <Redirect to="/login"/>;
       }
+
 
       bodyElement.className = `page page--gray page--main`;
       return (
@@ -139,7 +138,7 @@ const withScreenSwitch = (Component) => {
     }
 
     render() {
-      const {onAuthorizationScreenSubmit, bodyElement} = this.props;
+      const {onAuthorizationScreenSubmit, bodyElement, city} = this.props;
 
       // Here can pass props for header render
       return <BrowserRouter>

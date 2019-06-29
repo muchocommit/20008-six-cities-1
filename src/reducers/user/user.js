@@ -1,5 +1,6 @@
 import {ActionType} from './../../data';
 
+
 const initialState = {
   isAuthorizationRequired: false,
   credentials: {}
@@ -28,8 +29,8 @@ const Operation = {
         .get(`/login`)
         .then((response) => {
           if (response.status === 200) {
+
             dispatch(ActionCreator.sendCredentials(response.data));
-            dispatch(ActionCreator.requireAuthorization(false));
           } else {
 
             dispatch(ActionCreator.requireAuthorization(true));
@@ -50,7 +51,7 @@ const Operation = {
           dispatch(ActionCreator.sendCredentials(response.data));
           dispatch(ActionCreator.requireAuthorization(false));
         }
-      });
+      })
   }
 };
 
