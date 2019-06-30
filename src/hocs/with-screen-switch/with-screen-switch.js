@@ -2,6 +2,7 @@ import React, {PureComponent} from 'react';
 import {compose} from 'recompose';
 import {BrowserRouter, Switch, Route, Redirect} from 'react-router-dom';
 import {connect} from 'react-redux';
+import {api} from '../../index';
 
 import * as DataAction from '../../reducers/data/data';
 import * as UserAction from '../../reducers/user/user';
@@ -126,7 +127,6 @@ const withScreenSwitch = (Component) => {
         return <Redirect to="/login"/>;
       }
 
-
       bodyElement.className = `page page--gray page--main`;
       return (
           <>
@@ -142,22 +142,24 @@ const withScreenSwitch = (Component) => {
           </>);
     }
 
+    _getSignInScreenRoute(
+      {onAuthorizationScreenSubmit, bodyElement, credentials, history}) {
+
+      if (history.location.id) {
+        /** return component */
+      }
+      return <SignInScreen
+        handleSubmit={(submitData) => onAuthorizationScreenSubmit(submitData, history)}
+        bodyElement={bodyElement}
+        credentials={credentials}
+        history={history}/>;
+    }
+
     render() {
       const {
         onAuthorizationScreenSubmit,
         bodyElement,
         credentials, history} = this.props;
-
-      // if (credentials.id) {
-      //   console.log(credentials)
-      //   return <BrowserRouter>
-      //     <Route path="/login" render={() => <Component
-      //       {...this.props}
-      //       renderScreen={() => this._getScreen(credentials)}
-      //       renderHeader={() => this._getHeader(credentials, history)}
-      //     />}/>
-      //   </BrowserRouter>
-      // }
 
       return <BrowserRouter>
         <Switch>
@@ -168,11 +170,8 @@ const withScreenSwitch = (Component) => {
             renderHeader={() => this._getHeader(credentials, history)}
             />} />
 
-          <Route path="/login" render={() => <SignInScreen
-            handleSubmit={(submitData) => onAuthorizationScreenSubmit(submitData)}
-            bodyElement={bodyElement}
-            credentials={credentials}
-            history={history}/>} />
+          <Route path="/login" render={() => this._getSignInScreenRoute(
+            {onAuthorizationScreenSubmit, bodyElement, credentials, history})} />
         </Switch>
       </BrowserRouter>;
     }
@@ -209,8 +208,8 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(DataAction.ActionCreator.changeCity(activeCity));
   },
 
-  onAuthorizationScreenSubmit: (submitData) => {
-    dispatch(UserAction.Operation.sendCredentials(submitData))
+  onAuthorizationScreenSubmit: (submitData, history) => {
+    dispatch(UserAction.Operation.sendCredentials(submitData, history))
       .then((result) => dispatch(UserAction.ActionCreator.sendCredentials(result)));
   }
 });
