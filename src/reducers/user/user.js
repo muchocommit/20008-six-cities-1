@@ -2,7 +2,13 @@ import {ActionType} from './../../data';
 
 const initialState = {
   isAuthorizationRequired: false,
-  credentials: {}
+  credentials: {
+    [`avatar_url`]: ``,
+    email: ``,
+    id: null,
+    [`is_pro`]: false,
+    name: ``
+  },
 };
 
 const ActionCreator = {
@@ -23,22 +29,13 @@ const ActionCreator = {
 
 const Operation = {
   checkAuth: () => {
-    return (dispatch, _getState, api) => {
-      return api
-        .get(`/login`)
-        .then((response) => {
-          if (response.status === 200) {
+    return (dispatch, _getState) => {
 
-            dispatch(ActionCreator.sendCredentials(response.data));
-          } else {
-
-            dispatch(ActionCreator.requireAuthorization(true));
-          }
-        });
+      // console.log(_getState())
     };
   },
 
-  sendCredentials: (submitData) => {
+  sendCredentials: (submitData, history) => {
 
     return (dispatch, _getState, api) => {
 
@@ -46,8 +43,7 @@ const Operation = {
         .then((response) => {
           if (response.status === 200) {
 
-            dispatch(ActionCreator.sendCredentials(response.data));
-
+            return response.data;
           } else {
 
             dispatch(ActionCreator.sendCredentials({}));

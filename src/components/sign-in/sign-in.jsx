@@ -1,8 +1,8 @@
-import React, {createRef, PureComponent} from 'react';
+import React, {createRef, Component} from 'react';
 import PropTypes from 'prop-types';
 import {Link} from "react-router-dom";
 
-class SignInScreen extends PureComponent {
+class SignInScreen extends Component {
   constructor(props) {
     super(props);
 
@@ -44,6 +44,9 @@ class SignInScreen extends PureComponent {
   }
 
   _submitForm() {
+    const {history, credentials} = this.props;
+
+    console.log(history)
 
     const form = this._formRef.current;
     const formData = new FormData(form);
@@ -55,6 +58,7 @@ class SignInScreen extends PureComponent {
 
   render() {
     this.props.bodyElement.className = `page page--gray page--login`;
+
     return (
     <>
       <div style={{display: `none`}}>
@@ -129,7 +133,8 @@ class SignInScreen extends PureComponent {
 
 SignInScreen.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
-  bodyElement: PropTypes.object.isRequired
+  bodyElement: PropTypes.object.isRequired,
+  history: PropTypes.object.isRequired
 };
 
 export default SignInScreen;

@@ -1,12 +1,14 @@
 import React, {PureComponent} from 'react';
 import {Redirect} from 'react-router-dom';
 
+
 const withRedirect = (Component) => {
   class WithRedirect extends PureComponent {
     constructor(props) {
       super(props);
     }
 
+    // Get props and then redirect
     _getRoute(route) {
       switch (route) {
 

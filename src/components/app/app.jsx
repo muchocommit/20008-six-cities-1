@@ -1,9 +1,12 @@
 import React, {Component} from 'react';
+import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
+import {getCredentials} from "../../reducers/user/selectors";
 
 class App extends Component {
   render() {
-    const {renderScreen} = this.props;
+    const {renderScreen, credentials} = this.props;
+
 
     return (
       <>
@@ -56,8 +59,17 @@ class App extends Component {
 }
 
 App.propTypes = {
-  renderScreen: PropTypes.func.isRequired
+  renderScreen: PropTypes.func.isRequired,
+  credentials: PropTypes.object.isRequired
 };
 
+const mapStateToProps = (state, ownProps) => Object.assign(
+  {}, ownProps, {
+    credentials: getCredentials(state)
+  }
+);
+
 export {App};
+
+export default connect(mapStateToProps)(App);
 
