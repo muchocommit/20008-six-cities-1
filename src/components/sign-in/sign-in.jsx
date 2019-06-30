@@ -43,8 +43,7 @@ class SignInScreen extends PureComponent {
     return entry;
   }
 
-  _submitForm(e) {
-    e.preventDefault();
+  _submitForm() {
 
     const form = this._formRef.current;
     const formData = new FormData(form);
@@ -125,6 +124,10 @@ class SignInScreen extends PureComponent {
         </div>
       </main>
     </>);
+  }
+
+  componentDidUpdate() {
+    console.log(`signed`)
   }
 }
 

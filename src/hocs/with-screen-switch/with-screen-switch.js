@@ -121,23 +121,24 @@ const withScreenSwitch = (Component) => {
         return <Redirect to="/login"/>;
       }
 
-      else {
-        return <Redirect to="/" />;
+
+      if (credentials.id) {
+        bodyElement.className = `page page--gray page--main`;
+        return (
+          <>
+            <h1 className="visually-hidden">Cities</h1>
+            <div className="cities tabs">
+              <section className="locations container">
+                {this._getComponent({key: `CITY_NAMES`, cityNames})}
+              </section>
+            </div>
+            <div className="cities__places-wrapper">
+              {this._getContainer({offers, cityName: cityNames[city]})}
+            </div>
+          </>);
       }
 
-      bodyElement.className = `page page--gray page--main`;
-      return (
-        <>
-          <h1 className="visually-hidden">Cities</h1>
-          <div className="cities tabs">
-            <section className="locations container">
-              {this._getComponent({key: `CITY_NAMES`, cityNames})}
-            </section>
-          </div>
-          <div className="cities__places-wrapper">
-            {this._getContainer({offers, cityName: cityNames[city]})}
-          </div>
-        </>);
+      return null;
     }
 
     render() {

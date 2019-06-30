@@ -1,5 +1,6 @@
 import {ActionType} from './../../data';
-
+import {Redirect} from 'react-router-dom';
+import React from 'react';
 
 const initialState = {
   isAuthorizationRequired: false,
@@ -43,11 +44,15 @@ const Operation = {
 
     return (dispatch, _getState, api) => {
 
+      console.log({submitData}, {dispatch}, {_getState}, {api})
+
       return api.post(`/login`, submitData)
         .then((response) => {
           if (response.status === 200) {
 
             dispatch(ActionCreator.sendCredentials(response.data));
+            return <Redirect to="/"/>;
+
           } else {
 
             dispatch(ActionCreator.sendCredentials({}));
