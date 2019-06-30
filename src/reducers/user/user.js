@@ -28,12 +28,13 @@ const ActionCreator = {
 };
 
 const Operation = {
-  sendCredentials: (submitData) =>
+  sendCredentials: (submitData, history) =>
     (dispatch, _getState, api) => {
       return api.post(`/login`, submitData)
         .then((response) => {
           if (response.status === 200) {
 
+            history.push(response.data);
             return response.data;
           }
           return {};
