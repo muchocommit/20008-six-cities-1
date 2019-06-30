@@ -6,6 +6,7 @@ import {connect} from 'react-redux';
 import * as DataAction from '../../reducers/data/data';
 import * as UserAction from '../../reducers/user/user';
 
+import Header from './../../components/header/header.jsx';
 import CitiesList from './../../components/cities-list/cities-list.jsx';
 import OffersList from './../../components/offers-list/offers-list.jsx';
 import Map from './../../components/map/map.jsx';
@@ -26,6 +27,7 @@ const withScreenSwitch = (Component) => {
     constructor(props) {
       super(props);
 
+      this._getHeader = this._getHeader.bind(this);
       this._getScreen = this._getScreen.bind(this);
     }
 
@@ -103,8 +105,8 @@ const withScreenSwitch = (Component) => {
       return null;
     }
 
-    _getHeader() {
-
+    _getHeader(credentials) {
+      return <Header credentials={credentials} />;
     }
 
     _getScreen(credentials) {
@@ -118,6 +120,7 @@ const withScreenSwitch = (Component) => {
       if (credentials.id === null) {
         return <Redirect to="/login"/>;
       }
+
 
       bodyElement.className = `page page--gray page--main`;
       return (
@@ -137,15 +140,13 @@ const withScreenSwitch = (Component) => {
     render() {
       const {onAuthorizationScreenSubmit, bodyElement, credentials} = this.props;
 
-
       return <BrowserRouter>
         <Switch>
           <Route path="/" exact render={() => <Component
             {...this.props}
-            renderScreen={() => {
-
-              return this._getScreen(credentials);
-            }} />} />
+            renderScreen={() => this._getScreen(credentials)}
+            renderHeader={() => this._getHeader(credentials)}
+            />} />
 
           <Route path="/login" render={() => <SignInScreen
             handleSubmit={(submitData) => onAuthorizationScreenSubmit(submitData)}
@@ -193,7 +194,6 @@ const mapDispatchToProps = (dispatch) => ({
       .then((result) => dispatch(UserAction.ActionCreator.sendCredentials(result)));
   }
 });
-
 
 export default compose(connect(mapStateToProps, mapDispatchToProps), withScreenSwitch);
 
