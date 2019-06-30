@@ -9,6 +9,8 @@ import {BrowserRouter} from 'react-router-dom';
 
 import {App} from './components/app/app.jsx';
 import withScreenSwitch from './hocs/with-screen-switch/with-screen-switch.js';
+// import withRedirect from './hocs/with-redirect/with-redirect';
+
 import {createAPI} from './api';
 import reducer from './reducers/reducer';
 import {Operation as DataOperation} from './reducers/data/data';

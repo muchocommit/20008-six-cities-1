@@ -11,11 +11,12 @@ import Map from './../../components/map/map.jsx';
 import {OffersEmpty} from './../../components/offers-empty/offers-empty.jsx';
 import SignInScreen from './../../components/sign-in/sign-in.jsx';
 
-import withActiveItem from './../../hocs/with-active-item/with-active-item';
 import {getCity, combineCities} from '../../reducers/data/selectors';
 import {getAuthorizationStatus, getCredentials} from '../../reducers/user/selectors';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
+
+import withActiveItem from './../../hocs/with-active-item/with-active-item';
 
 const CitiesListWrapped = withActiveItem(CitiesList);
 const OffersListWrapped = withActiveItem(OffersList);
@@ -41,10 +42,10 @@ const withScreenSwitch = (Component) => {
             <span className="places__sorting-caption">Sort by</span>
             <span className="places__sorting-type" tabIndex="0">
                         Popular
-            <svg className="places__sorting-arrow" width="7" height="4">
-              <use xlinkHref="#icon-arrow-select"></use>
-            </svg>
-          </span>
+              <svg className="places__sorting-arrow" width="7" height="4">
+                <use xlinkHref="#icon-arrow-select"></use>
+              </svg>
+            </span>
             <ul className="places__options places__options--custom places__options--opened">
               <li className="places__option places__option--active" tabIndex="0">Popular</li>
               <li className="places__option" tabIndex="0">Price: low to high</li>
@@ -65,8 +66,8 @@ const withScreenSwitch = (Component) => {
       </div>);
     }
     _getComponent({key,
-                    offers = [],
-                    cityNames = []}) {
+      offers = [],
+      cityNames = []}) {
 
       const {onHandleTabClick} = this.props;
 
@@ -112,15 +113,17 @@ const withScreenSwitch = (Component) => {
         city,
         bodyElement,
         credentials} = this.props;
+
       const {cityNames, offers} = cities;
 
 
-      console.log(credentials)
-
-      if (!credentials) {
+      if (!credentials.id) {
         return <Redirect to="/login"/>;
       }
 
+      else {
+        return <Redirect to="/" />;
+      }
 
       bodyElement.className = `page page--gray page--main`;
       return (
@@ -138,7 +141,7 @@ const withScreenSwitch = (Component) => {
     }
 
     render() {
-      const {onAuthorizationScreenSubmit, bodyElement, city} = this.props;
+      const {onAuthorizationScreenSubmit, bodyElement} = this.props;
 
       // Here can pass props for header render
       return <BrowserRouter>
@@ -146,6 +149,7 @@ const withScreenSwitch = (Component) => {
           <Route path="/" exact render={() => <Component
             {...this.props}
             renderScreen={this._getScreen}
+
           />} />
           <Route path="/login" render={() => <SignInScreen
             handleSubmit={(submitData) => onAuthorizationScreenSubmit(submitData)}
@@ -173,12 +177,12 @@ const withScreenSwitch = (Component) => {
 
 
 const mapStateToProps = (state, ownProps) => Object.assign(
-  {}, ownProps, {
-    city: getCity(state),
-    cities: combineCities(state),
-    isAuthorizationRequired: getAuthorizationStatus(state),
-    credentials: getCredentials(state)
-  });
+    {}, ownProps, {
+      city: getCity(state),
+      cities: combineCities(state),
+      isAuthorizationRequired: getAuthorizationStatus(state),
+      credentials: getCredentials(state)
+    });
 
 const mapDispatchToProps = (dispatch) => ({
   onHandleTabClick: (activeCity) => {

@@ -39,19 +39,23 @@ const Operation = {
     };
   },
 
-  sendCredentials: (submitData) => (dispatch, _getState, api) => {
-    return api.post(`/login`, submitData)
-      .then((response) => {
-        if (response === 400) {
-          dispatch(ActionCreator.sendCredentials({}));
-          dispatch(ActionCreator.requireAuthorization(true));
-        } else {
+  sendCredentials: (submitData) => {
 
+    return (dispatch, _getState, api) => {
 
-          dispatch(ActionCreator.sendCredentials(response.data));
-          dispatch(ActionCreator.requireAuthorization(false));
-        }
-      })
+      return api.post(`/login`, submitData)
+        .then((response) => {
+          if (response.status === 200) {
+
+            dispatch(ActionCreator.sendCredentials(response.data));
+          } else {
+
+            dispatch(ActionCreator.sendCredentials({}));
+            dispatch(ActionCreator.requireAuthorization(true));
+          }
+        });
+    };
+
   }
 };
 
