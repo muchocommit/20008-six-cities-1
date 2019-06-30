@@ -2,6 +2,7 @@ import React, {PureComponent} from 'react';
 import PropTypes from 'prop-types';
 import {Link} from 'react-router-dom';
 
+
 export default class Header extends PureComponent {
   constructor(props) {
     super(props);
@@ -13,11 +14,12 @@ export default class Header extends PureComponent {
     const {credentials} = this.props;
 
     if (credentials.id) {
-      return (
-        <a className="header__nav-link header__nav-link--profile" href="#">
-          <span className="header__user-name user__name">{credentials.email}</span>
-        </a>);
+
+
     }
+    {/*<Link className="header__nav-link header__nav-link--profile" to="/favorites">*/}
+    {/*  <span className="header__user-name user__name">{credentials.email}</span>*/}
+    {/*</Link>);*/}
 
     return (
 

@@ -104,6 +104,7 @@ it(`App correctly renders after relaunch`, () => {
       onHandleTabClick={jest.fn()}
       bodyElement={document.createElement(`body`)}
       renderScreen={jest.fn()}
+      renderHeader={jest.fn()}
     />, {
       createNodeMock: () => {
         const el = document.createElement(`div`);
