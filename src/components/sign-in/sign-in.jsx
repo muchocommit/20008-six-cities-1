@@ -1,6 +1,9 @@
 import React, {createRef, PureComponent} from 'react';
 import PropTypes from 'prop-types';
 import {Redirect} from 'react-router-dom';
+import {connect} from 'react-redux';
+
+import {getCredentials} from '../../reducers/user/selectors';
 
 class SignInScreen extends PureComponent {
   constructor(props) {
@@ -55,12 +58,15 @@ class SignInScreen extends PureComponent {
 
 
   render() {
+    const {credentials, bodyElement} = this.props;
 
-    console.log(this.props);
-    if (this.props.credentials.id) {
+    // console.log(history)
+
+    // console.log(credentials);
+    if (credentials.id) {
       return <Redirect to="/"/>;
     }
-    this.props.bodyElement.className = `page page--gray page--login`;
+    bodyElement.className = `page page--gray page--login`;
 
     return (
     <>
@@ -137,7 +143,13 @@ class SignInScreen extends PureComponent {
 SignInScreen.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
   bodyElement: PropTypes.object.isRequired,
-  credentials: PropTypes.object.isRequired
+  credentials: PropTypes.object.isRequired,
+  history: PropTypes.object.isRequired
 };
 
-export default SignInScreen;
+const mapStateToProps = (state, ownProps) => Object.assign(
+    {}, ownProps, {
+      credentials: getCredentials(state)
+    });
+
+export default connect(mapStateToProps)(SignInScreen);

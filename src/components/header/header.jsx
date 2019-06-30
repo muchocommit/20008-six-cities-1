@@ -13,6 +13,7 @@ export default class Header extends PureComponent {
   _getUser() {
     const {credentials} = this.props;
 
+
     if (credentials.id) {
       return (<Link className="header__nav-link header__nav-link--profile" to="/favorites">
         <span className="header__user-name user__name">{credentials.email}</span>
@@ -49,5 +50,6 @@ export default class Header extends PureComponent {
 }
 
 Header.propTypes = {
-  credentials: PropTypes.object.isRequired
+  credentials: PropTypes.object.isRequired,
+  history: PropTypes.object.isRequired
 };

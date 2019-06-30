@@ -107,8 +107,11 @@ const withScreenSwitch = (Component) => {
       return null;
     }
 
-    _getHeader(credentials) {
-      return <Header credentials={credentials} />;
+    _getHeader(credentials, history) {
+      return <Header
+        credentials={credentials}
+        history={history}
+      />;
     }
 
     _getScreen(credentials) {
@@ -140,7 +143,21 @@ const withScreenSwitch = (Component) => {
     }
 
     render() {
-      const {onAuthorizationScreenSubmit, bodyElement, credentials} = this.props;
+      const {
+        onAuthorizationScreenSubmit,
+        bodyElement,
+        credentials, history} = this.props;
+
+      // if (credentials.id) {
+      //   console.log(credentials)
+      //   return <BrowserRouter>
+      //     <Route path="/login" render={() => <Component
+      //       {...this.props}
+      //       renderScreen={() => this._getScreen(credentials)}
+      //       renderHeader={() => this._getHeader(credentials, history)}
+      //     />}/>
+      //   </BrowserRouter>
+      // }
 
       return <BrowserRouter>
         <Switch>
@@ -148,13 +165,14 @@ const withScreenSwitch = (Component) => {
           <Route path="/" exact render={() => <Component
             {...this.props}
             renderScreen={() => this._getScreen(credentials)}
-            renderHeader={() => this._getHeader(credentials)}
+            renderHeader={() => this._getHeader(credentials, history)}
             />} />
 
           <Route path="/login" render={() => <SignInScreen
             handleSubmit={(submitData) => onAuthorizationScreenSubmit(submitData)}
             bodyElement={bodyElement}
-            credentials={credentials}/>} />
+            credentials={credentials}
+            history={history}/>} />
         </Switch>
       </BrowserRouter>;
     }
@@ -184,7 +202,6 @@ const mapStateToProps = (state, ownProps) => Object.assign(
       cities: combineCities(state),
       isAuthorizationRequired: getAuthorizationStatus(state),
       credentials: getCredentials(state),
-
     });
 
 const mapDispatchToProps = (dispatch) => ({
