@@ -1,5 +1,4 @@
 import axios from 'axios';
-import {ActionCreator} from './reducers/user/user';
 
 export const createAPI = () => {
   const api = axios.create({

@@ -1,6 +1,6 @@
 import React, {createRef, Component} from 'react';
 import PropTypes from 'prop-types';
-import {Link} from "react-router-dom";
+import {Redirect} from 'react-router-dom';
 
 class SignInScreen extends Component {
   constructor(props) {
@@ -43,10 +43,8 @@ class SignInScreen extends Component {
     return entry;
   }
 
-  _submitForm() {
-    const {history, credentials} = this.props;
-
-    console.log(history)
+  _submitForm(e) {
+    e.preventDefault();
 
     const form = this._formRef.current;
     const formData = new FormData(form);
@@ -57,6 +55,10 @@ class SignInScreen extends Component {
 
 
   render() {
+
+    if (this.props.credentials.id) {
+      return <Redirect to="/"/>;
+    }
     this.props.bodyElement.className = `page page--gray page--login`;
 
     return (
@@ -114,8 +116,8 @@ class SignInScreen extends Component {
                 <input className="login__input form__input" type="password" name="password" placeholder="Password"
                   required="" />
               </div>
-              <Link className="login__submit form__submit button"
-                type="submit" to="/" onClick={this._submitForm}>Sign in</Link>
+              <button className="login__submit form__submit button"
+                type="submit" onClick={this._submitForm}>Sign in</button>
             </form>
           </section>
           <section className="locations locations--login locations--current">
@@ -134,7 +136,7 @@ class SignInScreen extends Component {
 SignInScreen.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
   bodyElement: PropTypes.object.isRequired,
-  history: PropTypes.object.isRequired
+  credentials: PropTypes.object.isRequired
 };
 
 export default SignInScreen;

@@ -1,7 +1,7 @@
 import React, {PureComponent} from 'react';
 import {compose} from 'recompose';
 import {BrowserRouter, Switch, Route, Redirect} from 'react-router-dom';
-import {store} from '../../index';
+import {connect} from 'react-redux';
 
 import * as DataAction from '../../reducers/data/data';
 import * as UserAction from '../../reducers/user/user';
@@ -15,7 +15,6 @@ import SignInScreen from './../../components/sign-in/sign-in.jsx';
 import {getCity, combineCities} from '../../reducers/data/selectors';
 import {getAuthorizationStatus, getCredentials} from '../../reducers/user/selectors';
 import PropTypes from 'prop-types';
-import {connect} from 'react-redux';
 
 import withActiveItem from './../../hocs/with-active-item/with-active-item';
 
@@ -136,9 +135,8 @@ const withScreenSwitch = (Component) => {
     }
 
     render() {
-      const {onAuthorizationScreenSubmit, bodyElement, history} = this.props;
+      const {onAuthorizationScreenSubmit, bodyElement, credentials} = this.props;
 
-      ///
 
       return <BrowserRouter>
         <Switch>
@@ -146,13 +144,13 @@ const withScreenSwitch = (Component) => {
             {...this.props}
             renderScreen={() => {
 
-              return this._getScreen(this.props.credentials);
+              return this._getScreen(credentials);
             }} />} />
 
           <Route path="/login" render={() => <SignInScreen
-            handleSubmit={(submitData) => onAuthorizationScreenSubmit(submitData, history)}
+            handleSubmit={(submitData) => onAuthorizationScreenSubmit(submitData)}
             bodyElement={bodyElement}
-            history={history}/>} />
+            credentials={credentials}/>} />
         </Switch>
       </BrowserRouter>;
     }
@@ -190,11 +188,9 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(DataAction.ActionCreator.changeCity(activeCity));
   },
 
-  onAuthorizationScreenSubmit: (submitData, history) => {
-    dispatch(UserAction.Operation.sendCredentials(submitData, history))
-      .then((result) => dispatch(UserAction.ActionCreator.sendCredentials(result)))
-      .then((result) => console.log(store.getState()));
-
+  onAuthorizationScreenSubmit: (submitData) => {
+    dispatch(UserAction.Operation.sendCredentials(submitData))
+      .then((result) => dispatch(UserAction.ActionCreator.sendCredentials(result)));
   }
 });
 

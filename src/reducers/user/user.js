@@ -28,31 +28,17 @@ const ActionCreator = {
 };
 
 const Operation = {
-  checkAuth: () => {
-    return (dispatch, _getState) => {
-
-      // console.log(_getState())
-    };
-  },
-
-  sendCredentials: (submitData, history) => {
-
-    return (dispatch, _getState, api) => {
-
+  sendCredentials: (submitData) =>
+    (dispatch, _getState, api) => {
       return api.post(`/login`, submitData)
         .then((response) => {
           if (response.status === 200) {
 
             return response.data;
-          } else {
-
-            dispatch(ActionCreator.sendCredentials({}));
-            dispatch(ActionCreator.requireAuthorization(true));
           }
+          return {};
         });
-    };
-
-  }
+    }
 };
 
 const reducer = (state = initialState, action) => {
@@ -70,7 +56,6 @@ const reducer = (state = initialState, action) => {
 
   return state;
 };
-
 
 export {
   ActionCreator,
