@@ -5,7 +5,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import thunk from 'redux-thunk';
 import {compose} from 'recompose';
-import {BrowserRouter} from 'react-router-dom';
+import {BrowserRouter, withRouter} from 'react-router-dom';
 
 import {App} from './components/app/app.jsx';
 import withScreenSwitch from './hocs/with-screen-switch/with-screen-switch.js';
@@ -17,7 +17,7 @@ import {Operation as DataOperation} from './reducers/data/data';
 import {Operation as UserOperation} from './reducers/user/user';
 import {ActionCreator} from "./reducers/user/user";
 
-const AppWrapped = withScreenSwitch(App);
+const AppWrapped = withRouter(withScreenSwitch(App));
 
 const init = () => {
   const api = createAPI((...args) => store.dispatch(...args));

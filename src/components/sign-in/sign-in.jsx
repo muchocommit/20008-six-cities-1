@@ -125,10 +125,6 @@ class SignInScreen extends PureComponent {
       </main>
     </>);
   }
-
-  componentDidUpdate() {
-    console.log(`signed`)
-  }
 }
 
 SignInScreen.propTypes = {

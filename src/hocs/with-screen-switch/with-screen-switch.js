@@ -1,6 +1,6 @@
 import React, {PureComponent} from 'react';
 import {compose} from 'recompose';
-import {BrowserRouter, Switch, Route, Redirect} from 'react-router-dom';
+import {withRouter, BrowserRouter, Switch, Route, Redirect} from 'react-router-dom';
 
 import * as DataAction from '../../reducers/data/data';
 import * as UserAction from '../../reducers/user/user';
@@ -116,7 +116,6 @@ const withScreenSwitch = (Component) => {
 
       const {cityNames, offers} = cities;
 
-
       if (!credentials.id) {
         return <Redirect to="/login"/>;
       }
@@ -142,7 +141,8 @@ const withScreenSwitch = (Component) => {
     }
 
     render() {
-      const {onAuthorizationScreenSubmit, bodyElement} = this.props;
+      const {onAuthorizationScreenSubmit, bodyElement, history} = this.props;
+
 
       // Here can pass props for header render
       return <BrowserRouter>
@@ -153,7 +153,7 @@ const withScreenSwitch = (Component) => {
 
           />} />
           <Route path="/login" render={() => <SignInScreen
-            handleSubmit={(submitData) => onAuthorizationScreenSubmit(submitData)}
+            handleSubmit={(submitData) => onAuthorizationScreenSubmit(submitData, history)}
             bodyElement={bodyElement}/>} />
         </Switch>
       </BrowserRouter>;
@@ -190,8 +190,8 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(DataAction.ActionCreator.changeCity(activeCity));
   },
 
-  onAuthorizationScreenSubmit: (submitData) => {
-    dispatch(UserAction.Operation.sendCredentials(submitData));
+  onAuthorizationScreenSubmit: (submitData, history) => {
+    dispatch(UserAction.Operation.sendCredentials(submitData, history));
   }
 });
 

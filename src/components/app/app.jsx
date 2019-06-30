@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 class App extends Component {
   render() {
     const {renderScreen} = this.props;
+
     return (
       <>
         <div style={{display: `none`}}>
