@@ -13,6 +13,8 @@ import Map from './../../components/map/map.jsx';
 import {OffersEmpty} from './../../components/offers-empty/offers-empty.jsx';
 import SignInScreen from './../../components/sign-in/sign-in.jsx';
 
+import Favorites from './../../components/favorites/favorites.jsx';
+
 import {getCity, combineCities} from '../../reducers/data/selectors';
 import {getAuthorizationStatus, getCredentials} from '../../reducers/user/selectors';
 import PropTypes from 'prop-types';
@@ -142,6 +144,7 @@ const withScreenSwitch = (Component) => {
 
       return <BrowserRouter>
         <Switch>
+          <Route path="/favorites" component={Favorites}/>
           <Route path="/" exact render={() => <Component
             {...this.props}
             renderScreen={() => this._getScreen(credentials)}

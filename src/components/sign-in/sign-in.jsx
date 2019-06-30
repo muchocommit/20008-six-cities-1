@@ -1,8 +1,8 @@
-import React, {createRef, Component} from 'react';
+import React, {createRef, PureComponent} from 'react';
 import PropTypes from 'prop-types';
 import {Redirect} from 'react-router-dom';
 
-class SignInScreen extends Component {
+class SignInScreen extends PureComponent {
   constructor(props) {
     super(props);
 

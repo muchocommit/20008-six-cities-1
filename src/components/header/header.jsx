@@ -13,8 +13,9 @@ export default class Header extends PureComponent {
 
     if (credentials.id) {
       return (
-        <span className="header__user-name user__name">{credentials.email}</span>
-      );
+        <a className="header__nav-link header__nav-link--profile" href="#">
+          <span className="header__user-name user__name">{credentials.email}</span>
+        </a>);
     }
 
     return (
