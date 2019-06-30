@@ -1,134 +1,13 @@
 import React, {Component} from 'react';
-import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
-import * as DataAction from '../../reducers/data/data';
-import * as UserAction from '../../reducers/user/user';
-
-import CitiesList from '../cities-list/cities-list.jsx';
-import OffersList from '../offers-list/offers-list.jsx';
-import Map from './../map/map.jsx';
-import {OffersEmpty} from '../offers-empty/offers-empty.jsx';
-import SignInScreen from '../sign-in/sign-in.jsx';
-
-import withActiveItem from './../../hocs/with-active-item/with-active-item';
-import {getCity, combineCities} from '../../reducers/data/selectors';
-import {getAuthorizationStatus} from '../../reducers/user/selectors';
-
-const CitiesListWrapped = withActiveItem(CitiesList);
-const OffersListWrapped = withActiveItem(OffersList);
-
 class App extends Component {
-  _getContainer({offers = void (0), cityName}) {
-
-    if (offers && offers.length === 0) {
-      return (<OffersEmpty />);
-    }
-
-    return (<div className="cities__places-container container">
-      <section className="cities__places places">
-        <h2 className="visually-hidden">Places</h2>
-        <b className="places__found">{`${offers ? `${offers.length} places to stay in ${cityName}` : ``}`}</b>
-        <form className="places__sorting" action="#" method="get">
-          <span className="places__sorting-caption">Sort by</span>
-          <span className="places__sorting-type" tabIndex="0">
-                        Popular
-            <svg className="places__sorting-arrow" width="7" height="4">
-              <use xlinkHref="#icon-arrow-select"></use>
-            </svg>
-          </span>
-          <ul className="places__options places__options--custom places__options--opened">
-            <li className="places__option places__option--active" tabIndex="0">Popular</li>
-            <li className="places__option" tabIndex="0">Price: low to high</li>
-            <li className="places__option" tabIndex="0">Price: high to low</li>
-            <li className="places__option" tabIndex="0">Top rated first</li>
-          </ul>
-        </form>
-
-        {this._getComponent({key: `OFFERS`, offers})}
-
-      </section>
-      <div className="cities__right-section">
-
-        <section className="cities__map map">
-          {this._getComponent({key: `LOCATIONS`, offers})}
-        </section>
-      </div>
-    </div>);
-  }
-  _getComponent({key,
-    offers = [],
-    cityNames = []}) {
-
-    const {onHandleTabClick} = this.props;
-
-    switch (key) {
-      case `LOCATIONS`:
-
-        if (offers.length !== 0) {
-          const locations = DataAction.getLocations(offers);
-          const locationsCoordinates = DataAction.getLocationsCoordinates(locations);
-
-          return (
-            <Map
-              locations={locationsCoordinates}
-              id={`map`}
-            />);
-        }
-
-        break;
-
-      case `CITY_NAMES`:
-        return (
-          <CitiesListWrapped
-            cityNames={cityNames}
-            handleTabClick={(activeCity) => onHandleTabClick(activeCity)}
-          />);
-
-      default:
-        return (
-          <OffersListWrapped offers={offers}
-          />);
-    }
-
-    return null;
-  }
-
-  _getScreen() {
-    const {cities, city} = this.props;
-    const {cityNames, offers} = cities;
-
-    return (
-      <>
-        <h1 className="visually-hidden">Cities</h1>
-        <div className="cities tabs">
-          <section className="locations container">
-            {this._getComponent({key: `CITY_NAMES`, cityNames})}
-          </section>
-        </div>
-        <div className="cities__places-wrapper">
-          {this._getContainer({offers, cityName: cityNames[city]})}
-        </div>
-      </>);
-  }
-
   render() {
-    const {isAuthorizationRequired, bodyElement} = this.props;
+    const {renderHeader, renderScreen} = this.props;
 
-    if (isAuthorizationRequired) {
-
-      const {onAuthorizationScreenSubmit} = this.props;
-      bodyElement.className = `page page--gray page--login`;
-
-      return (
-        <SignInScreen
-          handleSubmit={(submitData) => onAuthorizationScreenSubmit(submitData)}/>);
-    }
-
-    bodyElement.className = `page page--gray page--main`;
     return (
       <>
-        <div style={{display: `none`}}>
+        <div style={{display: `none`}}>2
           <svg xmlns="http://www.w3.org/2000/svg">
             <symbol id="icon-arrow-select" viewBox="0 0 7 4">
               <path fillRule="evenodd" clipRule="evenodd" d="M0 0l3.5 2.813L7 0v1.084L3.5 4 0 1.084V0z"></path>
@@ -144,31 +23,10 @@ class App extends Component {
           </svg>
         </div>
 
-        <header className="header">
-          <div className="container">
-            <div className="header__wrapper">
-              <div className="header__left">
-                <a className="header__logo-link header__logo-link--active">
-                  <img className="header__logo" src="img/logo.svg" alt="6 cities logo" width="81" height="41"/>
-                </a>
-              </div>
-              <nav className="header__nav">
-                <ul className="header__nav-list">
-                  <li className="header__nav-item user">
-                    <a className="header__nav-link header__nav-link--profile" href="#">
-                      <div className="header__avatar-wrapper user__avatar-wrapper">
-                      </div>
-                      <span className="header__user-name user__name">Oliver.conner@gmail.com</span>
-                    </a>
-                  </li>
-                </ul>
-              </nav>
-            </div>
-          </div>
-        </header>
+        {renderHeader()}
 
         <main className="page__main page__main--index">
-          {this._getScreen()}
+          {renderScreen()}
         </main>
       </>
     );
@@ -176,34 +34,9 @@ class App extends Component {
 }
 
 App.propTypes = {
-  city: PropTypes.number.isRequired,
-  cities: PropTypes.shape({
-    cityNames: PropTypes.arrayOf(PropTypes.string).isRequired,
-    offers: PropTypes.array
-  }),
-  isAuthorizationRequired: PropTypes.bool.isRequired,
-  onAuthorizationScreenSubmit: PropTypes.func.isRequired,
-  onHandleTabClick: PropTypes.func.isRequired,
-  bodyElement: PropTypes.object.isRequired
+  renderHeader: PropTypes.func.isRequired,
+  renderScreen: PropTypes.func.isRequired,
 };
-
-const mapStateToProps = (state, ownProps) => Object.assign(
-    {}, ownProps, {
-      city: getCity(state),
-      cities: combineCities(state),
-      isAuthorizationRequired: getAuthorizationStatus(state)
-    });
-
-const mapDispatchToProps = (dispatch) => ({
-  onHandleTabClick: (activeCity) => {
-    dispatch(DataAction.ActionCreator.changeCity(activeCity));
-  },
-
-  onAuthorizationScreenSubmit: (submitData) => {
-    dispatch(UserAction.Operation.sendCredentials(submitData));
-  }
-});
 
 export {App};
 
-export default connect(mapStateToProps, mapDispatchToProps)(App);

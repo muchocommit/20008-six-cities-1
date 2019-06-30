@@ -1,8 +1,14 @@
 import {ActionType} from './../../data';
 
 const initialState = {
-  isAuthorizationRequired: true,
-  credentials: {}
+  isAuthorizationRequired: false,
+  credentials: {
+    [`avatar_url`]: ``,
+    email: ``,
+    id: null,
+    [`is_pro`]: false,
+    name: ``
+  },
 };
 
 const ActionCreator = {
@@ -22,19 +28,17 @@ const ActionCreator = {
 };
 
 const Operation = {
-  sendCredentials: (submitData) => (dispatch, _getState, api) => {
-    return api.post(`/login`, submitData)
-      .then((response) => {
-        if (response === 400) {
-          dispatch(ActionCreator.sendCredentials({id: null}));
-          dispatch(ActionCreator.requireAuthorization(true));
-        } else {
+  sendCredentials: (submitData) =>
+    (dispatch, _getState, api) => {
+      return api.post(`/login`, submitData)
+        .then((response) => {
+          if (response.status === 200) {
 
-          dispatch(ActionCreator.sendCredentials(response.data));
-          dispatch(ActionCreator.requireAuthorization(false));
-        }
-      });
-  }
+            return response.data;
+          }
+          return {};
+        });
+    }
 };
 
 const reducer = (state = initialState, action) => {
@@ -52,7 +56,6 @@ const reducer = (state = initialState, action) => {
 
   return state;
 };
-
 
 export {
   ActionCreator,

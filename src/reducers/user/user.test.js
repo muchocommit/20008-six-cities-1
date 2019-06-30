@@ -6,8 +6,14 @@ import {
 describe(`UserReducer works correctly`, () => {
   it(`Returns initial state if undefined state is provided with empty object`, () => {
     expect(reducer(undefined, {})).toEqual({
-      isAuthorizationRequired: true,
-      credentials: {}
+      isAuthorizationRequired: false,
+      credentials: {
+        [`avatar_url`]: ``,
+        email: ``,
+        id: null,
+        [`is_pro`]: false,
+        name: ``
+      },
     });
   });
 
@@ -17,7 +23,13 @@ describe(`UserReducer works correctly`, () => {
       payload: false
     })).toEqual({
       isAuthorizationRequired: false,
-      credentials: {}});
+      credentials: {
+        [`avatar_url`]: ``,
+        email: ``,
+        id: null,
+        [`is_pro`]: false,
+        name: ``}
+    });
   });
 
   it(`Returns modified initial state if action type with payload is provided for credentials`, () => {
@@ -25,7 +37,7 @@ describe(`UserReducer works correctly`, () => {
       type: ActionType.SEND_CREDENTIALS,
       payload: {id: 1}
     })).toEqual({
-      isAuthorizationRequired: true,
+      isAuthorizationRequired: false,
       credentials: {id: 1}});
   });
 

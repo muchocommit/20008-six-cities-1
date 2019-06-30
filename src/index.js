@@ -4,14 +4,19 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import thunk from 'redux-thunk';
 import {compose} from 'recompose';
+import {BrowserRouter, withRouter} from 'react-router-dom';
 
-import App from './components/app/app.jsx';
+import {App} from './components/app/app.jsx';
+import withScreenSwitch from './hocs/with-screen-switch/with-screen-switch.js';
+
 import {createAPI} from './api';
 import reducer from './reducers/reducer';
-import {Operation} from './reducers/data/data';
+import {Operation as DataOperation} from './reducers/data/data';
+
+const AppWrapped = withRouter(withScreenSwitch(App));
 
 const init = () => {
-  const api = createAPI((...args) => store.dispatch(...args));
+  const api = createAPI();
   const store = createStore(
     reducer,
 
@@ -21,16 +26,17 @@ const init = () => {
       window.__REDUX_DEVTOOLS_EXTENSION__()
     ));
 
-  store.dispatch(Operation.loadCities());
-
+  store.dispatch(DataOperation.loadCities());
   const body = document.getElementById(`root`).parentNode;
 
   ReactDOM.render(
-      <Provider store={store}>
-        <App
-          bodyElement={body}
+      <BrowserRouter>
+        <Provider store={store}>
+          <AppWrapped
+            bodyElement={body}
           />
-      </Provider>,
+        </Provider>
+      </BrowserRouter>,
       document.getElementById(`root`)
   );
 };
