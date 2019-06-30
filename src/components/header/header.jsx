@@ -14,12 +14,10 @@ export default class Header extends PureComponent {
     const {credentials} = this.props;
 
     if (credentials.id) {
-
-
+      return (<Link className="header__nav-link header__nav-link--profile" to="/favorites">
+        <span className="header__user-name user__name">{credentials.email}</span>
+      </Link>);
     }
-    {/*<Link className="header__nav-link header__nav-link--profile" to="/favorites">*/}
-    {/*  <span className="header__user-name user__name">{credentials.email}</span>*/}
-    {/*</Link>);*/}
 
     return (
 
