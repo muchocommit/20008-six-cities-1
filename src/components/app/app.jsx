@@ -33,8 +33,6 @@ class App extends Component {
   }
 }
 
-
-
 App.propTypes = {
   renderHeader: PropTypes.func.isRequired,
   renderScreen: PropTypes.func.isRequired,

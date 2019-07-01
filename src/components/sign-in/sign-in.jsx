@@ -58,7 +58,7 @@ class SignInScreen extends PureComponent {
 
 
   render() {
-    const {credentials, bodyElement, history} = this.props;
+    const {credentials, bodyElement} = this.props;
 
 
 
@@ -137,19 +137,12 @@ class SignInScreen extends PureComponent {
       </main>
     </>);
   }
-
-  componentDidMount() {
-    if (this.props.credentials.id) {
-      return <Redirect to="/"/>;
-    }
-  }
 }
 
 SignInScreen.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
   bodyElement: PropTypes.object.isRequired,
-  credentials: PropTypes.object.isRequired,
-  history: PropTypes.object.isRequired
+  credentials: PropTypes.object.isRequired
 };
 
 const mapStateToProps = (state, ownProps) => Object.assign(

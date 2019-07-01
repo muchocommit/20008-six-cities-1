@@ -28,14 +28,13 @@ const ActionCreator = {
 };
 
 const Operation = {
-  sendCredentials: (submitData, history) =>
+  sendCredentials: (submitData) =>
     (dispatch, _getState, api) => {
       return api.post(`/login`, submitData)
         .then((response) => {
           if (response.status === 200) {
 
             localStorage.setItem(`credentials`, JSON.stringify(response.data));
-            history.push(response.data);
             return response.data;
           }
           return {};

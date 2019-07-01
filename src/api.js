@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-export const createAPI = (history = void (0), callback = void (0)) => {
+export const createAPI = () => {
   const api = axios.create({
     baseURL: `https://es31-server.appspot.com/six-cities`,
     timeout: 1000 * 5,
@@ -8,18 +8,12 @@ export const createAPI = (history = void (0), callback = void (0)) => {
   });
 
   const onSuccess = (response) => {
-    if (history && callback) {
-      /** do stuff */
-
-    }
     return response;
-
   };
   const onFail = (err) => {
     return err.response.status;
   };
 
   api.interceptors.response.use(onSuccess, onFail);
-
   return api;
 };

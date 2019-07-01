@@ -50,6 +50,5 @@ export default class Header extends PureComponent {
 }
 
 Header.propTypes = {
-  credentials: PropTypes.object.isRequired,
-  history: PropTypes.object.isRequired
+  credentials: PropTypes.object.isRequired
 };
