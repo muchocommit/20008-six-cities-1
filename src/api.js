@@ -11,7 +11,8 @@ export const createAPI = () => {
     return response;
   };
   const onFail = (err) => {
-    return err.response.status;
+
+    return err.response;
   };
 
   api.interceptors.response.use(onSuccess, onFail);

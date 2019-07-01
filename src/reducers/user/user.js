@@ -7,7 +7,8 @@ const initialState = {
     email: ``,
     id: null,
     [`is_pro`]: false,
-    name: ``
+    name: ``,
+    error: false
   },
 };
 
@@ -48,6 +49,7 @@ const Operation = {
         .then((response) => {
           if (response.status === 200) {
 
+            // Must include error field for unsuccessful login attempts
             localStorage.setItem(`credentials`, JSON.stringify(response.data));
             return response.data;
           }
