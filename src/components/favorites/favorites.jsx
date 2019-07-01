@@ -10,9 +10,7 @@ export default class Favorites extends PureComponent {
 
   render() {
     const {bodyElement, offers} = this.props;
-
     const favoriteOffers = getFavoriteOffers(offers);
-
 
     bodyElement.className = `page`;
 
