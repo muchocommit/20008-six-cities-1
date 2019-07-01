@@ -157,6 +157,14 @@ const withScreenSwitch = (Component) => {
         credentials={credentials} />);
     }
 
+    _getFavoritesScreen({credentials}) {
+      if (credentials.id === null) {
+        return <Redirect to="/login"/>;
+      }
+
+      return <Favorites />;
+    }
+
     render() {
       const {
         onAuthorizationScreenSubmit,
@@ -165,7 +173,7 @@ const withScreenSwitch = (Component) => {
 
       return <BrowserRouter>
         <Switch>
-          <Route path="/favorites" component={Favorites}/>
+          <Route path="/favorites" render={() => this._getFavoritesScreen({credentials})}/>
           <Route path="/" exact render={() => this._getMainScreen({credentials})} />
 
           <Route path="/login" render={() => this._getSignInScreen(
@@ -199,7 +207,6 @@ const withScreenSwitch = (Component) => {
 
   return WithScreenSwitch;
 };
-
 
 const mapStateToProps = (state, ownProps) => Object.assign(
     {}, ownProps, {
