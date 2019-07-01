@@ -54,7 +54,17 @@ const Operation = {
 
           throw response;
         });
-    }
+    },
+
+  checkAuth: () => {
+    return (dispatch, _getState, api) => {
+      return api
+        .get(`/login`)
+        .then((res) => {
+          return res;
+        });
+    };
+  }
 };
 
 const reducer = (state = initialState, action) => {

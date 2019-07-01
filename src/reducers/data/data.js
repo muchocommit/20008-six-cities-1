@@ -12,6 +12,20 @@ const Operation = {
         dispatch(ActionCreator.loadCities(response.data));
       });
   },
+
+  addBookMark: ({bookMarkIndex, isFavorite}) =>
+    (dispatch, _getState, api) => {
+
+      return api.post(`/favorite/${bookMarkIndex}/${isFavorite}`)
+      .then((response) => {
+
+        if (response.status === 200) {
+          return response.data;
+        }
+
+        throw response;
+      });
+    }
 };
 
 const ActionCreator = {
@@ -71,8 +85,8 @@ const getFavoriteOffers = (offersArray) => {
 
     return offer.filter((it) => {
       return it[`is_favorite`] === true;
-    })
-  }).filter((it) => it.length > 0)
+    });
+  }).filter((it) => it.length > 0);
 };
 
 const reducer = (state = initialState, action) => {

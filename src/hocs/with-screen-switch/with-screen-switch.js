@@ -102,7 +102,8 @@ const withScreenSwitch = (Component) => {
           return (
             <OffersListWrapped
               offers={offers}
-              handleBookMarkClick={(className) => onBookMarkButtonClick(className)}
+              handleBookMarkClick={({bookMarkIndex, isFavorite}) =>
+                onBookMarkButtonClick({bookMarkIndex, isFavorite})}
             />);
       }
 
@@ -227,8 +228,15 @@ const mapStateToProps = (state, ownProps) => Object.assign(
     });
 
 const mapDispatchToProps = (dispatch) => ({
-  onBookMarkButtonClick: (className) => {
-    console.log(className)
+  onBookMarkButtonClick: ({bookMarkIndex, isFavorite}) => {
+    dispatch(DataAction.Operation.addBookMark({bookMarkIndex, isFavorite}))
+      .then((result) => {
+
+        console.log(result)
+      }).catch(() => {
+
+        dispatch(UserAction.Operation.checkAuth())
+      })
   },
 
   onHandleTabClick: (activeCity) => {

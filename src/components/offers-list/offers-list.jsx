@@ -21,7 +21,6 @@ class OffersList extends PureComponent {
     while (target !== `ARTICLE`) {
       if (target.parentNode.dataset.index) {
 
-
         return activateItem(target.parentNode.dataset.index);
       }
 
@@ -33,6 +32,8 @@ class OffersList extends PureComponent {
 
   _getOffers() {
     const {offers, handleBookMarkClick} = this.props;
+
+    console.log(offers)
 
     return offers.map((it, i) => {
 
