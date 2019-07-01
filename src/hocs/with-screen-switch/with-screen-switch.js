@@ -13,7 +13,7 @@ import Map from './../../components/map/map.jsx';
 import {OffersEmpty} from './../../components/offers-empty/offers-empty.jsx';
 import SignInScreen from './../../components/sign-in/sign-in.jsx';
 
-import Favorites from './../../components/favorites/favorites.jsx';
+import FavoritesList from './../../components/favorites-list/favorites-list.jsx';
 
 import {getCity, combineCities} from '../../reducers/data/selectors';
 import {getAuthorizationStatus, getCredentials} from '../../reducers/user/selectors';
@@ -162,7 +162,7 @@ const withScreenSwitch = (Component) => {
         return <Redirect to="/login"/>;
       }
 
-      return <Favorites
+      return <FavoritesList
         bodyElement={bodyElement}
         offers={offers}/>;
     }

@@ -25,7 +25,13 @@ it(`OfferCard renders correctly`, () => {
       offer={offer}
       mouseOverHandler={handler}
       index={index}
-    />).toJSON();
+      isFavorite={false}
+    />, {
+      createNodeMock: () => {
+        return document.createElement(`Link`);
+
+      }
+    }).toJSON();
 
   expect(tree).toMatchSnapshot();
 });

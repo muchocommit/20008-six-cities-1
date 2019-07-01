@@ -4,7 +4,7 @@ import {sortOffersByCityName} from './data';
 
 const NAME_SPACE = NameSpace.DATA;
 
-const getCityNames = (cities) => [...new Set(cities.map((it) => it[`city`].name))];
+export const getCityNames = (array) => [...new Set(array.map((it) => it[`city`].name))];
 
 export const getCities = (state) => {
   return state[NAME_SPACE].cities;
