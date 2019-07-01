@@ -1,7 +1,7 @@
 import {ActionType} from './../../data';
 
 const initialState = {
-  isAuthorizationRequired: false,
+  authorizationRequired: false,
   credentials: {
     [`avatar_url`]: ``,
     email: ``,
@@ -14,7 +14,7 @@ const initialState = {
 const ActionCreator = {
   requireAuthorization: (status) => {
     return {
-      type: ActionType.REQUIRE_AUTHORIZATION,
+      type: ActionType.AUTHORIZATION_REQUIRED,
       payload: status,
     };
   },
@@ -59,9 +59,9 @@ const Operation = {
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
-    case ActionType.REQUIRE_AUTHORIZATION:
+    case ActionType.AUTHORIZATION_REQUIRED:
       return Object.assign({}, state, {
-        isAuthorizationRequired: action.payload,
+        authorizationRequired: action.payload,
       });
 
     case ActionType.SEND_CREDENTIALS:

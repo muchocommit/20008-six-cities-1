@@ -1,4 +1,7 @@
 import React, {PureComponent} from 'react';
+import PropTypes from 'prop-types';
+
+import {getFavoriteOffers} from '../../reducers/data/data';
 
 export default class Favorites extends PureComponent {
   constructor(props) {
@@ -6,6 +9,12 @@ export default class Favorites extends PureComponent {
   }
 
   render() {
+    const {bodyElement, offers} = this.props;
+
+    const favoriteOffers = getFavoriteOffers(offers);
+
+
+    bodyElement.className = `page`;
 
     return (<>
       <main className="page__main page__main--favorites">
@@ -157,3 +166,8 @@ export default class Favorites extends PureComponent {
       </>);
   }
 }
+
+Favorites.propTypes = {
+  bodyElement: PropTypes.object.isRequired,
+  offers: PropTypes.array.isRequired
+};

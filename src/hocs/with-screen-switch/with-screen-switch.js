@@ -135,7 +135,7 @@ const withScreenSwitch = (Component) => {
               </section>
             </div>
             <div className="cities__places-wrapper">
-              {this._getContainer({offers, cityName: cityNames[city]})}
+              {this._getContainer({offers: offers[city], cityName: cityNames[city]})}
             </div>
           </>);
     }
@@ -157,23 +157,28 @@ const withScreenSwitch = (Component) => {
         credentials={credentials} />);
     }
 
-    _getFavoritesScreen({credentials}) {
+    _getFavoritesScreen({credentials, bodyElement, offers}) {
       if (credentials.id === null) {
         return <Redirect to="/login"/>;
       }
 
-      return <Favorites />;
+      return <Favorites
+        bodyElement={bodyElement}
+        offers={offers}/>;
     }
 
     render() {
       const {
         onAuthorizationScreenSubmit,
         bodyElement,
-        credentials} = this.props;
+        credentials,
+        cities} = this.props;
+
+      const {offers} = cities;
 
       return <BrowserRouter>
         <Switch>
-          <Route path="/favorites" render={() => this._getFavoritesScreen({credentials})}/>
+          <Route path="/favorites" render={() => this._getFavoritesScreen({credentials, bodyElement, offers})}/>
           <Route path="/" exact render={() => this._getMainScreen({credentials})} />
 
           <Route path="/login" render={() => this._getSignInScreen(
@@ -197,7 +202,7 @@ const withScreenSwitch = (Component) => {
       cityNames: PropTypes.arrayOf(PropTypes.string).isRequired,
       offers: PropTypes.array
     }),
-    isAuthorizationRequired: PropTypes.bool.isRequired,
+    authorizationRequired: PropTypes.bool.isRequired,
     onAuthorizationScreenSubmit: PropTypes.func.isRequired,
     onHandleTabClick: PropTypes.func.isRequired,
     bodyElement: PropTypes.object.isRequired,
@@ -212,7 +217,7 @@ const mapStateToProps = (state, ownProps) => Object.assign(
     {}, ownProps, {
       city: getCity(state),
       cities: combineCities(state),
-      isAuthorizationRequired: getAuthorizationStatus(state),
+      authorizationRequired: getAuthorizationStatus(state),
       credentials: getCredentials(state),
     });
 

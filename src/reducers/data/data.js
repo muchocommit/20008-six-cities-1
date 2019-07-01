@@ -47,6 +47,15 @@ const sortOffersByCityName = (namesArray, citiesArray) => {
   });
 };
 
+const getFavoriteOffers = (offersArray) => {
+  return offersArray.map((offer) => {
+
+    return offer.filter((it) => {
+      return it[`is_favorite`] === true;
+    })
+  })
+};
+
 const reducer = (state = initialState, action) => {
   switch (action.type) {
 
@@ -68,6 +77,7 @@ export {
   sortOffersByCityName,
   getLocations,
   getLocationsCoordinates,
+  getFavoriteOffers,
   ActionCreator,
   Operation,
   reducer

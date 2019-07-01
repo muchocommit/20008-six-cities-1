@@ -99,7 +99,7 @@ it(`App correctly renders after relaunch`, () => {
     .create(<App
       cities={cities}
       city={0}
-      isAuthorizationRequired={true}
+      authorizationRequired={true}
       onAuthorizationScreenSubmit={jest.fn()}
       onHandleTabClick={jest.fn()}
       bodyElement={document.createElement(`body`)}
