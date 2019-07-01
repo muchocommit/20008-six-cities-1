@@ -15,10 +15,10 @@ export default class FavoritesList extends PureComponent {
 
   render() {
     const {bodyElement, offers} = this.props;
-    offers[0][0][`is_favorite`] = true;
-    offers[0][1][`is_favorite`] = true;
-    offers[1][0][`is_favorite`] = true;
-    offers[1][1][`is_favorite`] = true;
+    // offers[0][0][`is_favorite`] = true;
+    // offers[0][1][`is_favorite`] = true;
+    // offers[1][0][`is_favorite`] = true;
+    // offers[1][1][`is_favorite`] = true;
 
     const favoriteOffers = getFavoriteOffers(offers);
     const offersGroupedByCityNames = groupFavoriteOffersByCityName(favoriteOffers);
