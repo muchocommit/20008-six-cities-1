@@ -142,17 +142,26 @@ const withScreenSwitch = (Component) => {
           </>);
     }
 
+    _getMainScreen({credentials, history}) {
+      return (<Component
+        {...this.props}
+        renderScreen={() => this._getScreen(credentials)}
+        renderHeader={() => this._getHeader(credentials, history)}
+      />);
+    }
+
     _getSignInScreenRoute(
       {onAuthorizationScreenSubmit, bodyElement, credentials, history}) {
 
       if (history.location.id) {
-        /** return component */
+
+        return this._getMainScreen({credentials, history});
       }
-      return <SignInScreen
+      return (<SignInScreen
         handleSubmit={(submitData) => onAuthorizationScreenSubmit(submitData, history)}
         bodyElement={bodyElement}
         credentials={credentials}
-        history={history}/>;
+        history={history}/>);
     }
 
     render() {
@@ -164,16 +173,17 @@ const withScreenSwitch = (Component) => {
       return <BrowserRouter>
         <Switch>
           <Route path="/favorites" component={Favorites}/>
-          <Route path="/" exact render={() => <Component
-            {...this.props}
-            renderScreen={() => this._getScreen(credentials)}
-            renderHeader={() => this._getHeader(credentials, history)}
-            />} />
+          <Route path="/" exact render={() => this._getMainScreen({credentials, history})} />
 
           <Route path="/login" render={() => this._getSignInScreenRoute(
             {onAuthorizationScreenSubmit, bodyElement, credentials, history})} />
         </Switch>
       </BrowserRouter>;
+    }
+
+    componentDidMount() {
+      const {credentials} = this.props;
+      DataAction.hydrateStateWithLocalStorage(credentials);
     }
   }
 

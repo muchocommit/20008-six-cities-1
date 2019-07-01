@@ -60,6 +60,8 @@ class SignInScreen extends PureComponent {
   render() {
     const {credentials, bodyElement, history} = this.props;
 
+
+
     if (credentials.id) {
       return <Redirect to="/"/>;
     }
@@ -134,6 +136,12 @@ class SignInScreen extends PureComponent {
         </div>
       </main>
     </>);
+  }
+
+  componentDidMount() {
+    if (this.props.credentials.id) {
+      return <Redirect to="/"/>;
+    }
   }
 }
 

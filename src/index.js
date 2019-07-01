@@ -25,6 +25,7 @@ const store = createStore(
     window.__REDUX_DEVTOOLS_EXTENSION__()
   ));
 
+
 const init = () => {
   store.dispatch(DataOperation.loadCities());
   const body = document.getElementById(`root`).parentNode;
