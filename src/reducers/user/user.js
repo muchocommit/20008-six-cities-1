@@ -27,6 +27,20 @@ const ActionCreator = {
   }
 };
 
+const hydrateStateWithLocalStorage = (credentials) => {
+  const localCredentials = JSON.parse(
+    localStorage.getItem(`credentials`));
+
+  for (let key in credentials) {
+
+    if (localCredentials && localCredentials.hasOwnProperty(key)) {
+      credentials[key] = localCredentials[key];
+    }
+  }
+
+  return credentials;
+};
+
 const Operation = {
   sendCredentials: (submitData) =>
     (dispatch, _getState, api) => {
@@ -61,5 +75,6 @@ const reducer = (state = initialState, action) => {
 export {
   ActionCreator,
   reducer,
-  Operation
+  Operation,
+  hydrateStateWithLocalStorage
 };

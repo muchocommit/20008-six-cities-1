@@ -148,7 +148,7 @@ const withScreenSwitch = (Component) => {
       />);
     }
 
-    _getSignInScreenRoute(
+    _getSignInScreen(
         {onAuthorizationScreenSubmit, bodyElement, credentials}) {
 
       return (<SignInScreen
@@ -168,15 +168,18 @@ const withScreenSwitch = (Component) => {
           <Route path="/favorites" component={Favorites}/>
           <Route path="/" exact render={() => this._getMainScreen({credentials})} />
 
-          <Route path="/login" render={() => this._getSignInScreenRoute(
+          <Route path="/login" render={() => this._getSignInScreen(
               {onAuthorizationScreenSubmit, bodyElement, credentials})} />
         </Switch>
       </BrowserRouter>;
     }
 
     componentDidMount() {
-      const {credentials} = this.props;
-      DataAction.hydrateStateWithLocalStorage(credentials);
+      const {credentials,
+        hydrateStateOnComponentMount} = this.props;
+
+      hydrateStateOnComponentMount(
+        UserAction.hydrateStateWithLocalStorage(credentials));
     }
   }
 
@@ -191,7 +194,7 @@ const withScreenSwitch = (Component) => {
     onHandleTabClick: PropTypes.func.isRequired,
     bodyElement: PropTypes.object.isRequired,
     credentials: PropTypes.object.isRequired,
-    history: PropTypes.object.isRequired
+    hydrateStateOnComponentMount: PropTypes.func.isRequired
   };
 
   return WithScreenSwitch;
@@ -214,6 +217,10 @@ const mapDispatchToProps = (dispatch) => ({
   onAuthorizationScreenSubmit: (submitData) => {
     dispatch(UserAction.Operation.sendCredentials(submitData))
       .then((result) => dispatch(UserAction.ActionCreator.sendCredentials(result)));
+  },
+
+  hydrateStateOnComponentMount: (credentials) => {
+    dispatch(UserAction.ActionCreator.sendCredentials(credentials));
   }
 });
 
