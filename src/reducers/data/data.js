@@ -30,6 +30,25 @@ const ActionCreator = {
   }
 };
 
+const groupByPropertyName = (objectArray, property) => {
+  return objectArray.reduce(function (acc, obj) {
+    let key = obj[property].name;
+    if (!acc[key]) {
+      acc[key] = [];
+    }
+
+    acc[key].push(obj);
+    return acc;
+  }, {});
+};
+
+const groupFavoriteOffersByCityName = (set) => {
+  const arrayConcatenated = set.reduce((acc, it) => acc.concat(it));
+
+  return groupByPropertyName(arrayConcatenated, `city`);
+};
+
+
 const getLocations = (offers) => {
   return offers.map((it) => it.location);
 };
@@ -45,6 +64,15 @@ const sortOffersByCityName = (namesArray, citiesArray) => {
       return name === it.city.name;
     });
   });
+};
+
+const getFavoriteOffers = (offersArray) => {
+  return offersArray.map((offer) => {
+
+    return offer.filter((it) => {
+      return it[`is_favorite`] === true;
+    })
+  }).filter((it) => it.length > 0)
 };
 
 const reducer = (state = initialState, action) => {
@@ -68,6 +96,8 @@ export {
   sortOffersByCityName,
   getLocations,
   getLocationsCoordinates,
+  getFavoriteOffers,
+  groupFavoriteOffersByCityName,
   ActionCreator,
   Operation,
   reducer

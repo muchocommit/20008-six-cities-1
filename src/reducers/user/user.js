@@ -1,7 +1,7 @@
 import {ActionType} from './../../data';
 
 const initialState = {
-  isAuthorizationRequired: false,
+  authorizationRequired: false,
   credentials: {
     [`avatar_url`]: ``,
     email: ``,
@@ -14,7 +14,7 @@ const initialState = {
 const ActionCreator = {
   requireAuthorization: (status) => {
     return {
-      type: ActionType.REQUIRE_AUTHORIZATION,
+      type: ActionType.AUTHORIZATION_REQUIRED,
       payload: status,
     };
   },
@@ -27,6 +27,20 @@ const ActionCreator = {
   }
 };
 
+const hydrateStateWithLocalStorage = (credentials) => {
+  const localCredentials = JSON.parse(
+      localStorage.getItem(`credentials`));
+
+  for (let key in credentials) {
+
+    if (localCredentials && localCredentials.hasOwnProperty(key)) {
+      credentials[key] = localCredentials[key];
+    }
+  }
+
+  return credentials;
+};
+
 const Operation = {
   sendCredentials: (submitData) =>
     (dispatch, _getState, api) => {
@@ -34,18 +48,20 @@ const Operation = {
         .then((response) => {
           if (response.status === 200) {
 
+            localStorage.setItem(`credentials`, JSON.stringify(response.data));
             return response.data;
           }
-          return {};
+
+          throw response;
         });
     }
 };
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
-    case ActionType.REQUIRE_AUTHORIZATION:
+    case ActionType.AUTHORIZATION_REQUIRED:
       return Object.assign({}, state, {
-        isAuthorizationRequired: action.payload,
+        authorizationRequired: action.payload,
       });
 
     case ActionType.SEND_CREDENTIALS:
@@ -60,5 +76,6 @@ const reducer = (state = initialState, action) => {
 export {
   ActionCreator,
   reducer,
-  Operation
+  Operation,
+  hydrateStateWithLocalStorage
 };

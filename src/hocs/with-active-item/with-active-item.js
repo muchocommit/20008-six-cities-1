@@ -11,6 +11,7 @@ const withActiveItem = (Component) => {
     }
 
     render() {
+
       return (<Component
         {...this.props}
         activateItem={(i) => this.setState({activeItem: i})}

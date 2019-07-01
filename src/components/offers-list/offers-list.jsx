@@ -14,6 +14,11 @@ class OffersList extends PureComponent {
     let {target} = e;
     const {activateItem} = this.props;
 
+    if (target.dataset.index) {
+      activateItem(target.dataset.index);
+      return;
+    }
+
     while (target !== `ARTICLE`) {
       if (target.parentNode.dataset.index) {
 
@@ -28,13 +33,16 @@ class OffersList extends PureComponent {
   _getOffers() {
     const {offers} = this.props;
 
-    return offers.map((it, i) =>
-      <OfferCard
+    return offers.map((it, i) => {
+
+      return <OfferCard
         key={i}
         offer={it}
         mouseOverHandler={this._handleMouseOver}
         index={i}
-      />);
+        isFavorite={it[`is_favorite`]}
+      />;
+    });
   }
 
   render() {

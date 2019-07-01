@@ -15,17 +15,18 @@ import {Operation as DataOperation} from './reducers/data/data';
 
 const AppWrapped = withRouter(withScreenSwitch(App));
 
+export const api = createAPI();
+const store = createStore(
+  reducer,
+
+  compose(
+    applyMiddleware(thunk.withExtraArgument(api)),
+    window.__REDUX_DEVTOOLS_EXTENSION__ &&
+    window.__REDUX_DEVTOOLS_EXTENSION__()
+  ));
+
+
 const init = () => {
-  const api = createAPI();
-  const store = createStore(
-    reducer,
-
-    compose(
-      applyMiddleware(thunk.withExtraArgument(api)),
-      window.__REDUX_DEVTOOLS_EXTENSION__ &&
-      window.__REDUX_DEVTOOLS_EXTENSION__()
-    ));
-
   store.dispatch(DataOperation.loadCities());
   const body = document.getElementById(`root`).parentNode;
 

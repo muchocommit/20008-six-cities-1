@@ -13,7 +13,7 @@ import Map from './../../components/map/map.jsx';
 import {OffersEmpty} from './../../components/offers-empty/offers-empty.jsx';
 import SignInScreen from './../../components/sign-in/sign-in.jsx';
 
-import Favorites from './../../components/favorites/favorites.jsx';
+import FavoritesList from './../../components/favorites-list/favorites-list.jsx';
 
 import {getCity, combineCities} from '../../reducers/data/selectors';
 import {getAuthorizationStatus, getCredentials} from '../../reducers/user/selectors';
@@ -107,10 +107,9 @@ const withScreenSwitch = (Component) => {
       return null;
     }
 
-    _getHeader(credentials, history) {
+    _getHeader(credentials) {
       return <Header
         credentials={credentials}
-        history={history}
       />;
     }
 
@@ -126,7 +125,6 @@ const withScreenSwitch = (Component) => {
         return <Redirect to="/login"/>;
       }
 
-
       bodyElement.className = `page page--gray page--main`;
       return (
           <>
@@ -137,44 +135,64 @@ const withScreenSwitch = (Component) => {
               </section>
             </div>
             <div className="cities__places-wrapper">
-              {this._getContainer({offers, cityName: cityNames[city]})}
+              {this._getContainer({offers: offers[city], cityName: cityNames[city]})}
             </div>
           </>);
+    }
+
+    _getMainScreen({credentials}) {
+      return (<Component
+        {...this.props}
+        renderScreen={() => this._getScreen(credentials)}
+        renderHeader={() => this._getHeader(credentials)}
+      />);
+    }
+
+    _getSignInScreen(
+        {onAuthorizationScreenSubmit, bodyElement, credentials}) {
+
+      return (<SignInScreen
+        handleSubmit={(submitData) => onAuthorizationScreenSubmit(submitData)}
+        bodyElement={bodyElement}
+        credentials={credentials} />);
+    }
+
+    _getFavoritesScreen({credentials, bodyElement, offers}) {
+      if (credentials.id === null) {
+        return <Redirect to="/login"/>;
+      }
+
+      return <FavoritesList
+        bodyElement={bodyElement}
+        offers={offers}/>;
     }
 
     render() {
       const {
         onAuthorizationScreenSubmit,
         bodyElement,
-        credentials, history} = this.props;
+        credentials,
+        cities} = this.props;
 
-      // if (credentials.id) {
-      //   console.log(credentials)
-      //   return <BrowserRouter>
-      //     <Route path="/login" render={() => <Component
-      //       {...this.props}
-      //       renderScreen={() => this._getScreen(credentials)}
-      //       renderHeader={() => this._getHeader(credentials, history)}
-      //     />}/>
-      //   </BrowserRouter>
-      // }
+      const {offers} = cities;
 
       return <BrowserRouter>
         <Switch>
-          <Route path="/favorites" component={Favorites}/>
-          <Route path="/" exact render={() => <Component
-            {...this.props}
-            renderScreen={() => this._getScreen(credentials)}
-            renderHeader={() => this._getHeader(credentials, history)}
-            />} />
+          <Route path="/favorites" render={() => this._getFavoritesScreen({credentials, bodyElement, offers})}/>
+          <Route path="/" exact render={() => this._getMainScreen({credentials})} />
 
-          <Route path="/login" render={() => <SignInScreen
-            handleSubmit={(submitData) => onAuthorizationScreenSubmit(submitData)}
-            bodyElement={bodyElement}
-            credentials={credentials}
-            history={history}/>} />
+          <Route path="/login" render={() => this._getSignInScreen(
+              {onAuthorizationScreenSubmit, bodyElement, credentials})} />
         </Switch>
       </BrowserRouter>;
+    }
+
+    componentDidMount() {
+      const {credentials,
+        hydrateStateOnComponentMount} = this.props;
+
+      hydrateStateOnComponentMount(
+          UserAction.hydrateStateWithLocalStorage(credentials));
     }
   }
 
@@ -184,23 +202,22 @@ const withScreenSwitch = (Component) => {
       cityNames: PropTypes.arrayOf(PropTypes.string).isRequired,
       offers: PropTypes.array
     }),
-    isAuthorizationRequired: PropTypes.bool.isRequired,
+    authorizationRequired: PropTypes.bool.isRequired,
     onAuthorizationScreenSubmit: PropTypes.func.isRequired,
     onHandleTabClick: PropTypes.func.isRequired,
     bodyElement: PropTypes.object.isRequired,
     credentials: PropTypes.object.isRequired,
-    history: PropTypes.object.isRequired
+    hydrateStateOnComponentMount: PropTypes.func.isRequired
   };
 
   return WithScreenSwitch;
 };
 
-
 const mapStateToProps = (state, ownProps) => Object.assign(
     {}, ownProps, {
       city: getCity(state),
       cities: combineCities(state),
-      isAuthorizationRequired: getAuthorizationStatus(state),
+      authorizationRequired: getAuthorizationStatus(state),
       credentials: getCredentials(state),
     });
 
@@ -211,7 +228,15 @@ const mapDispatchToProps = (dispatch) => ({
 
   onAuthorizationScreenSubmit: (submitData) => {
     dispatch(UserAction.Operation.sendCredentials(submitData))
-      .then((result) => dispatch(UserAction.ActionCreator.sendCredentials(result)));
+      .then((result) => {
+          dispatch(UserAction.ActionCreator.sendCredentials(result));
+      }).catch(() => {
+      dispatch(UserAction.ActionCreator.requireAuthorization(true));
+    })
+  },
+
+  hydrateStateOnComponentMount: (credentials) => {
+    dispatch(UserAction.ActionCreator.sendCredentials(credentials));
   }
 });
 

@@ -6,7 +6,7 @@ import {
 describe(`UserReducer works correctly`, () => {
   it(`Returns initial state if undefined state is provided with empty object`, () => {
     expect(reducer(undefined, {})).toEqual({
-      isAuthorizationRequired: false,
+      authorizationRequired: false,
       credentials: {
         [`avatar_url`]: ``,
         email: ``,
@@ -17,12 +17,12 @@ describe(`UserReducer works correctly`, () => {
     });
   });
 
-  it(`Returns modified initial state if action type with payload is provided for isAuthorizationRequired`, () => {
+  it(`Returns modified initial state if action type with payload is provided for authorizationRequired`, () => {
     expect(reducer(undefined, {
-      type: ActionType.REQUIRE_AUTHORIZATION,
+      type: ActionType.AUTHORIZATION_REQUIRED,
       payload: false
     })).toEqual({
-      isAuthorizationRequired: false,
+      authorizationRequired: false,
       credentials: {
         [`avatar_url`]: ``,
         email: ``,
@@ -37,16 +37,16 @@ describe(`UserReducer works correctly`, () => {
       type: ActionType.SEND_CREDENTIALS,
       payload: {id: 1}
     })).toEqual({
-      isAuthorizationRequired: false,
+      authorizationRequired: false,
       credentials: {id: 1}});
   });
 
   it(`Returns modified state if action type with payload is provided for Authorization`, () => {
-    expect(reducer({isAuthorizationRequired: false, credentials: {}}, {
-      type: ActionType.REQUIRE_AUTHORIZATION,
+    expect(reducer({authorizationRequired: false, credentials: {}}, {
+      type: ActionType.AUTHORIZATION_REQUIRED,
       payload: true
     })).toEqual({
-      isAuthorizationRequired: true,
+      authorizationRequired: true,
       credentials: {}});
   });
 });
@@ -54,7 +54,7 @@ describe(`UserReducer works correctly`, () => {
 describe(`ActionCreator in UserReducer works correctly`, () => {
   it(`Returns object with action type`, () => {
     expect(ActionCreator.requireAuthorization(true)).toEqual({
-      type: ActionType.REQUIRE_AUTHORIZATION,
+      type: ActionType.AUTHORIZATION_REQUIRED,
       payload: true
     });
     expect(ActionCreator.sendCredentials({id: 2})).toEqual({

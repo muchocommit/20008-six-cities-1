@@ -9,13 +9,12 @@ export const createAPI = () => {
 
   const onSuccess = (response) => {
     return response;
-
   };
   const onFail = (err) => {
-    return err.response.status;
+
+    return err.response;
   };
 
   api.interceptors.response.use(onSuccess, onFail);
-
   return api;
 };

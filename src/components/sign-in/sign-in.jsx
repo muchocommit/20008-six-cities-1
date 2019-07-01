@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {Redirect} from 'react-router-dom';
 import {connect} from 'react-redux';
 
-import {getCredentials} from '../../reducers/user/selectors';
+import {getAuthorizationStatus, getCredentials} from '../../reducers/user/selectors';
 
 class SignInScreen extends PureComponent {
   constructor(props) {
@@ -58,11 +58,13 @@ class SignInScreen extends PureComponent {
 
 
   render() {
-    const {credentials, bodyElement} = this.props;
+    const {credentials, bodyElement, authorizationRequired} = this.props;
 
-    // console.log(history)
+    if (authorizationRequired) {
+      const formError = this._formRef.current.querySelector(`.login__error`);
+      formError.style.display = `block`;
+    }
 
-    // console.log(credentials);
     if (credentials.id) {
       return <Redirect to="/"/>;
     }
@@ -125,6 +127,8 @@ class SignInScreen extends PureComponent {
               </div>
               <button className="login__submit form__submit button"
                 type="submit" onClick={this._submitForm}>Sign in</button>
+
+              <span className="login__error" style={{display: `none`, textAlign: `center`, paddingTop: `10px`}}>Неверный логин или пароль</span>
             </form>
           </section>
           <section className="locations locations--login locations--current">
@@ -144,12 +148,13 @@ SignInScreen.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
   bodyElement: PropTypes.object.isRequired,
   credentials: PropTypes.object.isRequired,
-  history: PropTypes.object.isRequired
+  authorizationRequired: PropTypes.bool.isRequired
 };
 
 const mapStateToProps = (state, ownProps) => Object.assign(
     {}, ownProps, {
-      credentials: getCredentials(state)
+      credentials: getCredentials(state),
+      authorizationRequired: getAuthorizationStatus(state),
     });
 
 export default connect(mapStateToProps)(SignInScreen);
