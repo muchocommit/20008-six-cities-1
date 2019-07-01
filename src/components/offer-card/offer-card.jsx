@@ -70,5 +70,6 @@ OfferCard.propTypes = {
     title: PropTypes.string.isRequired
   }),
   mouseOverHandler: PropTypes.func.isRequired,
-  index: PropTypes.number.isRequired
+  index: PropTypes.number.isRequired,
+  isFavorite: PropTypes.bool.isRequired
 };
