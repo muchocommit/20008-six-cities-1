@@ -7,8 +7,7 @@ const initialState = {
     email: ``,
     id: null,
     [`is_pro`]: false,
-    name: ``,
-    error: false
+    name: ``
   },
 };
 
@@ -30,7 +29,7 @@ const ActionCreator = {
 
 const hydrateStateWithLocalStorage = (credentials) => {
   const localCredentials = JSON.parse(
-    localStorage.getItem(`credentials`));
+      localStorage.getItem(`credentials`));
 
   for (let key in credentials) {
 
@@ -49,11 +48,11 @@ const Operation = {
         .then((response) => {
           if (response.status === 200) {
 
-            // Must include error field for unsuccessful login attempts
             localStorage.setItem(`credentials`, JSON.stringify(response.data));
             return response.data;
           }
-          return {};
+
+          throw response;
         });
     }
 };

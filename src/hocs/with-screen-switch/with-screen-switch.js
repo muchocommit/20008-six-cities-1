@@ -187,7 +187,7 @@ const withScreenSwitch = (Component) => {
         hydrateStateOnComponentMount} = this.props;
 
       hydrateStateOnComponentMount(
-        UserAction.hydrateStateWithLocalStorage(credentials));
+          UserAction.hydrateStateWithLocalStorage(credentials));
     }
   }
 
@@ -223,7 +223,11 @@ const mapDispatchToProps = (dispatch) => ({
 
   onAuthorizationScreenSubmit: (submitData) => {
     dispatch(UserAction.Operation.sendCredentials(submitData))
-      .then((result) => dispatch(UserAction.ActionCreator.sendCredentials(result)));
+      .then((result) => {
+          dispatch(UserAction.ActionCreator.sendCredentials(result));
+      }).catch(() => {
+      dispatch(UserAction.ActionCreator.requireAuthorization(true));
+    })
   },
 
   hydrateStateOnComponentMount: (credentials) => {
