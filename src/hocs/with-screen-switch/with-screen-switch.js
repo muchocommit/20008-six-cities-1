@@ -164,7 +164,8 @@ const withScreenSwitch = (Component) => {
 
       return <FavoritesList
         bodyElement={bodyElement}
-        offers={offers}/>;
+        offers={offers}
+        credentials={credentials}/>;
     }
 
     render() {
