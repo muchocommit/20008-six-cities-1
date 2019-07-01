@@ -15,23 +15,24 @@ class OffersList extends PureComponent {
     const {activateItem} = this.props;
 
     if (target.dataset.index) {
-      activateItem(target.dataset.index);
-      return;
+      return activateItem(target.dataset.index);
     }
 
     while (target !== `ARTICLE`) {
       if (target.parentNode.dataset.index) {
 
-        activateItem(target.parentNode.dataset.index);
-        return;
+
+        return activateItem(target.parentNode.dataset.index);
       }
 
       target = target.parentNode;
     }
+
+    return null;
   }
 
   _getOffers() {
-    const {offers} = this.props;
+    const {offers, handleBookMarkClick} = this.props;
 
     return offers.map((it, i) => {
 
@@ -41,6 +42,7 @@ class OffersList extends PureComponent {
         mouseOverHandler={this._handleMouseOver}
         index={i}
         isFavorite={it[`is_favorite`]}
+        bookMarkClickHandler={handleBookMarkClick}
       />;
     });
   }
@@ -55,7 +57,8 @@ class OffersList extends PureComponent {
 
 OffersList.propTypes = {
   activateItem: PropTypes.func.isRequired,
-  offers: PropTypes.array.isRequired
+  offers: PropTypes.array.isRequired,
+  handleBookMarkClick: PropTypes.func.isRequired
 };
 
 export default OffersList;

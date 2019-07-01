@@ -73,7 +73,7 @@ const withScreenSwitch = (Component) => {
       offers = [],
       cityNames = []}) {
 
-      const {onHandleTabClick} = this.props;
+      const {onHandleTabClick, onBookMarkButtonClick} = this.props;
 
       switch (key) {
         case `LOCATIONS`:
@@ -100,7 +100,9 @@ const withScreenSwitch = (Component) => {
 
         default:
           return (
-            <OffersListWrapped offers={offers}
+            <OffersListWrapped
+              offers={offers}
+              handleBookMarkClick={(className) => onBookMarkButtonClick(className)}
             />);
       }
 
@@ -179,7 +181,8 @@ const withScreenSwitch = (Component) => {
 
       return <BrowserRouter>
         <Switch>
-          <Route path="/favorites" render={() => this._getFavoritesScreen({credentials, bodyElement, offers})}/>
+          <Route path="/favorites" render={() => this._getFavoritesScreen({
+            credentials, bodyElement, offers})}/>
           <Route path="/" exact render={() => this._getMainScreen({credentials})} />
 
           <Route path="/login" render={() => this._getSignInScreen(
@@ -208,7 +211,8 @@ const withScreenSwitch = (Component) => {
     onHandleTabClick: PropTypes.func.isRequired,
     bodyElement: PropTypes.object.isRequired,
     credentials: PropTypes.object.isRequired,
-    hydrateStateOnComponentMount: PropTypes.func.isRequired
+    hydrateStateOnComponentMount: PropTypes.func.isRequired,
+    onBookMarkButtonClick: PropTypes.func.isRequired
   };
 
   return WithScreenSwitch;
@@ -223,6 +227,10 @@ const mapStateToProps = (state, ownProps) => Object.assign(
     });
 
 const mapDispatchToProps = (dispatch) => ({
+  onBookMarkButtonClick: (className) => {
+    console.log(className)
+  },
+
   onHandleTabClick: (activeCity) => {
     dispatch(DataAction.ActionCreator.changeCity(activeCity));
   },
