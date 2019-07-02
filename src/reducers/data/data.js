@@ -9,13 +9,20 @@ const Operation = {
   loadCities: () => (dispatch, _getState, api) => {
     return api.get(`/hotels`)
       .then((response) => {
-        dispatch(ActionCreator.loadCities(response.data));
+
+        if (response.status === 200) {
+
+          dispatch(ActionCreator.loadCities(response.data));
+        }
+
+        throw response;
       });
   },
 
   addBookMark: ({bookMarkIndex, isFavorite}) =>
     (dispatch, _getState, api) => {
 
+    isFavorite = +!isFavorite;
       return api.post(`/favorite/${bookMarkIndex}/${isFavorite}`)
       .then((response) => {
 
@@ -71,7 +78,8 @@ const getLocationsCoordinates = (locations) => {
   return locations.map((it) => [it.latitude, it.longitude]);
 };
 
-const sortOffersByCityName = (namesArray, citiesArray) => {
+const sortOffersByCityName = (namesArray, [...citiesArray]) => {
+
   return namesArray.map((name) => {
 
     return citiesArray.filter((it) => {

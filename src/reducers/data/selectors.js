@@ -18,14 +18,15 @@ export const getOffersByCityName = (cityName, citiesArray) => {
   return citiesArray.filter((it) => it.city.name === cityName);
 };
 
-export const combineCities = createSelector(
-    getCities,
-
-    (cities) => {
-      const cityNames = getCityNames(cities);
-      const offers = sortOffersByCityName(cityNames, cities);
-
-      return {cityNames, offers};
-    }
-);
+// export const combineCities = createSelector(
+//     getCities,
+//
+//     (cities) => {
+//
+//       const cityNames = getCityNames(cities);
+//       const offers = sortOffersByCityName(cityNames, cities);
+//
+//       return {cityNames, offers};
+//     }
+// );
 

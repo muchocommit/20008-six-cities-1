@@ -7,6 +7,8 @@ import {getRating} from '../../assets/handler';
 export default class OfferCard extends PureComponent {
   constructor(props) {
     super(props);
+
+    this._getCardScreen = this._getCardScreen.bind(this);
   }
 
   static _getPropertyMark(isPremium) {
@@ -15,6 +17,7 @@ export default class OfferCard extends PureComponent {
 
   _getCardScreen() {
     const {isFavorite, offer} = this.props;
+
 
     if (!isFavorite) {
       const {
