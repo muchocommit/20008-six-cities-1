@@ -16,9 +16,13 @@ import SignInScreen from './../../components/sign-in/sign-in.jsx';
 import FavoritesList from './../../components/favorites-list/favorites-list.jsx';
 
 import {getCity, combineCities} from '../../reducers/data/selectors';
-import {getAuthorizationStatus, getCredentials} from '../../reducers/user/selectors';
-import PropTypes from 'prop-types';
+import {sortOffersByCityName} from '../../reducers/data/data';
+import {
+  getAuthorizationAttempt,
+  getCredentials,
+  getAuthorizationStatus} from '../../reducers/user/selectors';
 
+import PropTypes from 'prop-types';
 import withActiveItem from './../../hocs/with-active-item/with-active-item';
 
 const CitiesListWrapped = withActiveItem(CitiesList);
@@ -73,7 +77,7 @@ const withScreenSwitch = (Component) => {
       offers = [],
       cityNames = []}) {
 
-      const {onHandleTabClick} = this.props;
+      const {onHandleTabClick, onBookMarkButtonClick} = this.props;
 
       switch (key) {
         case `LOCATIONS`:
@@ -100,7 +104,10 @@ const withScreenSwitch = (Component) => {
 
         default:
           return (
-            <OffersListWrapped offers={offers}
+            <OffersListWrapped
+              offers={offers}
+              handleBookMarkClick={({bookMarkIndex, isFavorite}) =>
+                onBookMarkButtonClick({bookMarkIndex, isFavorite})}
             />);
       }
 
@@ -113,15 +120,13 @@ const withScreenSwitch = (Component) => {
       />;
     }
 
-    _getScreen(credentials) {
+    _getScreen({credentials, isAuthorizationRequired, offers, cityNames}) {
       const {
-        cities,
         city,
         bodyElement} = this.props;
 
-      const {cityNames, offers} = cities;
 
-      if (credentials.id === null) {
+      if (isAuthorizationRequired || credentials.id === null) {
         return <Redirect to="/login"/>;
       }
 
@@ -140,11 +145,12 @@ const withScreenSwitch = (Component) => {
           </>);
     }
 
-    _getMainScreen({credentials}) {
+    _getMainScreen({credentials, isAuthorizationRequired, offers, cityNames}) {
       return (<Component
         {...this.props}
-        renderScreen={() => this._getScreen(credentials)}
-        renderHeader={() => this._getHeader(credentials)}
+        renderScreen={() => this._getScreen({
+          credentials, isAuthorizationRequired, offers, cityNames})}
+        renderHeader={() => this._getHeader(credentials, isAuthorizationRequired)}
       />);
     }
 
@@ -164,7 +170,8 @@ const withScreenSwitch = (Component) => {
 
       return <FavoritesList
         bodyElement={bodyElement}
-        offers={offers}/>;
+        offers={offers}
+        credentials={credentials}/>;
     }
 
     render() {
@@ -172,27 +179,31 @@ const withScreenSwitch = (Component) => {
         onAuthorizationScreenSubmit,
         bodyElement,
         credentials,
-        cities} = this.props;
+        cities,
+        isAuthorizationRequired} = this.props;
 
-      const {offers} = cities;
+      const {cityNames, offers} = cities;
+
+      const storedCredentials = UserAction.getCredentials(credentials);
+
 
       return <BrowserRouter>
         <Switch>
-          <Route path="/favorites" render={() => this._getFavoritesScreen({credentials, bodyElement, offers})}/>
-          <Route path="/" exact render={() => this._getMainScreen({credentials})} />
+          <Route path="/favorites" render={() => this._getFavoritesScreen({
+            credentials: storedCredentials, bodyElement, offers})}/>
+          <Route path="/" exact render={() => this._getMainScreen({
+            credentials: storedCredentials, isAuthorizationRequired, offers, cityNames})} />
 
           <Route path="/login" render={() => this._getSignInScreen(
-              {onAuthorizationScreenSubmit, bodyElement, credentials})} />
+              {onAuthorizationScreenSubmit, bodyElement, credentials: storedCredentials})} />
         </Switch>
       </BrowserRouter>;
     }
 
     componentDidMount() {
-      const {credentials,
-        hydrateStateOnComponentMount} = this.props;
+      const {checkAuthOnComponentMount} = this.props;
 
-      hydrateStateOnComponentMount(
-          UserAction.hydrateStateWithLocalStorage(credentials));
+      checkAuthOnComponentMount();
     }
   }
 
@@ -202,12 +213,15 @@ const withScreenSwitch = (Component) => {
       cityNames: PropTypes.arrayOf(PropTypes.string).isRequired,
       offers: PropTypes.array
     }),
-    authorizationRequired: PropTypes.bool.isRequired,
     onAuthorizationScreenSubmit: PropTypes.func.isRequired,
     onHandleTabClick: PropTypes.func.isRequired,
     bodyElement: PropTypes.object.isRequired,
     credentials: PropTypes.object.isRequired,
-    hydrateStateOnComponentMount: PropTypes.func.isRequired
+    onBookMarkButtonClick: PropTypes.func.isRequired,
+
+    isAuthorizationFailed: PropTypes.bool.isRequired,
+    isAuthorizationRequired: PropTypes.bool.isRequired,
+    checkAuthOnComponentMount: PropTypes.func.isRequired
   };
 
   return WithScreenSwitch;
@@ -217,11 +231,24 @@ const mapStateToProps = (state, ownProps) => Object.assign(
     {}, ownProps, {
       city: getCity(state),
       cities: combineCities(state),
-      authorizationRequired: getAuthorizationStatus(state),
+      isAuthorizationFailed: getAuthorizationAttempt(state),
+      isAuthorizationRequired: getAuthorizationStatus(state),
       credentials: getCredentials(state),
     });
 
 const mapDispatchToProps = (dispatch) => ({
+  onBookMarkButtonClick: ({bookMarkIndex, isFavorite}) => {
+
+    dispatch(DataAction.Operation.addBookMark({bookMarkIndex, isFavorite}))
+      .then(() => {
+
+        dispatch(DataAction.Operation.loadCities());
+      })
+      .catch(() => {
+        dispatch(UserAction.Operation.checkAuth());
+      });
+  },
+
   onHandleTabClick: (activeCity) => {
     dispatch(DataAction.ActionCreator.changeCity(activeCity));
   },
@@ -229,14 +256,22 @@ const mapDispatchToProps = (dispatch) => ({
   onAuthorizationScreenSubmit: (submitData) => {
     dispatch(UserAction.Operation.sendCredentials(submitData))
       .then((result) => {
-          dispatch(UserAction.ActionCreator.sendCredentials(result));
+
+        dispatch(UserAction.ActionCreator.isAuthorizationRequired(false));
+        dispatch(UserAction.ActionCreator.sendCredentials(result));
       }).catch(() => {
-      dispatch(UserAction.ActionCreator.requireAuthorization(true));
-    })
+        // If user is not Authorized, then redirect
+        dispatch(UserAction.ActionCreator.isAuthorizationFailed(true));
+      });
   },
 
-  hydrateStateOnComponentMount: (credentials) => {
-    dispatch(UserAction.ActionCreator.sendCredentials(credentials));
+  checkAuthOnComponentMount: () => {
+    dispatch(UserAction.Operation.checkAuth()).then(
+        () => {
+
+          dispatch(UserAction.ActionCreator.isAuthorizationRequired(false));
+        })
+        .catch(() => dispatch(UserAction.ActionCreator.isAuthorizationRequired(true)));
   }
 });
 

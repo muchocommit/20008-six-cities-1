@@ -22,6 +22,7 @@ export const combineCities = createSelector(
     getCities,
 
     (cities) => {
+
       const cityNames = getCityNames(cities);
       const offers = sortOffersByCityName(cityNames, cities);
 

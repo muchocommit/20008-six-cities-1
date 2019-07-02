@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {Redirect} from 'react-router-dom';
 import {connect} from 'react-redux';
 
-import {getAuthorizationStatus, getCredentials} from '../../reducers/user/selectors';
+import {getAuthorizationAttempt, getAuthorizationStatus, getCredentials} from '../../reducers/user/selectors';
 
 class SignInScreen extends PureComponent {
   constructor(props) {
@@ -56,18 +56,23 @@ class SignInScreen extends PureComponent {
     this.props.handleSubmit(newData);
   }
 
-
   render() {
-    const {credentials, bodyElement, authorizationRequired} = this.props;
+    const {credentials,
+      bodyElement,
+      isAuthorizationFailed,
+      isAuthorizationRequired} = this.props;
 
-    if (authorizationRequired) {
+
+    if (isAuthorizationFailed) {
       const formError = this._formRef.current.querySelector(`.login__error`);
       formError.style.display = `block`;
     }
 
-    if (credentials.id) {
+
+    if (credentials.id && !isAuthorizationRequired) {
       return <Redirect to="/"/>;
     }
+
     bodyElement.className = `page page--gray page--login`;
 
     return (
@@ -148,13 +153,16 @@ SignInScreen.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
   bodyElement: PropTypes.object.isRequired,
   credentials: PropTypes.object.isRequired,
-  authorizationRequired: PropTypes.bool.isRequired
+
+  isAuthorizationFailed: PropTypes.bool.isRequired,
+  isAuthorizationRequired: PropTypes.bool.isRequired
 };
 
 const mapStateToProps = (state, ownProps) => Object.assign(
     {}, ownProps, {
       credentials: getCredentials(state),
-      authorizationRequired: getAuthorizationStatus(state),
+      isAuthorizationFailed: getAuthorizationAttempt(state),
+      isAuthorizationRequired: getAuthorizationStatus(state),
     });
 
 export default connect(mapStateToProps)(SignInScreen);

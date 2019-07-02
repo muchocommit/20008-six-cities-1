@@ -12,6 +12,8 @@ export const createAPI = () => {
   };
   const onFail = (err) => {
 
+    // Need to return err.response in order to
+    // Handle it
     return err.response;
   };
 

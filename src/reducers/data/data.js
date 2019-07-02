@@ -9,9 +9,30 @@ const Operation = {
   loadCities: () => (dispatch, _getState, api) => {
     return api.get(`/hotels`)
       .then((response) => {
-        dispatch(ActionCreator.loadCities(response.data));
+
+        if (response) {
+
+          return dispatch(ActionCreator.loadCities(response.data));
+        }
+
+        throw response;
       });
   },
+
+  addBookMark: ({bookMarkIndex, isFavorite}) =>
+    (dispatch, _getState, api) => {
+
+    isFavorite = +!isFavorite;
+      return api.post(`/favorite/${bookMarkIndex}/${isFavorite}`)
+      .then((response) => {
+
+        if (response.status === 200) {
+          return response.data;
+        }
+
+        throw response;
+      });
+    }
 };
 
 const ActionCreator = {
@@ -42,8 +63,8 @@ const groupByPropertyName = (objectArray, property) => {
   }, {});
 };
 
-const groupFavoriteOffersByCityName = (set) => {
-  const arrayConcatenated = set.reduce((acc, it) => acc.concat(it));
+const groupFavoriteOffersByCityName = (array) => {
+  const arrayConcatenated = array.reduce((acc, it) => acc.concat(it));
 
   return groupByPropertyName(arrayConcatenated, `city`);
 };
@@ -57,7 +78,8 @@ const getLocationsCoordinates = (locations) => {
   return locations.map((it) => [it.latitude, it.longitude]);
 };
 
-const sortOffersByCityName = (namesArray, citiesArray) => {
+const sortOffersByCityName = (namesArray, [...citiesArray]) => {
+
   return namesArray.map((name) => {
 
     return citiesArray.filter((it) => {
@@ -71,8 +93,8 @@ const getFavoriteOffers = (offersArray) => {
 
     return offer.filter((it) => {
       return it[`is_favorite`] === true;
-    })
-  }).filter((it) => it.length > 0)
+    });
+  }).filter((it) => it.length > 0);
 };
 
 const reducer = (state = initialState, action) => {
