@@ -25,20 +25,9 @@ export default class Map extends PureComponent {
     return {};
   }
 
-  render() {
-    return (
-      <div ref={this._mapRef}></div>
-    );
-  }
-
-  componentDidMount() {
-    const {locations, mapId} = this.props;
-    const currentMap = this._mapRef.current;
-
-    currentMap.id = mapId;
-    const {
-      ZOOM, CITY, ICON, TILE_LAYER
-    } = MapParams;
+  _renderMarkers() {
+    const {locations} = this.props;
+    const {ICON} = MapParams;
 
     const icon = leaflet.icon({
       iconUrl: ICON.URL,
@@ -52,6 +41,32 @@ export default class Map extends PureComponent {
       id: null
     });
 
+    [...locations].forEach((it) => {
+
+      return leaflet.marker(getLocationsCoordinates(it), {icon, id: it.id})
+        .addTo(this.markerGroup).on('click', (e) => {
+
+          const {target} = e;
+          target.setIcon(newIcon);
+        });
+    });
+  }
+
+  render() {
+    return (
+      <div ref={this._mapRef}></div>
+    );
+  }
+
+  componentDidMount() {
+    const {mapId} = this.props;
+    const currentMap = this._mapRef.current;
+
+    currentMap.id = mapId;
+    const {
+      ZOOM, CITY, TILE_LAYER
+    } = MapParams;
+
     const map = leaflet.map(currentMap, {
       center: CITY,
       zoom: ZOOM,
@@ -59,51 +74,20 @@ export default class Map extends PureComponent {
       marker: true
     }).setView(CITY, ZOOM);
 
-
-    leaflet.tileLayer(TILE_LAYER.URL, {
-      attribution: TILE_LAYER.OPTIONS.ATTRIBUTION
-    })
-      .addTo(map);
-
     this.markerGroup = leaflet.layerGroup().addTo(map);
 
+    leaflet.tileLayer(TILE_LAYER.URL, {
+        attribution: TILE_LAYER.OPTIONS.ATTRIBUTION
+      })
+      .addTo(map);
 
-    const markers = [...locations].forEach((it) => {
-
-      return leaflet.marker(getLocationsCoordinates(it), {icon, id: it.id})
-        .addTo(this.markerGroup).on('click', (e) => {
-
-        const {target} = e;
-        target.setIcon(newIcon);
-      });
-    });
+    this._renderMarkers();
   }
 
   componentDidUpdate() {
-    const {locations} = this.props;
-
-    const {ICON} = MapParams;
-
-    const icon = leaflet.icon({
-      iconUrl: ICON.URL,
-      iconSize: ICON.SIZE
-    });
-
-    const newIcon = leaflet.icon({
-      iconUrl: ICON.URL,
-      iconSize: [40, 40],
-      id: null
-    });
 
     this.markerGroup.clearLayers();
-
-    const markers = [...locations].forEach((it) =>
-      leaflet.marker(it, {icon}).addTo(this.markerGroup).on('click', (e) => {
-        const {target} = e;
-
-        target.setIcon(newIcon);
-      }));
-    console.log(this.markerGroup);
+    this._renderMarkers();
   }
 }
 
