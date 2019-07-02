@@ -119,5 +119,5 @@ OfferCard.propTypes = {
   mouseOverHandler: PropTypes.func,
   index: PropTypes.number,
   isFavorite: PropTypes.bool.isRequired,
-  bookMarkClickHandler: PropTypes.func.isRequired
+  bookMarkClickHandler: PropTypes.func
 };

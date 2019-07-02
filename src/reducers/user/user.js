@@ -1,7 +1,8 @@
 import {ActionType} from './../../data';
 
 const initialState = {
-  authorizationRequired: false,
+  isAuthorizationFailed: false,
+  isAuthorizationRequired: false,
   credentials: {
     [`avatar_url`]: ``,
     email: ``,
@@ -12,9 +13,16 @@ const initialState = {
 };
 
 const ActionCreator = {
-  requireAuthorization: (status) => {
+  isAuthorizationRequired: (status) => {
     return {
       type: ActionType.AUTHORIZATION_REQUIRED,
+      payload: status
+    }
+  },
+
+  isAuthorizationFailed: (status) => {
+    return {
+      type: ActionType.AUTHORIZATION_FAILED,
       payload: status,
     };
   },
@@ -61,6 +69,7 @@ const Operation = {
       return api
         .get(`/login`)
         .then((res) => {
+
           return res;
         });
     };
@@ -69,14 +78,19 @@ const Operation = {
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
-    case ActionType.AUTHORIZATION_REQUIRED:
+    case ActionType.AUTHORIZATION_FAILED:
       return Object.assign({}, state, {
-        authorizationRequired: action.payload,
+        isAuthorizationFailed: action.payload,
       });
 
     case ActionType.SEND_CREDENTIALS:
       return Object.assign({}, state, {
         credentials: action.payload
+      });
+
+    case ActionType.AUTHORIZATION_REQUIRED:
+      return Object.assign({}, state, {
+        isAuthorizationRequired: action.payload
       });
   }
 

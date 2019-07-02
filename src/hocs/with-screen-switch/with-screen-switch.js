@@ -16,9 +16,12 @@ import SignInScreen from './../../components/sign-in/sign-in.jsx';
 import FavoritesList from './../../components/favorites-list/favorites-list.jsx';
 
 import {getCity, combineCities} from '../../reducers/data/selectors';
-import {getAuthorizationStatus, getCredentials} from '../../reducers/user/selectors';
-import PropTypes from 'prop-types';
+import {
+  getAuthorizationAttempt,
+  getCredentials,
+  getAuthorizationStatus} from '../../reducers/user/selectors';
 
+import PropTypes from 'prop-types';
 import withActiveItem from './../../hocs/with-active-item/with-active-item';
 
 const CitiesListWrapped = withActiveItem(CitiesList);
@@ -207,7 +210,7 @@ const withScreenSwitch = (Component) => {
       cityNames: PropTypes.arrayOf(PropTypes.string).isRequired,
       offers: PropTypes.array
     }),
-    authorizationRequired: PropTypes.bool.isRequired,
+    isAuthorizationFailed: PropTypes.bool.isRequired,
     onAuthorizationScreenSubmit: PropTypes.func.isRequired,
     onHandleTabClick: PropTypes.func.isRequired,
     bodyElement: PropTypes.object.isRequired,
@@ -223,7 +226,7 @@ const mapStateToProps = (state, ownProps) => Object.assign(
     {}, ownProps, {
       city: getCity(state),
       cities: combineCities(state),
-      authorizationRequired: getAuthorizationStatus(state),
+      isAuthorizationFailed: getAuthorizationAttempt(state),
       credentials: getCredentials(state),
     });
 
@@ -232,11 +235,15 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(DataAction.Operation.addBookMark({bookMarkIndex, isFavorite}))
       .then((result) => {
 
-        console.log(result)
+        console.log(result);
       }).catch(() => {
 
-        dispatch(UserAction.Operation.checkAuth())
-      })
+        return dispatch(UserAction.Operation.checkAuth());
+      }).then((result) => {
+
+        console.log(result);
+        // dispatch(UserAction.ActionCreator.sendCredentials(result));
+      });
   },
 
   onHandleTabClick: (activeCity) => {
@@ -246,10 +253,11 @@ const mapDispatchToProps = (dispatch) => ({
   onAuthorizationScreenSubmit: (submitData) => {
     dispatch(UserAction.Operation.sendCredentials(submitData))
       .then((result) => {
-          dispatch(UserAction.ActionCreator.sendCredentials(result));
+        dispatch(UserAction.ActionCreator.sendCredentials(result));
       }).catch(() => {
-      dispatch(UserAction.ActionCreator.requireAuthorization(true));
-    })
+        // If user is not Authorized, then redirect
+        dispatch(UserAction.ActionCreator.isAuthorizationFailed(true));
+      });
   },
 
   hydrateStateOnComponentMount: (credentials) => {
