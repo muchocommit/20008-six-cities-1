@@ -56,8 +56,8 @@ const groupByPropertyName = (objectArray, property) => {
   }, {});
 };
 
-const groupFavoriteOffersByCityName = (set) => {
-  const arrayConcatenated = set.reduce((acc, it) => acc.concat(it));
+const groupFavoriteOffersByCityName = (array) => {
+  const arrayConcatenated = array.reduce((acc, it) => acc.concat(it));
 
   return groupByPropertyName(arrayConcatenated, `city`);
 };

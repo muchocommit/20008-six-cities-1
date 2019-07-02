@@ -8,10 +8,14 @@ export const createAPI = () => {
   });
 
   const onSuccess = (response) => {
+    console.log(response);
+
     return response;
   };
   const onFail = (err) => {
 
+    // Need to return err.response in order to
+    // Handle it
     return err.response;
   };
 

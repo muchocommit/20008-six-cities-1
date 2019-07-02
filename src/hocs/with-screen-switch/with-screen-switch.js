@@ -235,7 +235,6 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(DataAction.Operation.addBookMark({bookMarkIndex, isFavorite}))
       .then((result) => {
 
-        console.log(result);
       }).catch(() => {
 
         return dispatch(UserAction.Operation.checkAuth());

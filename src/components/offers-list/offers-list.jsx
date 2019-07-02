@@ -33,7 +33,6 @@ class OffersList extends PureComponent {
   _getOffers() {
     const {offers, handleBookMarkClick} = this.props;
 
-    console.log(offers)
 
     return offers.map((it, i) => {
 
