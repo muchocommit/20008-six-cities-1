@@ -42,7 +42,14 @@ export default class Map extends PureComponent {
 
     const icon = leaflet.icon({
       iconUrl: ICON.URL,
-      iconSize: ICON.SIZE
+      iconSize: ICON.SIZE,
+      id: null
+    });
+
+    const newIcon = leaflet.icon({
+      iconUrl: ICON.URL,
+      iconSize: [40, 40],
+      id: null
     });
 
     const map = leaflet.map(currentMap, {
@@ -60,23 +67,43 @@ export default class Map extends PureComponent {
 
     this.markerGroup = leaflet.layerGroup().addTo(map);
 
-    [...locations].forEach((it) =>
-      leaflet.marker(it, {icon}).addTo(this.markerGroup));
+    const markers = [...locations].forEach((it, i) => {
+      return leaflet.marker(it, {icon, id: i}).addTo(this.markerGroup).on('click', (e) => {
+        const {target} = e;
+
+        console.log(this.markerGroup);
+        target.setIcon(newIcon);
+      });
+    });
   }
 
   componentDidUpdate() {
     const {locations} = this.props;
 
     const {ICON} = MapParams;
+
     const icon = leaflet.icon({
       iconUrl: ICON.URL,
       iconSize: ICON.SIZE
     });
 
+    const newIcon = leaflet.icon({
+      iconUrl: ICON.URL,
+      iconSize: [40, 40],
+      id: null
+    });
+
     this.markerGroup.clearLayers();
 
-    [...locations].forEach((it) =>
-      leaflet.marker(it, {icon}).addTo(this.markerGroup));
+    const markers = [...locations].forEach((it) =>
+      leaflet.marker(it, {icon}).addTo(this.markerGroup).on('click', (e) => {
+        const {target} = e;
+
+        target.setIcon(newIcon);
+      }));
+
+
+    console.log(this.markerGroup);
   }
 }
 
