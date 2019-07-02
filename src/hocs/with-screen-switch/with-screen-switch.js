@@ -15,7 +15,7 @@ import SignInScreen from './../../components/sign-in/sign-in.jsx';
 
 import FavoritesList from './../../components/favorites-list/favorites-list.jsx';
 
-import {getCity, getCities, getCityNames} from '../../reducers/data/selectors';
+import {getCity, combineCities} from '../../reducers/data/selectors';
 import {sortOffersByCityName} from '../../reducers/data/data';
 import {
   getAuthorizationAttempt,
@@ -148,7 +148,8 @@ const withScreenSwitch = (Component) => {
     _getMainScreen({credentials, isAuthorizationRequired, offers, cityNames}) {
       return (<Component
         {...this.props}
-        renderScreen={() => this._getScreen({credentials, isAuthorizationRequired, offers, cityNames})}
+        renderScreen={() => this._getScreen({
+          credentials, isAuthorizationRequired, offers, cityNames})}
         renderHeader={() => this._getHeader(credentials, isAuthorizationRequired)}
       />);
     }
@@ -181,9 +182,7 @@ const withScreenSwitch = (Component) => {
         cities,
         isAuthorizationRequired} = this.props;
 
-
-      const cityNames = getCityNames(cities);
-      const offers = sortOffersByCityName(cityNames, cities);
+      const {cityNames, offers} = cities;
 
       const storedCredentials = UserAction.getCredentials(credentials);
 
@@ -207,18 +206,6 @@ const withScreenSwitch = (Component) => {
       checkAuthOnComponentMount();
 
     }
-
-    componentDidUpdate() {
-      const {credentials, isAuthorizationRequired, cities} = this.props;
-      const storedCredentials = UserAction.getCredentials(credentials);
-
-
-
-      console.log(`offers on update`, sortOffersByCityName(getCityNames([...cities]), [...cities]));
-      // this._getMainScreen({
-      //   credentials: storedCredentials, isAuthorizationRequired, offers, cityNames})
-    }
-
   }
 
   WithScreenSwitch.propTypes = {
@@ -244,7 +231,7 @@ const withScreenSwitch = (Component) => {
 const mapStateToProps = (state, ownProps) => Object.assign(
     {}, ownProps, {
       city: getCity(state),
-      cities: getCities(state),
+      cities: combineCities(state),
       isAuthorizationFailed: getAuthorizationAttempt(state),
       isAuthorizationRequired: getAuthorizationStatus(state),
       credentials: getCredentials(state),

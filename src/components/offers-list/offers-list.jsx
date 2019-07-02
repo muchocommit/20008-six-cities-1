@@ -40,7 +40,7 @@ class OffersList extends PureComponent {
         key={i}
         offer={it}
         mouseOverHandler={this._handleMouseOver}
-        index={i}
+        index={it.id}
         isFavorite={it[`is_favorite`]}
         bookMarkClickHandler={handleBookMarkClick}
       />;
