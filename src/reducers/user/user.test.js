@@ -34,6 +34,7 @@ describe(`UserReducer works correctly`, () => {
     });
   });
 
+
   it(`Returns modified initial state if action type with payload is provided for credentials`, () => {
     expect(reducer(undefined, {
       type: ActionType.SEND_CREDENTIALS,
