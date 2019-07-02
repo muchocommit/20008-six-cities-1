@@ -2,13 +2,18 @@ import React, {PureComponent, createRef} from 'react';
 import PropTypes from 'prop-types';
 
 import {MapParams} from '../../data';
-import {getLocationsCoordinates} from '../../reducers/data/data';
+import {
+  getLocationsCoordinates,
+  getPureLocations, getLocationMean,
+  accumulateLocationsFromArray} from '../../reducers/data/data';
+
 import leaflet from 'leaflet';
 
 export default class Map extends PureComponent {
   constructor(props) {
     super(props);
 
+    this._map = {};
     this._markerGroup = null;
     this._mapRef = createRef();
   }
@@ -23,6 +28,13 @@ export default class Map extends PureComponent {
       return this._markerGroup;
     }
     return {};
+  }
+
+  static _getCityLocation(locations) {
+    const pureLocations = getPureLocations(locations);
+    const accumulatedLocation = accumulateLocationsFromArray(pureLocations);
+
+    return getLocationMean(accumulatedLocation, locations.length);
   }
 
   _renderMarkers() {
@@ -41,6 +53,7 @@ export default class Map extends PureComponent {
       id: null
     });
 
+
     [...locations].forEach((it) => {
 
       return leaflet.marker(getLocationsCoordinates(it), {icon, id: it.id})
@@ -50,6 +63,7 @@ export default class Map extends PureComponent {
           target.setIcon(newIcon);
         });
     });
+
   }
 
   render() {
@@ -59,7 +73,7 @@ export default class Map extends PureComponent {
   }
 
   componentDidMount() {
-    const {mapId} = this.props;
+    const {mapId, locations} = this.props;
     const currentMap = this._mapRef.current;
 
     currentMap.id = mapId;
@@ -82,12 +96,21 @@ export default class Map extends PureComponent {
       .addTo(map);
 
     this._renderMarkers();
+    const cityLocation = Map._getCityLocation(locations);
+
+    map.setView([cityLocation.latitude, cityLocation.longitude]);
+
+    this._map = map;
   }
 
   componentDidUpdate() {
+    const {locations} = this.props;
 
     this.markerGroup.clearLayers();
     this._renderMarkers();
+
+    const cityLocation = Map._getCityLocation(locations);
+    this._map.setView([cityLocation.latitude, cityLocation.longitude]);
   }
 }
 

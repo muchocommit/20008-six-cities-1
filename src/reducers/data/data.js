@@ -75,6 +75,26 @@ const getLocations = (offers) => {
   });
 };
 
+const getPureLocations = (array) => array.map((it) =>
+  [it.location.latitude, it.location.longitude]);
+
+const accumulateLocationsFromArray = (array) => {
+  return array.reduce((acc, val) => {
+
+    const latitude = (acc.latitude + val[0]);
+    const longitude = (acc.longitude + val[1]);
+
+    return Object.assign({}, acc, {latitude, longitude});
+  }, {latitude: 0, longitude: 0})
+};
+
+const getLocationMean = (accumulatedObject, arrayLength) => {
+  const latitude = accumulatedObject.latitude / arrayLength;
+  const longitude = accumulatedObject.longitude / arrayLength;
+
+  return Object.assign({}, accumulatedObject, {latitude, longitude});
+};
+
 const getLocationsCoordinates = (locationObject) =>
   [locationObject.location.latitude, locationObject.location.longitude];
 
@@ -120,6 +140,9 @@ export {
   getLocationsCoordinates,
   getFavoriteOffers,
   groupFavoriteOffersByCityName,
+  getPureLocations,
+  getLocationMean,
+  accumulateLocationsFromArray,
   ActionCreator,
   Operation,
   reducer
