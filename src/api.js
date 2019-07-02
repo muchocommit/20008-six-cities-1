@@ -8,8 +8,6 @@ export const createAPI = () => {
   });
 
   const onSuccess = (response) => {
-    console.log(response);
-
     return response;
   };
   const onFail = (err) => {

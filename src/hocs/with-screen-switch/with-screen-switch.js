@@ -119,7 +119,7 @@ const withScreenSwitch = (Component) => {
       />;
     }
 
-    _getScreen(credentials) {
+    _getScreen(credentials, isAuthorizationRequired) {
       const {
         cities,
         city,
@@ -127,7 +127,7 @@ const withScreenSwitch = (Component) => {
 
       const {cityNames, offers} = cities;
 
-      if (credentials.id === null) {
+      if (isAuthorizationRequired) {
         return <Redirect to="/login"/>;
       }
 
@@ -146,11 +146,11 @@ const withScreenSwitch = (Component) => {
           </>);
     }
 
-    _getMainScreen({credentials}) {
+    _getMainScreen({credentials, isAuthorizationRequired}) {
       return (<Component
         {...this.props}
-        renderScreen={() => this._getScreen(credentials)}
-        renderHeader={() => this._getHeader(credentials)}
+        renderScreen={() => this._getScreen(credentials, isAuthorizationRequired)}
+        renderHeader={() => this._getHeader(credentials, isAuthorizationRequired)}
       />);
     }
 
@@ -179,7 +179,8 @@ const withScreenSwitch = (Component) => {
         onAuthorizationScreenSubmit,
         bodyElement,
         credentials,
-        cities} = this.props;
+        cities,
+        isAuthorizationRequired} = this.props;
 
       const {offers} = cities;
 
@@ -187,7 +188,7 @@ const withScreenSwitch = (Component) => {
         <Switch>
           <Route path="/favorites" render={() => this._getFavoritesScreen({
             credentials, bodyElement, offers})}/>
-          <Route path="/" exact render={() => this._getMainScreen({credentials})} />
+          <Route path="/" exact render={() => this._getMainScreen({credentials, isAuthorizationRequired})} />
 
           <Route path="/login" render={() => this._getSignInScreen(
               {onAuthorizationScreenSubmit, bodyElement, credentials})} />
@@ -196,11 +197,7 @@ const withScreenSwitch = (Component) => {
     }
 
     componentDidMount() {
-      const {credentials,
-        hydrateStateOnComponentMount} = this.props;
-
-      hydrateStateOnComponentMount(
-          UserAction.hydrateStateWithLocalStorage(credentials));
+      this.props.checkAuthOnComponentMount();
     }
   }
 
@@ -210,13 +207,15 @@ const withScreenSwitch = (Component) => {
       cityNames: PropTypes.arrayOf(PropTypes.string).isRequired,
       offers: PropTypes.array
     }),
-    isAuthorizationFailed: PropTypes.bool.isRequired,
     onAuthorizationScreenSubmit: PropTypes.func.isRequired,
     onHandleTabClick: PropTypes.func.isRequired,
     bodyElement: PropTypes.object.isRequired,
     credentials: PropTypes.object.isRequired,
-    hydrateStateOnComponentMount: PropTypes.func.isRequired,
-    onBookMarkButtonClick: PropTypes.func.isRequired
+    onBookMarkButtonClick: PropTypes.func.isRequired,
+
+    isAuthorizationFailed: PropTypes.bool.isRequired,
+    isAuthorizationRequired: PropTypes.bool.isRequired,
+    checkAuthOnComponentMount: PropTypes.func.isRequired
   };
 
   return WithScreenSwitch;
@@ -227,6 +226,7 @@ const mapStateToProps = (state, ownProps) => Object.assign(
       city: getCity(state),
       cities: combineCities(state),
       isAuthorizationFailed: getAuthorizationAttempt(state),
+      isAuthorizationRequired: getAuthorizationStatus(state),
       credentials: getCredentials(state),
     });
 
@@ -241,7 +241,6 @@ const mapDispatchToProps = (dispatch) => ({
       }).then((result) => {
 
         console.log(result);
-        // dispatch(UserAction.ActionCreator.sendCredentials(result));
       });
   },
 
@@ -259,8 +258,11 @@ const mapDispatchToProps = (dispatch) => ({
       });
   },
 
-  hydrateStateOnComponentMount: (credentials) => {
-    dispatch(UserAction.ActionCreator.sendCredentials(credentials));
+  checkAuthOnComponentMount: () => {
+    dispatch(UserAction.Operation.checkAuth()).then(
+        () => dispatch(UserAction.ActionCreator.isAuthorizationRequired(false)))
+
+        .catch(() => dispatch(UserAction.ActionCreator.isAuthorizationRequired(true)));
   }
 });
 

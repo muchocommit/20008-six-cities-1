@@ -1,7 +1,10 @@
 import {ActionType} from './../../data';
 
 const initialState = {
+  // Auth is failed on login POST
+  // attempt and error is displayed
   isAuthorizationFailed: false,
+  // The page is forbidden
   isAuthorizationRequired: false,
   credentials: {
     [`avatar_url`]: ``,
@@ -35,20 +38,6 @@ const ActionCreator = {
   }
 };
 
-const hydrateStateWithLocalStorage = (credentials) => {
-  const localCredentials = JSON.parse(
-      localStorage.getItem(`credentials`));
-
-  for (let key in credentials) {
-
-    if (localCredentials && localCredentials.hasOwnProperty(key)) {
-      credentials[key] = localCredentials[key];
-    }
-  }
-
-  return credentials;
-};
-
 const Operation = {
   sendCredentials: (submitData) =>
     (dispatch, _getState, api) => {
@@ -56,10 +45,11 @@ const Operation = {
         .then((response) => {
           if (response.status === 200) {
 
-            localStorage.setItem(`credentials`, JSON.stringify(response.data));
             return response.data;
           }
 
+          // Response with code 400 (Bad request)
+          // is thrown
           throw response;
         });
     },
@@ -68,9 +58,15 @@ const Operation = {
     return (dispatch, _getState, api) => {
       return api
         .get(`/login`)
-        .then((res) => {
+        .then((response) => {
 
-          return res;
+          if (response.status === 200) {
+            return response.data;
+          }
+
+          // Response with code 403 (Forbidden)
+          // is thrown
+          throw response;
         });
     };
   }
@@ -100,6 +96,5 @@ const reducer = (state = initialState, action) => {
 export {
   ActionCreator,
   reducer,
-  Operation,
-  hydrateStateWithLocalStorage
+  Operation
 };
