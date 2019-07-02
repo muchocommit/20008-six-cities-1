@@ -33,7 +33,6 @@ export default class Map extends PureComponent {
 
   componentDidMount() {
     const {locations, mapId} = this.props;
-
     const currentMap = this._mapRef.current;
 
     currentMap.id = mapId;
@@ -67,6 +66,7 @@ export default class Map extends PureComponent {
       .addTo(map);
 
     this.markerGroup = leaflet.layerGroup().addTo(map);
+
 
     const markers = [...locations].forEach((it) => {
 
@@ -103,7 +103,6 @@ export default class Map extends PureComponent {
 
         target.setIcon(newIcon);
       }));
-
     console.log(this.markerGroup);
   }
 }
