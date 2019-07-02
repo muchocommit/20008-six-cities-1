@@ -10,9 +10,9 @@ const Operation = {
     return api.get(`/hotels`)
       .then((response) => {
 
-        if (response.status === 200) {
+        if (response) {
 
-          dispatch(ActionCreator.loadCities(response.data));
+          return dispatch(ActionCreator.loadCities(response.data));
         }
 
         throw response;

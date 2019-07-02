@@ -7,6 +7,7 @@ describe(`UserReducer works correctly`, () => {
   it(`Returns initial state if undefined state is provided with empty object`, () => {
     expect(reducer(undefined, {})).toEqual({
       isAuthorizationFailed: false,
+      isAuthorizationRequired: false,
       credentials: {
         [`avatar_url`]: ``,
         email: ``,
@@ -23,6 +24,7 @@ describe(`UserReducer works correctly`, () => {
       payload: false
     })).toEqual({
       isAuthorizationFailed: false,
+      isAuthorizationRequired: false,
       credentials: {
         [`avatar_url`]: ``,
         email: ``,
@@ -38,15 +40,17 @@ describe(`UserReducer works correctly`, () => {
       payload: {id: 1}
     })).toEqual({
       isAuthorizationFailed: false,
+      isAuthorizationRequired: false,
       credentials: {id: 1}});
   });
 
   it(`Returns modified state if action type with payload is provided for Authorization`, () => {
-    expect(reducer({isAuthorizationFailed: false, credentials: {}}, {
+    expect(reducer({isAuthorizationFailed: false, isAuthorizationRequired: false, credentials: {}}, {
       type: ActionType.AUTHORIZATION_FAILED,
       payload: true
     })).toEqual({
       isAuthorizationFailed: true,
+      isAuthorizationRequired: false,
       credentials: {}});
   });
 });

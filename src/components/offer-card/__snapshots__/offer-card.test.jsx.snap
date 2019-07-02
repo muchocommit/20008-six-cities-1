@@ -34,7 +34,6 @@ exports[`OfferCard renders correctly 1`] = `
     <div
       className="place-card__price-wrapper"
     >
-      |
       <div
         className="place-card__price"
       >
@@ -52,6 +51,7 @@ exports[`OfferCard renders correctly 1`] = `
       </div>
       <button
         className="place-card__bookmark-button button"
+        onClick={[Function]}
         type="button"
       >
         <svg

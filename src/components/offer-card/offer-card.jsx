@@ -16,14 +16,12 @@ export default class OfferCard extends PureComponent {
   }
 
   _getCardScreen() {
-    const {isFavorite, offer} = this.props;
+    const {isFavorite, offer, bookMarkClickHandler, index} = this.props;
 
 
     if (!isFavorite) {
       const {
         mouseOverHandler,
-        index,
-        bookMarkClickHandler
       } = this.props;
 
       return (<article className="cities__place-card place-card" onMouseEnter={mouseOverHandler} data-index={index}>
@@ -43,7 +41,7 @@ export default class OfferCard extends PureComponent {
               <span className="place-card__price-text">&#47;&nbsp;night</span>
             </div>
             <button className="place-card__bookmark-button button"
-                    type="button" onClick={() => bookMarkClickHandler({bookMarkIndex: index, isFavorite: isFavorite ? 1 : 0})}>
+              type="button" onClick={() => bookMarkClickHandler({bookMarkIndex: index, isFavorite: isFavorite ? 1 : 0})}>
 
               <svg className="place-card__bookmark-icon" width="18" height="19">
                 <use xlinkHref="#icon-bookmark"></use>
@@ -80,7 +78,7 @@ export default class OfferCard extends PureComponent {
             <span className="place-card__price-text">&#47;&nbsp;night</span>
           </div>
           <button className="place-card__bookmark-button place-card__bookmark-button--active button"
-            type="button">
+            type="button" onClick={() => bookMarkClickHandler({bookMarkIndex: index, isFavorite: isFavorite ? 1 : 0})}>
             <svg className="place-card__bookmark-icon" width="18" height="19">
               <use xlinkHref="#icon-bookmark"></use>
             </svg>

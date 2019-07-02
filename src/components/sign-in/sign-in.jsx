@@ -56,14 +56,12 @@ class SignInScreen extends PureComponent {
     this.props.handleSubmit(newData);
   }
 
-
   render() {
     const {credentials,
       bodyElement,
       isAuthorizationFailed,
       isAuthorizationRequired} = this.props;
 
-    console.log(isAuthorizationRequired);
 
     if (isAuthorizationFailed) {
       const formError = this._formRef.current.querySelector(`.login__error`);

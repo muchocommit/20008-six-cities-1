@@ -6,7 +6,7 @@ exports[`Offers-list correctly render after relaunch 1`] = `
 >
   <article
     className="cities__place-card place-card"
-    data-index={0}
+    data-index={1}
     onMouseEnter={[Function]}
   >
     <div
@@ -37,7 +37,6 @@ exports[`Offers-list correctly render after relaunch 1`] = `
       <div
         className="place-card__price-wrapper"
       >
-        |
         <div
           className="place-card__price"
         >
@@ -55,6 +54,7 @@ exports[`Offers-list correctly render after relaunch 1`] = `
         </div>
         <button
           className="place-card__bookmark-button button"
+          onClick={[Function]}
           type="button"
         >
           <svg
@@ -144,7 +144,6 @@ exports[`Offers-list correctly render after relaunch 1`] = `
       <div
         className="place-card__price-wrapper"
       >
-        |
         <div
           className="place-card__price"
         >
@@ -162,6 +161,7 @@ exports[`Offers-list correctly render after relaunch 1`] = `
         </div>
         <button
           className="place-card__bookmark-button button"
+          onClick={[Function]}
           type="button"
         >
           <svg

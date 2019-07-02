@@ -357,7 +357,7 @@ describe(`DataReducer works correctly`, () => {
   it(`Should make a correct API call to /hotels`, () => {
     const dispatch = jest.fn();
 
-    const api = createAPI(dispatch);
+    const api = createAPI();
     const apiMock = new MockAdapter(api);
     const questionLoader = Operation.loadCities();
 

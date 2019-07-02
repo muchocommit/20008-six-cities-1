@@ -98,6 +98,7 @@ it(`Offers-list correctly render after relaunch`, () => {
     .create(
       <MemoryRouter>
       <OffersList
+      handleBookMarkClick={jest.fn()}
       activateItem={jest.fn()}
       offers={offers}/>
       </MemoryRouter>)

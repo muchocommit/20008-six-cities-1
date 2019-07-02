@@ -204,7 +204,6 @@ const withScreenSwitch = (Component) => {
       const {checkAuthOnComponentMount} = this.props;
 
       checkAuthOnComponentMount();
-
     }
   }
 
@@ -239,23 +238,15 @@ const mapStateToProps = (state, ownProps) => Object.assign(
 
 const mapDispatchToProps = (dispatch) => ({
   onBookMarkButtonClick: ({bookMarkIndex, isFavorite}) => {
-    console.log(bookMarkIndex)
 
     dispatch(DataAction.Operation.addBookMark({bookMarkIndex, isFavorite}))
-      .then((result) => {
-
-
+      .then(() => {
 
         dispatch(DataAction.Operation.loadCities());
       })
-      .then((result) => {
-
-
-    })
-      // .catch((err) => {
-      //
-      //   console.log(`error`, err)
-      // })
+      .catch(() => {
+        dispatch(UserAction.Operation.checkAuth());
+      });
   },
 
   onHandleTabClick: (activeCity) => {
@@ -277,8 +268,8 @@ const mapDispatchToProps = (dispatch) => ({
   checkAuthOnComponentMount: () => {
     dispatch(UserAction.Operation.checkAuth()).then(
         () => {
+
           dispatch(UserAction.ActionCreator.isAuthorizationRequired(false));
-          // dispatch(UserAction.hydrateStateWithLocalStorage(credentials))
         })
         .catch(() => dispatch(UserAction.ActionCreator.isAuthorizationRequired(true)));
   }
