@@ -127,7 +127,7 @@ const withScreenSwitch = (Component) => {
 
       const {cityNames, offers} = cities;
 
-      if (isAuthorizationRequired) {
+      if (isAuthorizationRequired || credentials.id === null) {
         return <Redirect to="/login"/>;
       }
 
@@ -184,20 +184,25 @@ const withScreenSwitch = (Component) => {
 
       const {offers} = cities;
 
+      const storedCredentials = UserAction.getCredentials(credentials);
+
       return <BrowserRouter>
         <Switch>
           <Route path="/favorites" render={() => this._getFavoritesScreen({
-            credentials, bodyElement, offers})}/>
-          <Route path="/" exact render={() => this._getMainScreen({credentials, isAuthorizationRequired})} />
+            credentials: storedCredentials, bodyElement, offers})}/>
+          <Route path="/" exact render={() => this._getMainScreen({
+            credentials: storedCredentials, isAuthorizationRequired})} />
 
           <Route path="/login" render={() => this._getSignInScreen(
-              {onAuthorizationScreenSubmit, bodyElement, credentials})} />
+              {onAuthorizationScreenSubmit, bodyElement, credentials: storedCredentials})} />
         </Switch>
       </BrowserRouter>;
     }
 
     componentDidMount() {
-      this.props.checkAuthOnComponentMount();
+      const {checkAuthOnComponentMount} = this.props;
+
+      checkAuthOnComponentMount();
     }
   }
 
@@ -260,8 +265,10 @@ const mapDispatchToProps = (dispatch) => ({
 
   checkAuthOnComponentMount: () => {
     dispatch(UserAction.Operation.checkAuth()).then(
-        () => dispatch(UserAction.ActionCreator.isAuthorizationRequired(false)))
-
+        () => {
+          dispatch(UserAction.ActionCreator.isAuthorizationRequired(false));
+          // dispatch(UserAction.hydrateStateWithLocalStorage(credentials))
+        })
         .catch(() => dispatch(UserAction.ActionCreator.isAuthorizationRequired(true)));
   }
 });
