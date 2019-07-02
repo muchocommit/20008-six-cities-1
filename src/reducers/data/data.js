@@ -69,14 +69,14 @@ const groupFavoriteOffersByCityName = (array) => {
   return groupByPropertyName(arrayConcatenated, `city`);
 };
 
-
 const getLocations = (offers) => {
-  return offers.map((it) => it.location);
+  return offers.map((it) => {
+    return {id: it.id, location: it.location};
+  });
 };
 
-const getLocationsCoordinates = (locations) => {
-  return locations.map((it) => [it.latitude, it.longitude]);
-};
+const getLocationsCoordinates = (locationObject) =>
+  [locationObject.location.latitude, locationObject.location.longitude];
 
 const sortOffersByCityName = (namesArray, [...citiesArray]) => {
 

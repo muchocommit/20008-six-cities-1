@@ -2,6 +2,7 @@ import React, {PureComponent, createRef} from 'react';
 import PropTypes from 'prop-types';
 
 import {MapParams} from '../../data';
+import {getLocationsCoordinates} from '../../reducers/data/data';
 import leaflet from 'leaflet';
 
 export default class Map extends PureComponent {
@@ -31,11 +32,11 @@ export default class Map extends PureComponent {
   }
 
   componentDidMount() {
-    const {locations, id} = this.props;
+    const {locations, mapId} = this.props;
 
     const currentMap = this._mapRef.current;
 
-    currentMap.id = id;
+    currentMap.id = mapId;
     const {
       ZOOM, CITY, ICON, TILE_LAYER
     } = MapParams;
@@ -67,11 +68,12 @@ export default class Map extends PureComponent {
 
     this.markerGroup = leaflet.layerGroup().addTo(map);
 
-    const markers = [...locations].forEach((it, i) => {
-      return leaflet.marker(it, {icon, id: i}).addTo(this.markerGroup).on('click', (e) => {
-        const {target} = e;
+    const markers = [...locations].forEach((it) => {
 
-        console.log(this.markerGroup);
+      return leaflet.marker(getLocationsCoordinates(it), {icon, id: it.id})
+        .addTo(this.markerGroup).on('click', (e) => {
+
+        const {target} = e;
         target.setIcon(newIcon);
       });
     });
@@ -102,13 +104,11 @@ export default class Map extends PureComponent {
         target.setIcon(newIcon);
       }));
 
-
     console.log(this.markerGroup);
   }
 }
 
 Map.propTypes = {
-  id: PropTypes.string.isRequired,
-  locations: PropTypes.arrayOf(
-      PropTypes.arrayOf(PropTypes.number)).isRequired
+  mapId: PropTypes.string.isRequired,
+  locations: PropTypes.array.isRequired
 };

@@ -84,12 +84,11 @@ const withScreenSwitch = (Component) => {
 
           if (offers.length !== 0) {
             const locations = DataAction.getLocations(offers);
-            const locationsCoordinates = DataAction.getLocationsCoordinates(locations);
 
             return (
               <Map
-                locations={locationsCoordinates}
-                id={`map`}
+                locations={locations}
+                mapId={`map`}
               />);
           }
 

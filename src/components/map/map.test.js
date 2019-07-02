@@ -17,7 +17,7 @@ it(`Map is rendered correctly`, () => {
 
   const tree = renderer.create(<Map
     locations={locations}
-    id={`map`}
+    mapId={`map`}
   />, {
     createNodeMock: () => {
       const el = document.createElement(`div`);
