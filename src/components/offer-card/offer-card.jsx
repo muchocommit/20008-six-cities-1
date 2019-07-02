@@ -7,6 +7,8 @@ import {getRating} from '../../assets/handler';
 export default class OfferCard extends PureComponent {
   constructor(props) {
     super(props);
+
+    this._getCardScreen = this._getCardScreen.bind(this);
   }
 
   static _getPropertyMark(isPremium) {
@@ -14,12 +16,12 @@ export default class OfferCard extends PureComponent {
   }
 
   _getCardScreen() {
-    const {isFavorite, offer} = this.props;
+    const {isFavorite, offer, bookMarkClickHandler, index} = this.props;
+
 
     if (!isFavorite) {
       const {
         mouseOverHandler,
-        index,
       } = this.props;
 
       return (<article className="cities__place-card place-card" onMouseEnter={mouseOverHandler} data-index={index}>
@@ -33,12 +35,14 @@ export default class OfferCard extends PureComponent {
           </a>
         </div>
         <div className="place-card__info">
-          <div className="place-card__price-wrapper">|
+          <div className="place-card__price-wrapper">
             <div className="place-card__price">
               <b className="place-card__price-value">&euro;{offer.price}</b>
               <span className="place-card__price-text">&#47;&nbsp;night</span>
             </div>
-            <button className="place-card__bookmark-button button" type="button">
+            <button className="place-card__bookmark-button button"
+              type="button" onClick={() => bookMarkClickHandler({bookMarkIndex: index, isFavorite: isFavorite ? 1 : 0})}>
+
               <svg className="place-card__bookmark-icon" width="18" height="19">
                 <use xlinkHref="#icon-bookmark"></use>
               </svg>
@@ -74,7 +78,7 @@ export default class OfferCard extends PureComponent {
             <span className="place-card__price-text">&#47;&nbsp;night</span>
           </div>
           <button className="place-card__bookmark-button place-card__bookmark-button--active button"
-            type="button">
+            type="button" onClick={() => bookMarkClickHandler({bookMarkIndex: index, isFavorite: isFavorite ? 1 : 0})}>
             <svg className="place-card__bookmark-icon" width="18" height="19">
               <use xlinkHref="#icon-bookmark"></use>
             </svg>
@@ -115,5 +119,6 @@ OfferCard.propTypes = {
   }),
   mouseOverHandler: PropTypes.func,
   index: PropTypes.number,
-  isFavorite: PropTypes.bool.isRequired
+  isFavorite: PropTypes.bool.isRequired,
+  bookMarkClickHandler: PropTypes.func
 };
