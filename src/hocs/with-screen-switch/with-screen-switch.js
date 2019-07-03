@@ -283,7 +283,7 @@ const mapDispatchToProps = (dispatch) => ({
       .then((result) => {
 
         dispatch(UserAction.ActionCreator.getComments(result));
-      }).catch(() => `do some stuff`);
+      }).catch(() => {});
   },
 
   onBookMarkButtonClick: ({bookMarkIndex, isFavorite}) => {
