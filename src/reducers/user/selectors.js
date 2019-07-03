@@ -17,3 +17,7 @@ export const getCredentials = (state) => {
 export const getComments = (state) => {
   return state[NAME_SPACE].comments;
 };
+
+export const getCommentsDeployAttempt = (state) => {
+  return state[NAME_SPACE].isCommentsDeployFailed;
+};

@@ -5,7 +5,6 @@ import {getOfferById} from '../../reducers/data/data';
 import {getRating} from '../../assets/handler';
 
 import {getDateFromUTCString,
-  formatDateIntoUTCString,
   getMonthYearFromUTCString} from '../../reducers/user/user';
 
 import Header from './../../components/header/header.jsx';
@@ -52,7 +51,6 @@ export default class Offer extends PureComponent {
       }
     }
 
-    console.log(entry);
     return entry;
   }
 
@@ -74,6 +72,10 @@ export default class Offer extends PureComponent {
     const {commentsSubmitHandler, match} = this.props;
     const offerId = +match.url.slice(1);
 
+    const form = this._formRef.current;
+    const submitButton = form.querySelector(`.form__submit`);
+    submitButton.disabled = true;
+
     const formData = new FormData(this._formRef.current);
 
     commentsSubmitHandler({
@@ -87,6 +89,7 @@ export default class Offer extends PureComponent {
       credentials,
       bodyElement,
       comments,
+      isCommentsDeployFailed
     } = this.props;
 
     bodyElement.className = `page`;
@@ -95,10 +98,6 @@ export default class Offer extends PureComponent {
 
       const offer = this._getCurrentOffer(offers[city]);
       const {images} = offer;
-
-      if (comments.length > 0) {
-        console.log(comments);
-      }
 
       return (<>
         <Header credentials={credentials} />
@@ -242,6 +241,7 @@ export default class Offer extends PureComponent {
                       </p>
                       <button className="reviews__submit form__submit button" type="submit" disabled="" onClick={this._submitForm}>Submit</button>
                     </div>
+                    <span className="login__error" style={{display: `none`, textAlign: `center`, paddingTop: `10px`}}>Вы забыли поставить оценку или оставить комментарий</span>
                   </form> : ``}
 
 
@@ -364,12 +364,38 @@ export default class Offer extends PureComponent {
   }
 
   componentDidMount() {
-
-    // Choose if the user is logged in
-    const {getComments, match} = this.props;
+    const {
+      getComments, match} = this.props;
     const offerId = +match.url.slice(1);
 
     getComments(offerId);
+  }
+
+  componentDidUpdate() {
+    const {credentials, isCommentsDeployFailed, resetCommentsDeploy} = this.props;
+
+    if (credentials.id && isCommentsDeployFailed && this._formRef.current) {
+      const form = this._formRef.current;
+      const submitButton = form.querySelector(`.form__submit`);
+      const commentsError = form.querySelector(`.login__error`);
+
+      commentsError.style.display = `block`;
+      submitButton.disabled = false;
+
+      resetCommentsDeploy();
+    }
+
+    if (credentials.id && !isCommentsDeployFailed && this._formRef.current) {
+      const form = this._formRef.current;
+      const submitButton = form.querySelector(`.form__submit`);
+      const commentsError = form.querySelector(`.login__error`);
+
+      commentsError.style.display = `none`;
+      submitButton.disabled = false;
+
+      // console.log(form.querySelector('#review'))
+      form.querySelector('#review').value = ``;
+    }
   }
 }
 
@@ -381,5 +407,7 @@ Offer.propTypes = {
   match: PropTypes.object.isRequired,
   getComments: PropTypes.func.isRequired,
   comments: PropTypes.array.isRequired,
-  commentsSubmitHandler: PropTypes.func.isRequired
+  commentsSubmitHandler: PropTypes.func.isRequired,
+  isCommentsDeployFailed: PropTypes.bool.isRequired,
+  resetCommentsDeploy: PropTypes.func.isRequired
 };

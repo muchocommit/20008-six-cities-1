@@ -8,6 +8,7 @@ const initialState = {
   isAuthorizationFailed: false,
   // The page is forbidden
   isAuthorizationRequired: false,
+  isCommentsDeployFailed: false,
   credentials: {
     [`avatar_url`]: ``,
     email: ``,
@@ -33,6 +34,13 @@ const ActionCreator = {
     };
   },
 
+  isCommentsDeployFailed: (status) => {
+    return {
+      type: ActionType.COMMENTS_DEPLOY_FAILED,
+      payload: status
+    }
+  },
+
   sendCredentials: (status) => {
     return {
       type: ActionType.SEND_CREDENTIALS,
@@ -45,6 +53,13 @@ const ActionCreator = {
       type: ActionType.GET_COMMENTS,
       payload: status
     };
+  },
+
+  resetCommentsDeploy: () => {
+    return {
+      type: ActionType.RESET_COMMENTS_DEPLOY,
+      payload: false
+    }
   }
 };
 
@@ -53,9 +68,6 @@ const getDateFromUTCString = (string) =>
 
 const getMonthYearFromUTCString = (string) =>
   moment(`2019-06-27T20:42:47.038Z`).utc().format(`MMMM YYYY`);
-
-const formatDateIntoUTCString = () =>
-  moment().utc().format(`YYYY-MM-DD[T]HH:mm:ss.SSS[Z]`);
 
 
 const getCredentials = (credentials) => {
@@ -160,6 +172,16 @@ const reducer = (state = initialState, action) => {
       return Object.assign({}, state, {
         comments: action.payload
       });
+
+    case ActionType.COMMENTS_DEPLOY_FAILED:
+      return Object.assign({}, state, {
+        isCommentsDeployFailed: action.payload
+      });
+
+    case ActionType.RESET_COMMENTS_DEPLOY:
+      return Object.assign({}, state, {
+        isCommentsDeployFailed: action.payload
+      });
   }
 
   return state;
@@ -171,6 +193,5 @@ export {
   Operation,
   getCredentials,
   getDateFromUTCString,
-  formatDateIntoUTCString,
   getMonthYearFromUTCString
 };

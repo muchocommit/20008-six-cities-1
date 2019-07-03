@@ -17,12 +17,13 @@ import Offer from './../../components/offer/offer.jsx';
 import FavoritesList from './../../components/favorites-list/favorites-list.jsx';
 
 import {getCity, combineCities} from '../../reducers/data/selectors';
-import {sortOffersByCityName} from '../../reducers/data/data';
+
 import {
   getAuthorizationAttempt,
   getCredentials,
   getAuthorizationStatus,
-  getComments} from '../../reducers/user/selectors';
+  getComments,
+  getCommentsDeployAttempt} from '../../reducers/user/selectors';
 
 import PropTypes from 'prop-types';
 import withActiveItem from './../../hocs/with-active-item/with-active-item';
@@ -186,11 +187,12 @@ const withScreenSwitch = (Component) => {
         isAuthorizationRequired,
         getCommentsOnComponentMount,
         comments,
-        onCommentsSubmit} = this.props;
+        onCommentsSubmit,
+        isCommentsDeployFailed,
+        resetCommentsDeploy} = this.props;
 
       const {cityNames, offers} = cities;
 
-      // console.log(offers);
 
       const storedCredentials = UserAction.getCredentials(credentials);
 
@@ -204,7 +206,9 @@ const withScreenSwitch = (Component) => {
             offers={offers}
             getComments={getCommentsOnComponentMount}
             comments={comments}
-            commentsSubmitHandler={onCommentsSubmit}/>} />
+            commentsSubmitHandler={onCommentsSubmit}
+            isCommentsDeployFailed={isCommentsDeployFailed}
+            resetCommentsDeploy={resetCommentsDeploy}/>} />
 
           <Route path="/favorites" render={() => this._getFavoritesScreen({
             credentials: storedCredentials, bodyElement, offers})}/>
@@ -238,10 +242,13 @@ const withScreenSwitch = (Component) => {
 
     isAuthorizationFailed: PropTypes.bool.isRequired,
     isAuthorizationRequired: PropTypes.bool.isRequired,
+    isCommentsDeployFailed: PropTypes.bool.isRequired,
+
     checkAuthOnComponentMount: PropTypes.func.isRequired,
     getCommentsOnComponentMount: PropTypes.func.isRequired,
     comments: PropTypes.array.isRequired,
-    onCommentsSubmit: PropTypes.func.isRequired
+    onCommentsSubmit: PropTypes.func.isRequired,
+    resetCommentsDeploy: PropTypes.func.isRequired
   };
 
   return WithScreenSwitch;
@@ -254,19 +261,26 @@ const mapStateToProps = (state, ownProps) => Object.assign(
       isAuthorizationFailed: getAuthorizationAttempt(state),
       isAuthorizationRequired: getAuthorizationStatus(state),
       credentials: getCredentials(state),
-      comments: getComments(state)
+      comments: getComments(state),
+      isCommentsDeployFailed: getCommentsDeployAttempt(state)
     });
 
 const mapDispatchToProps = (dispatch) => ({
+  resetCommentsDeploy: () => {
+
+    dispatch(UserAction.ActionCreator.resetCommentsDeploy());
+  },
   onCommentsSubmit: ({submitData, hotelId}) => {
 
     dispatch(UserAction.Operation.postComments({submitData, hotelId}))
-
       .then(() => dispatch(UserAction.Operation.getComments(hotelId)))
         .then((result) => {
 
           dispatch(UserAction.ActionCreator.getComments(result));
-        }).catch(() => `do some stuff`);
+        })
+      .catch(() => {
+          dispatch(UserAction.ActionCreator.isCommentsDeployFailed(true));
+        });
   },
 
   getCommentsOnComponentMount: (hotelId) => {
