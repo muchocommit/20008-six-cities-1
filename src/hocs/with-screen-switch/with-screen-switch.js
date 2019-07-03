@@ -12,8 +12,11 @@ import OffersList from './../../components/offers-list/offers-list.jsx';
 import Map from './../../components/map/map.jsx';
 import {OffersEmpty} from './../../components/offers-empty/offers-empty.jsx';
 import SignInScreen from './../../components/sign-in/sign-in.jsx';
+import Offer from './../../components/offer/offer.jsx';
 
 import FavoritesList from './../../components/favorites-list/favorites-list.jsx';
+
+const pathToRegexp = require(`path-to-regexp`);
 
 import {getCity, combineCities} from '../../reducers/data/selectors';
 import {sortOffersByCityName} from '../../reducers/data/data';
@@ -174,6 +177,8 @@ const withScreenSwitch = (Component) => {
     }
 
     render() {
+      const getOfferId = () => 1;
+
       const {
         onAuthorizationScreenSubmit,
         bodyElement,
@@ -182,18 +187,24 @@ const withScreenSwitch = (Component) => {
         isAuthorizationRequired} = this.props;
 
       const {cityNames, offers} = cities;
-
       const storedCredentials = UserAction.getCredentials(credentials);
 
 
+      const toPath = pathToRegexp.compile('/offer/:id');
+      // {`/offer/${getOfferId()}`}
       return <BrowserRouter>
         <Switch>
-          <Route path="/favorites" render={() => this._getFavoritesScreen({
+          <Route path={`/:id`} render={({match}) => <Offer
+            match={match}
+            credentials={credentials}
+            bodyElement={bodyElement}/>} />
+
+          <Route path={`/favorites`} exact render={() => this._getFavoritesScreen({
             credentials: storedCredentials, bodyElement, offers})}/>
-          <Route path="/" exact render={() => this._getMainScreen({
+          <Route path={[`/`, `/hotels`]} render={() => this._getMainScreen({
             credentials: storedCredentials, isAuthorizationRequired, offers, cityNames})} />
 
-          <Route path="/login" render={() => this._getSignInScreen(
+          <Route path="/login" exact render={() => this._getSignInScreen(
               {onAuthorizationScreenSubmit, bodyElement, credentials: storedCredentials})} />
         </Switch>
       </BrowserRouter>;
