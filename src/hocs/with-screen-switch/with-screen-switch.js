@@ -284,7 +284,6 @@ const mapDispatchToProps = (dispatch) => ({
           })));
         break;
     }
-
   },
 
   onCommentsSubmit: ({submitData, hotelId}) => {
