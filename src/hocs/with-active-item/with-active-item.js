@@ -16,11 +16,16 @@ const withActiveItem = (Component) => {
         {...this.props}
         activateItem={(i) => this.setState({activeItem: i})}
 
-        isActiveItem={(i) => {
-          return i === this.state.activeItem ||
-          (i === 0 && this.state.activeItem === null)
+        isActiveItem={(i, isCityTab = false) => {
+
+          if (isCityTab) {
+            return i === this.state.activeItem ||
+              (i === 0 && this.state.activeItem === null);
+          }
+
+          return i === this.state.activeItem;
         }}
-      />)
+      />);
     }
   }
 

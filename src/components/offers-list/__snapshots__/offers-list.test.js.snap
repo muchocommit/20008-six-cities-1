@@ -20,7 +20,8 @@ exports[`Offers-list correctly render after relaunch 1`] = `
       className="cities__image-wrapper place-card__image-wrapper"
     >
       <a
-        href="#"
+        href="/1"
+        onClick={[Function]}
       >
         <img
           alt="Place image"
@@ -98,7 +99,7 @@ exports[`Offers-list correctly render after relaunch 1`] = `
       >
         <a
           className="place-card__link"
-          href="/offer/1"
+          href="/1"
           onClick={[Function]}
         >
           The house among whee 
@@ -127,7 +128,8 @@ exports[`Offers-list correctly render after relaunch 1`] = `
       className="cities__image-wrapper place-card__image-wrapper"
     >
       <a
-        href="#"
+        href="/1"
+        onClick={[Function]}
       >
         <img
           alt="Place image"
@@ -205,7 +207,7 @@ exports[`Offers-list correctly render after relaunch 1`] = `
       >
         <a
           className="place-card__link"
-          href="/offer/1"
+          href="/1"
           onClick={[Function]}
         >
           The house among whee 

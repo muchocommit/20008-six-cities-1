@@ -15,71 +15,39 @@ describe(`Business logic is correct`, () => {
   it(`getLocations returns array of locations`, () => {
     expect(getLocations([
       {
-        "city": {
-          "name": `Some City`,
-          "location": {
-            "latitude": 50.938361,
-            "longitude": 6.959974,
-            "zoom": 13
-          }
-        },
-        "some-key": `Bla`,
-        "description": `This is a place for the people who like to blah`,
+        "id": 1,
         "location": {
           "latitude": 31.945361,
           "longitude": 3.962974,
-          "zoom": 16
+          "zoom": 16,
         },
-        "id": 1
       },
-
       {
-        "city": {
-          "name": `Some City#2`,
-          "location": {
-            "latitude": 50.938361,
-            "longitude": 6.959974,
-            "zoom": 13
-          }
-        },
-        "preview_image": `some/image`,
-        "description": `This is a place for the people who like to blah`,
-        "location": {
+        id: 2,
+        location: {
           "latitude": 32.945361,
           "longitude": 4.962974,
-          "zoom": 16
+          "zoom": 16,
         },
-        "id": 2
       },
-    ])).toEqual([
+    ]
+    )).toEqual([
       {
-        "latitude": 31.945361,
-        "longitude": 3.962974,
-        "zoom": 16
-      },
-      {
-        "latitude": 32.945361,
-        "longitude": 4.962974,
-        "zoom": 16
-      },
-    ]);
-  });
-
-  it(`getLocationsCoordinates returns array of arrays coordinates`, () => {
-
-    expect(getLocationsCoordinates([
-      {
-        "latitude": 31.945361,
-        "longitude": 3.962974,
-        "zoom": 16
+        "id": 1,
+        "location": {
+          "latitude": 31.945361,
+          "longitude": 3.962974,
+          "zoom": 16,
+        },
       },
       {
-        "latitude": 32.945361,
-        "longitude": 4.962974,
-        "zoom": 16
+        id: 2,
+        location: {
+          "latitude": 32.945361,
+          "longitude": 4.962974,
+          "zoom": 16,
+        },
       },
-    ])).toEqual([
-      [31.945361, 3.962974], [32.945361, 4.962974]
     ]);
   });
 
