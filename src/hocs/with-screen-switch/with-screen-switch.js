@@ -2,6 +2,7 @@ import React, {PureComponent} from 'react';
 import {compose} from 'recompose';
 import {BrowserRouter, Switch, Route, Redirect} from 'react-router-dom';
 import {connect} from 'react-redux';
+import {SortingParams} from "../../data";
 
 import * as DataAction from '../../reducers/data/data';
 import * as UserAction from '../../reducers/user/user';
@@ -12,15 +13,19 @@ import OffersList from './../../components/offers-list/offers-list.jsx';
 import Map from './../../components/map/map.jsx';
 import {OffersEmpty} from './../../components/offers-empty/offers-empty.jsx';
 import SignInScreen from './../../components/sign-in/sign-in.jsx';
+import Offer from './../../components/offer/offer.jsx';
 
 import FavoritesList from './../../components/favorites-list/favorites-list.jsx';
+import SortingList from './../../components/sorting-list/sorting-list.jsx';
 
 import {getCity, combineCities} from '../../reducers/data/selectors';
-import {sortOffersByCityName} from '../../reducers/data/data';
+
 import {
   getAuthorizationAttempt,
   getCredentials,
-  getAuthorizationStatus} from '../../reducers/user/selectors';
+  getAuthorizationStatus,
+  getComments,
+  getCommentsDeployAttempt} from '../../reducers/user/selectors';
 
 import PropTypes from 'prop-types';
 import withActiveItem from './../../hocs/with-active-item/with-active-item';
@@ -35,32 +40,28 @@ const withScreenSwitch = (Component) => {
 
       this._getHeader = this._getHeader.bind(this);
       this._getScreen = this._getScreen.bind(this);
+      this._sortOffers = this._sortOffers.bind(this);
     }
 
-    _getContainer({offers = void (0), cityName}) {
+    _sortOffers(filterParam, offers) {
+
+    }
+
+    _getContainer({offers, cityName}) {
       if (offers && offers.length === 0) {
         return (<OffersEmpty />);
       }
+
+      const {cities, onFilterCities} = this.props;
 
       return (<div className="cities__places-container container">
         <section className="cities__places places">
           <h2 className="visually-hidden">Places</h2>
           <b className="places__found">{`${offers ? `${offers.length} places to stay in ${cityName}` : ``}`}</b>
-          <form className="places__sorting" action="#" method="get">
-            <span className="places__sorting-caption">Sort by</span>
-            <span className="places__sorting-type" tabIndex="0">
-                        Popular
-              <svg className="places__sorting-arrow" width="7" height="4">
-                <use xlinkHref="#icon-arrow-select"></use>
-              </svg>
-            </span>
-            <ul className="places__options places__options--custom places__options--opened">
-              <li className="places__option places__option--active" tabIndex="0">Popular</li>
-              <li className="places__option" tabIndex="0">Price: low to high</li>
-              <li className="places__option" tabIndex="0">Price: high to low</li>
-              <li className="places__option" tabIndex="0">Top rated first</li>
-            </ul>
-          </form>
+
+
+          <SortingList cities={cities} filterHandler={(citiesToSort, filterParam) =>
+            onFilterCities(citiesToSort, filterParam)}></SortingList>
 
           {this._getComponent({key: `OFFERS`, offers})}
 
@@ -75,7 +76,7 @@ const withScreenSwitch = (Component) => {
     }
     _getComponent({key,
       offers = [],
-      cityNames = []}) {
+      cityNames}) {
 
       const {onHandleTabClick, onBookMarkButtonClick} = this.props;
 
@@ -84,12 +85,11 @@ const withScreenSwitch = (Component) => {
 
           if (offers.length !== 0) {
             const locations = DataAction.getLocations(offers);
-            const locationsCoordinates = DataAction.getLocationsCoordinates(locations);
 
             return (
               <Map
-                locations={locationsCoordinates}
-                id={`map`}
+                locations={locations}
+                mapId={`map`}
               />);
           }
 
@@ -175,26 +175,45 @@ const withScreenSwitch = (Component) => {
     }
 
     render() {
+
       const {
         onAuthorizationScreenSubmit,
         bodyElement,
         credentials,
         cities,
-        isAuthorizationRequired} = this.props;
+        city,
+        isAuthorizationRequired,
+        getCommentsOnComponentMount,
+        comments,
+        onCommentsSubmit,
+        isCommentsDeployFailed,
+        onBookMarkButtonClick} = this.props;
 
       const {cityNames, offers} = cities;
+      const offersCopy = [...offers];
 
       const storedCredentials = UserAction.getCredentials(credentials);
 
-
       return <BrowserRouter>
         <Switch>
-          <Route path="/favorites" render={() => this._getFavoritesScreen({
-            credentials: storedCredentials, bodyElement, offers})}/>
-          <Route path="/" exact render={() => this._getMainScreen({
-            credentials: storedCredentials, isAuthorizationRequired, offers, cityNames})} />
+          <Route path={`/([0-9][0-9]?[0-9]?)`} render={({match}) => <Offer
+            city={city}
+            match={match}
+            credentials={credentials}
+            bodyElement={bodyElement}
+            offers={offersCopy}
+            getComments={getCommentsOnComponentMount}
+            comments={comments}
+            commentsSubmitHandler={onCommentsSubmit}
+            isCommentsDeployFailed={isCommentsDeployFailed}
+            bookMarkClickHandler={onBookMarkButtonClick}/>} />
 
-          <Route path="/login" render={() => this._getSignInScreen(
+          <Route path="/favorites" render={() => this._getFavoritesScreen({
+            credentials: storedCredentials, bodyElement, offers: offersCopy})}/>
+          <Route path="/" exact render={() => this._getMainScreen({
+            credentials: storedCredentials, isAuthorizationRequired, offers: offersCopy, cityNames})} />
+
+          <Route path="/login" exact render={() => this._getSignInScreen(
               {onAuthorizationScreenSubmit, bodyElement, credentials: storedCredentials})} />
         </Switch>
       </BrowserRouter>;
@@ -221,7 +240,13 @@ const withScreenSwitch = (Component) => {
 
     isAuthorizationFailed: PropTypes.bool.isRequired,
     isAuthorizationRequired: PropTypes.bool.isRequired,
-    checkAuthOnComponentMount: PropTypes.func.isRequired
+    isCommentsDeployFailed: PropTypes.bool.isRequired,
+
+    checkAuthOnComponentMount: PropTypes.func.isRequired,
+    getCommentsOnComponentMount: PropTypes.func.isRequired,
+    comments: PropTypes.array.isRequired,
+    onCommentsSubmit: PropTypes.func.isRequired,
+    onFilterCities: PropTypes.func.isRequired
   };
 
   return WithScreenSwitch;
@@ -234,9 +259,56 @@ const mapStateToProps = (state, ownProps) => Object.assign(
       isAuthorizationFailed: getAuthorizationAttempt(state),
       isAuthorizationRequired: getAuthorizationStatus(state),
       credentials: getCredentials(state),
+      comments: getComments(state),
+      isCommentsDeployFailed: getCommentsDeployAttempt(state)
     });
 
 const mapDispatchToProps = (dispatch) => ({
+  onFilterCities: (cities, filterParam) => {
+
+    switch (filterParam) {
+
+      case SortingParams.HIGH_TO_LOW:
+        dispatch(DataAction.ActionCreator.updateCities(
+          cities.offers.map((city) => {
+
+            dispatch(DataAction.Operation.loadCities(city.sort((a, b) => a.price > b.price)));
+          })));
+        break;
+
+      case SortingParams.LOW_TO_HIGH:
+        dispatch(DataAction.ActionCreator.updateCities(
+          cities.offers.map((city) => {
+
+            dispatch(DataAction.Operation.loadCities(city.sort((a, b) => a.price < b.price)));
+          })));
+        break;
+    }
+  },
+
+  onCommentsSubmit: ({submitData, hotelId}) => {
+
+    dispatch(UserAction.Operation.postComments({submitData, hotelId}))
+      .then(() => dispatch(UserAction.Operation.getComments(hotelId)))
+        .then((result) => {
+
+          dispatch(UserAction.ActionCreator.getComments(result));
+          dispatch(UserAction.ActionCreator.resetCommentsDeploy());
+        })
+      .catch(() => {
+          dispatch(UserAction.ActionCreator.isCommentsDeployFailed(true));
+        });
+  },
+
+  getCommentsOnComponentMount: (hotelId) => {
+
+    dispatch(UserAction.Operation.getComments(hotelId))
+      .then((result) => {
+
+        dispatch(UserAction.ActionCreator.getComments(result));
+      }).catch(() => {});
+  },
+
   onBookMarkButtonClick: ({bookMarkIndex, isFavorite}) => {
 
     dispatch(DataAction.Operation.addBookMark({bookMarkIndex, isFavorite}))
@@ -268,7 +340,6 @@ const mapDispatchToProps = (dispatch) => ({
   checkAuthOnComponentMount: () => {
     dispatch(UserAction.Operation.checkAuth()).then(
         () => {
-
           dispatch(UserAction.ActionCreator.isAuthorizationRequired(false));
         })
         .catch(() => dispatch(UserAction.ActionCreator.isAuthorizationRequired(true)));

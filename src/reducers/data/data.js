@@ -6,7 +6,11 @@ const initialState = {
 };
 
 const Operation = {
-  loadCities: () => (dispatch, _getState, api) => {
+  loadCities: (cities = null) => (dispatch, _getState, api) => {
+    if (cities) {
+
+      return dispatch(ActionCreator.loadCities(cities));
+    }
     return api.get(`/hotels`)
       .then((response) => {
 
@@ -48,7 +52,31 @@ const ActionCreator = {
       type: ActionType.CHANGE_CITY,
       payload: city
     };
+  },
+
+  updateCities: (cities) => {
+    return {
+      type: ActionType.UPDATE_CITIES,
+      payload: cities
+    }
   }
+};
+
+const getOfferById = (array, id) => {
+  return array.map((it) => {
+
+    return it.find((item) => item.id === id);
+
+  }).filter((it) => it !== void (0));
+};
+
+const getOffersByCityName = (array, name) => {
+  return array.find((city) => {
+
+    return city.filter((offers) => {
+      return offers.city.name === name;
+    })
+  })
 };
 
 const groupByPropertyName = (objectArray, property) => {
@@ -69,14 +97,34 @@ const groupFavoriteOffersByCityName = (array) => {
   return groupByPropertyName(arrayConcatenated, `city`);
 };
 
-
 const getLocations = (offers) => {
-  return offers.map((it) => it.location);
+  return offers.map((it) => {
+    return {id: it.id, location: it.location};
+  });
 };
 
-const getLocationsCoordinates = (locations) => {
-  return locations.map((it) => [it.latitude, it.longitude]);
+const getPureLocations = (array) => array.map((it) =>
+  [it.location.latitude, it.location.longitude]);
+
+const accumulateLocationsFromArray = (array) => {
+  return array.reduce((acc, val) => {
+
+    const latitude = (acc.latitude + val[0]);
+    const longitude = (acc.longitude + val[1]);
+
+    return Object.assign({}, acc, {latitude, longitude});
+  }, {latitude: 0, longitude: 0})
 };
+
+const getLocationMean = (accumulatedObject, arrayLength) => {
+  const latitude = accumulatedObject.latitude / arrayLength;
+  const longitude = accumulatedObject.longitude / arrayLength;
+
+  return Object.assign({}, accumulatedObject, {latitude, longitude});
+};
+
+const getLocationsCoordinates = (locationObject) =>
+  [locationObject.location.latitude, locationObject.location.longitude];
 
 const sortOffersByCityName = (namesArray, [...citiesArray]) => {
 
@@ -109,6 +157,11 @@ const reducer = (state = initialState, action) => {
       return Object.assign({}, state, {
         city: action.payload
       });
+
+    case ActionType.UPDATE_CITIES:
+      return Object.assign({}, state, {
+        offers: action.payload
+      });
   }
 
   return state;
@@ -120,6 +173,11 @@ export {
   getLocationsCoordinates,
   getFavoriteOffers,
   groupFavoriteOffersByCityName,
+  getPureLocations,
+  getOfferById,
+  getOffersByCityName,
+  getLocationMean,
+  accumulateLocationsFromArray,
   ActionCreator,
   Operation,
   reducer
