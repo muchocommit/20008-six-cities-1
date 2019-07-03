@@ -88,8 +88,7 @@ export default class Offer extends PureComponent {
       offers,
       credentials,
       bodyElement,
-      comments,
-      isCommentsDeployFailed
+      comments
     } = this.props;
 
     bodyElement.className = `page`;
@@ -97,6 +96,8 @@ export default class Offer extends PureComponent {
     if (offers && offers.length > 0) {
 
       const offer = this._getCurrentOffer(offers[city]);
+
+      console.log(offer)
       const {images} = offer;
 
       return (<>
@@ -372,9 +373,9 @@ export default class Offer extends PureComponent {
   }
 
   componentDidUpdate() {
-    const {credentials, isCommentsDeployFailed, resetCommentsDeploy} = this.props;
+    const {credentials, isCommentsDeployFailed} = this.props;
 
-    if (credentials.id && isCommentsDeployFailed && this._formRef.current) {
+    if (credentials.id && isCommentsDeployFailed) {
       const form = this._formRef.current;
       const submitButton = form.querySelector(`.form__submit`);
       const commentsError = form.querySelector(`.login__error`);
@@ -382,10 +383,9 @@ export default class Offer extends PureComponent {
       commentsError.style.display = `block`;
       submitButton.disabled = false;
 
-      resetCommentsDeploy();
     }
 
-    if (credentials.id && !isCommentsDeployFailed && this._formRef.current) {
+    if (credentials.id && !isCommentsDeployFailed) {
       const form = this._formRef.current;
       const submitButton = form.querySelector(`.form__submit`);
       const commentsError = form.querySelector(`.login__error`);
@@ -393,7 +393,6 @@ export default class Offer extends PureComponent {
       commentsError.style.display = `none`;
       submitButton.disabled = false;
 
-      // console.log(form.querySelector('#review'))
       form.querySelector('#review').value = ``;
     }
   }
@@ -408,6 +407,5 @@ Offer.propTypes = {
   getComments: PropTypes.func.isRequired,
   comments: PropTypes.array.isRequired,
   commentsSubmitHandler: PropTypes.func.isRequired,
-  isCommentsDeployFailed: PropTypes.bool.isRequired,
-  resetCommentsDeploy: PropTypes.func.isRequired
+  isCommentsDeployFailed: PropTypes.bool.isRequired
 };

@@ -188,8 +188,7 @@ const withScreenSwitch = (Component) => {
         getCommentsOnComponentMount,
         comments,
         onCommentsSubmit,
-        isCommentsDeployFailed,
-        resetCommentsDeploy} = this.props;
+        isCommentsDeployFailed} = this.props;
 
       const {cityNames, offers} = cities;
 
@@ -207,8 +206,7 @@ const withScreenSwitch = (Component) => {
             getComments={getCommentsOnComponentMount}
             comments={comments}
             commentsSubmitHandler={onCommentsSubmit}
-            isCommentsDeployFailed={isCommentsDeployFailed}
-            resetCommentsDeploy={resetCommentsDeploy}/>} />
+            isCommentsDeployFailed={isCommentsDeployFailed} />} />
 
           <Route path="/favorites" render={() => this._getFavoritesScreen({
             credentials: storedCredentials, bodyElement, offers})}/>
@@ -247,8 +245,7 @@ const withScreenSwitch = (Component) => {
     checkAuthOnComponentMount: PropTypes.func.isRequired,
     getCommentsOnComponentMount: PropTypes.func.isRequired,
     comments: PropTypes.array.isRequired,
-    onCommentsSubmit: PropTypes.func.isRequired,
-    resetCommentsDeploy: PropTypes.func.isRequired
+    onCommentsSubmit: PropTypes.func.isRequired
   };
 
   return WithScreenSwitch;
@@ -266,10 +263,6 @@ const mapStateToProps = (state, ownProps) => Object.assign(
     });
 
 const mapDispatchToProps = (dispatch) => ({
-  resetCommentsDeploy: () => {
-
-    dispatch(UserAction.ActionCreator.resetCommentsDeploy());
-  },
   onCommentsSubmit: ({submitData, hotelId}) => {
 
     dispatch(UserAction.Operation.postComments({submitData, hotelId}))
@@ -277,6 +270,7 @@ const mapDispatchToProps = (dispatch) => ({
         .then((result) => {
 
           dispatch(UserAction.ActionCreator.getComments(result));
+          dispatch(UserAction.ActionCreator.resetCommentsDeploy());
         })
       .catch(() => {
           dispatch(UserAction.ActionCreator.isCommentsDeployFailed(true));
