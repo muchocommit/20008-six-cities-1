@@ -21,7 +21,8 @@ import {sortOffersByCityName} from '../../reducers/data/data';
 import {
   getAuthorizationAttempt,
   getCredentials,
-  getAuthorizationStatus} from '../../reducers/user/selectors';
+  getAuthorizationStatus,
+  getComments} from '../../reducers/user/selectors';
 
 import PropTypes from 'prop-types';
 import withActiveItem from './../../hocs/with-active-item/with-active-item';
@@ -182,9 +183,14 @@ const withScreenSwitch = (Component) => {
         credentials,
         cities,
         city,
-        isAuthorizationRequired} = this.props;
+        isAuthorizationRequired,
+        getCommentsOnComponentMount,
+        comments} = this.props;
 
       const {cityNames, offers} = cities;
+
+      // console.log(offers);
+
       const storedCredentials = UserAction.getCredentials(credentials);
 
       return <BrowserRouter>
@@ -194,7 +200,9 @@ const withScreenSwitch = (Component) => {
             match={match}
             credentials={credentials}
             bodyElement={bodyElement}
-            offers={offers}/>} />
+            offers={offers}
+            getComments={getCommentsOnComponentMount}
+            comments={comments}/>} />
 
           <Route path="/favorites" render={() => this._getFavoritesScreen({
             credentials: storedCredentials, bodyElement, offers})}/>
@@ -228,7 +236,9 @@ const withScreenSwitch = (Component) => {
 
     isAuthorizationFailed: PropTypes.bool.isRequired,
     isAuthorizationRequired: PropTypes.bool.isRequired,
-    checkAuthOnComponentMount: PropTypes.func.isRequired
+    checkAuthOnComponentMount: PropTypes.func.isRequired,
+    getCommentsOnComponentMount: PropTypes.func.isRequired,
+    comments: PropTypes.array.isRequired
   };
 
   return WithScreenSwitch;
@@ -241,9 +251,19 @@ const mapStateToProps = (state, ownProps) => Object.assign(
       isAuthorizationFailed: getAuthorizationAttempt(state),
       isAuthorizationRequired: getAuthorizationStatus(state),
       credentials: getCredentials(state),
+      comments: getComments(state)
     });
 
 const mapDispatchToProps = (dispatch) => ({
+  getCommentsOnComponentMount: (hotelId) => {
+
+    dispatch(UserAction.Operation.getComments(hotelId))
+      .then((result) => {
+
+        dispatch(UserAction.ActionCreator.getComments(result));
+      }).catch(() => `do some stuff`);
+  },
+
   onBookMarkButtonClick: ({bookMarkIndex, isFavorite}) => {
 
     dispatch(DataAction.Operation.addBookMark({bookMarkIndex, isFavorite}))

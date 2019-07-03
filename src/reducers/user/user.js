@@ -13,6 +13,7 @@ const initialState = {
     [`is_pro`]: false,
     name: ``
   },
+  comments: []
 };
 
 const ActionCreator = {
@@ -35,6 +36,13 @@ const ActionCreator = {
       type: ActionType.SEND_CREDENTIALS,
       payload: status
     };
+  },
+
+  getComments: (status) => {
+    return {
+      type: ActionType.GET_COMMENTS,
+      payload: status
+    };
   }
 };
 
@@ -53,6 +61,20 @@ const getCredentials = (credentials) => {
 };
 
 const Operation = {
+  getComments: (hotelId) => {
+    return (dispatch, _getState, api) => {
+      return api.get(`/comments/${hotelId}`)
+        .then((response) => {
+
+          if (response.status === 200) {
+            return response.data;
+          }
+
+          throw response;
+        })
+    }
+  },
+
   sendCredentials: (submitData) =>
     (dispatch, _getState, api) => {
       return api.post(`/login`, submitData)
@@ -104,6 +126,11 @@ const reducer = (state = initialState, action) => {
       return Object.assign({}, state, {
         isAuthorizationRequired: action.payload
       });
+
+    case ActionType.GET_COMMENTS:
+      return Object.assign({}, state, {
+        comments: action.payload
+      })
   }
 
   return state;

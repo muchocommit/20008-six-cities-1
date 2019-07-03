@@ -13,3 +13,7 @@ export const getAuthorizationStatus = (state) => {
 export const getCredentials = (state) => {
   return state[NAME_SPACE].credentials;
 };
+
+export const getComments = (state) => {
+  return state[NAME_SPACE].comments;
+};

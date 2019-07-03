@@ -28,10 +28,10 @@ export default class OfferCard extends PureComponent {
           <span>{OfferCard._getPropertyMark(offer[`is_premium`])}</span>
         </div>
         <div className="cities__image-wrapper place-card__image-wrapper">
-          <a href="#">
+          <Link to={`/${offer.id}`}>
             <img className="place-card__image" src={offer[`preview_image`]} width="260" height="200"
               alt="Place image" />
-          </a>
+          </Link>
         </div>
         <div className="place-card__info">
           <div className="place-card__price-wrapper">
@@ -65,7 +65,7 @@ export default class OfferCard extends PureComponent {
     return (<article className="favorites__card place-card">
       <div className="favorites__image-wrapper place-card__image-wrapper">
 
-        <Link to={`offer/${offer.id}`}>
+        <Link to={`/${offer.id}`}>
           <img className="place-card__image" src={offer[`preview_image`]} width="150" height="110"
             alt="Place image" />
         </Link>
@@ -91,7 +91,7 @@ export default class OfferCard extends PureComponent {
           </div>
         </div>
         <h2 className="place-card__name">
-          <Link to={`offer/${offer.id}`}>Nice, cozy, warm big bed apartment</Link>
+          <Link to={`/${offer.id}`}>Nice, cozy, warm big bed apartment</Link>
         </h2>
         <p className="place-card__type">Apartment</p>
       </div>
