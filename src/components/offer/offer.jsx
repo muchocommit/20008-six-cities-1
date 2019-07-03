@@ -126,7 +126,6 @@ export default class Offer extends PureComponent {
 
   render() {
     const {
-      city,
       offers,
       credentials,
       bodyElement,
@@ -147,7 +146,7 @@ export default class Offer extends PureComponent {
 
       const currentOffers = getOffersByCityName([...offers], offer.city.name).slice(0, 3);
       const currentLocations = getLocations(
-        [...currentOffers]);
+          [...currentOffers]);
 
 
       const headerImages = images.slice(0, 6);
@@ -217,7 +216,7 @@ export default class Offer extends PureComponent {
                   <div className="property__host-user user">
                     <div className="property__avatar-wrapper property__avatar-wrapper--pro user__avatar-wrapper">
                       <img className="property__avatar user__avatar" src={offer.host[`avatar_url`]} width="74" height="74"
-                           alt="Host avatar" />
+                        alt="Host avatar" />
                     </div>
                     <span className="property__user-name">{offer.host.name}</span>
                     <span className="property__user-status">{offer.host[`is_pro`] ? `Pro` : ``}</span>
@@ -234,7 +233,7 @@ export default class Offer extends PureComponent {
                         <div className="reviews__user user">
                           <div className="reviews__avatar-wrapper user__avatar-wrapper">
                             <img className="reviews__avatar user__avatar" src={it.user[`avatar_url`]} width="54" height="54"
-                                 alt="Reviews avatar" />
+                              alt="Reviews avatar" />
                           </div>
                           <span className="reviews__user-name">{it.user.name}</span>
                         </div>
@@ -281,8 +280,8 @@ export default class Offer extends PureComponent {
                       </div>
                       <button className={currentOffer[`is_favorite`] ?
                         `place-card__bookmark-button place-card__bookmark-button--active button` : `place-card__bookmark-button button`}
-                              type="button" onClick={() => bookMarkClickHandler(
-                        {bookMarkIndex: currentOffer.id, isFavorite: currentOffer[`is_favorite`] ? 1 : 0})}>
+                      type="button" onClick={() => bookMarkClickHandler(
+                          {bookMarkIndex: currentOffer.id, isFavorite: currentOffer[`is_favorite`] ? 1 : 0})}>
 
                         <svg className="place-card__bookmark-icon" width="17" height="18" viewBox="0 0 17 18" xmlns="http://www.w3.org/2000/svg"><path d="M3.993 2.185l.017-.092V2c0-.554.449-1 .99-1h10c.522 0 .957.41.997.923l-2.736 14.59-4.814-2.407-.39-.195-.408.153L1.31 16.44 3.993 2.185z"/></svg>
                         <span className="visually-hidden">In bookmarks</span>

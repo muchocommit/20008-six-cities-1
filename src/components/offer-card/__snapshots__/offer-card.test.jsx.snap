@@ -17,7 +17,8 @@ exports[`OfferCard renders correctly 1`] = `
     className="cities__image-wrapper place-card__image-wrapper"
   >
     <a
-      href="#"
+      href="/5"
+      onClick={[Function]}
     >
       <img
         alt="Place image"
@@ -95,7 +96,7 @@ exports[`OfferCard renders correctly 1`] = `
     >
       <a
         className="place-card__link"
-        href="/offer/5"
+        href="/5"
         onClick={[Function]}
       >
         Mock title

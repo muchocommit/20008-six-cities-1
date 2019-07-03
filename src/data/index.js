@@ -25,3 +25,10 @@ export const ActionType = {
   COMMENTS_DEPLOY_FAILED: `COMMENTS_DEPLOY_FAILED`,
   RESET_COMMENTS_DEPLOY: `RESET_COMMENTS_DEPLOY`
 };
+
+export const SortingParams = {
+  POPULAR: `Popular`,
+  LOW_TO_HIGH: `Price: low to high`,
+  HIGH_TO_LOW: `Price: high to low`,
+  TOP_RATED: `Top rated first`
+};

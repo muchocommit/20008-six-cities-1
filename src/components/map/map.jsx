@@ -57,7 +57,7 @@ export default class Map extends PureComponent {
     [...locations].forEach((it) => {
 
       return leaflet.marker(getLocationsCoordinates(it), {icon, id: it.id})
-        .addTo(this.markerGroup).on('click', (e) => {
+        .addTo(this.markerGroup).on(`click`, (e) => {
 
           const {target} = e;
           target.setIcon(newIcon);
@@ -91,8 +91,8 @@ export default class Map extends PureComponent {
     this.markerGroup = leaflet.layerGroup().addTo(map);
 
     leaflet.tileLayer(TILE_LAYER.URL, {
-        attribution: TILE_LAYER.OPTIONS.ATTRIBUTION
-      })
+      attribution: TILE_LAYER.OPTIONS.ATTRIBUTION
+    })
       .addTo(map);
 
     this._renderMarkers();
