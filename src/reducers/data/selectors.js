@@ -20,11 +20,12 @@ export const getOffersByCityName = (cityName, citiesArray) => {
 
 export const combineCities = createSelector(
     getCities,
+    getCity,
 
-    (cities) => {
+    (cities, city) => {
 
       const cityNames = getCityNames(cities);
-      const offers = sortOffersByCityName(cityNames, cities);
+      const offers = sortOffersByCityName(cityNames, cities)[city];
 
       return {cityNames, offers};
     }

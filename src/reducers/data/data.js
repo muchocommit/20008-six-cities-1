@@ -51,6 +51,8 @@ const ActionCreator = {
   }
 };
 
+const getOfferById = (array, id) => array.find((it) => (it.id === id));
+
 const groupByPropertyName = (objectArray, property) => {
   return objectArray.reduce(function (acc, obj) {
     let key = obj[property].name;
@@ -141,6 +143,7 @@ export {
   getFavoriteOffers,
   groupFavoriteOffersByCityName,
   getPureLocations,
+  getOfferById,
   getLocationMean,
   accumulateLocationsFromArray,
   ActionCreator,

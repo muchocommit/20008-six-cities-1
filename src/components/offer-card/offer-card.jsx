@@ -18,7 +18,6 @@ export default class OfferCard extends PureComponent {
   _getCardScreen() {
     const {isFavorite, offer, bookMarkClickHandler, index} = this.props;
 
-
     if (!isFavorite) {
       const {
         mouseOverHandler,
@@ -56,7 +55,7 @@ export default class OfferCard extends PureComponent {
             </div>
           </div>
           <h2 className="place-card__name">
-            <Link className="place-card__link" to={`offer/${offer.id}`}>{offer.title}</Link>
+            <Link className="place-card__link" to={`/${offer.id}`}>{offer.title}</Link>
           </h2>
           <p className="place-card__type">{offer.type}</p>
         </div>

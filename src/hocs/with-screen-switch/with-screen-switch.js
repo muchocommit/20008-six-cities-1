@@ -16,8 +16,6 @@ import Offer from './../../components/offer/offer.jsx';
 
 import FavoritesList from './../../components/favorites-list/favorites-list.jsx';
 
-const pathToRegexp = require(`path-to-regexp`);
-
 import {getCity, combineCities} from '../../reducers/data/selectors';
 import {sortOffersByCityName} from '../../reducers/data/data';
 import {
@@ -142,7 +140,7 @@ const withScreenSwitch = (Component) => {
               </section>
             </div>
             <div className="cities__places-wrapper">
-              {this._getContainer({offers: offers[city], cityName: cityNames[city]})}
+              {this._getContainer({offers, cityName: cityNames[city]})}
             </div>
           </>);
     }
@@ -177,7 +175,6 @@ const withScreenSwitch = (Component) => {
     }
 
     render() {
-      const getOfferId = () => 1;
 
       const {
         onAuthorizationScreenSubmit,
@@ -189,15 +186,13 @@ const withScreenSwitch = (Component) => {
       const {cityNames, offers} = cities;
       const storedCredentials = UserAction.getCredentials(credentials);
 
-
-      const toPath = pathToRegexp.compile('/offer/:id');
-      // {`/offer/${getOfferId()}`}
       return <BrowserRouter>
         <Switch>
           <Route path={`/:id`} render={({match}) => <Offer
             match={match}
             credentials={credentials}
-            bodyElement={bodyElement}/>} />
+            bodyElement={bodyElement}
+            offers={offers}/>} />
 
           <Route path={`/favorites`} exact render={() => this._getFavoritesScreen({
             credentials: storedCredentials, bodyElement, offers})}/>
