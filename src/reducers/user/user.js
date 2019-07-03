@@ -1,3 +1,5 @@
+import moment from 'moment';
+
 import {ActionType} from './../../data';
 
 const initialState = {
@@ -45,6 +47,16 @@ const ActionCreator = {
     };
   }
 };
+
+const getDateFromUTCString = (string) =>
+  moment(`${string}`).utc().format(`YYYY-MM-DD`);
+
+const getMonthYearFromUTCString = (string) =>
+  moment("2019-06-27T20:42:47.038Z").utc().format("MMMM YYYY");
+
+const formatDateIntoUTCString = () =>
+  moment().utc().format(`YYYY-MM-DD[T]HH:mm:ss.SSS[Z]`);
+
 
 const getCredentials = (credentials) => {
   const localCredentials = JSON.parse(
@@ -140,5 +152,8 @@ export {
   ActionCreator,
   reducer,
   Operation,
-  getCredentials
+  getCredentials,
+  getDateFromUTCString,
+  formatDateIntoUTCString,
+  getMonthYearFromUTCString
 };
