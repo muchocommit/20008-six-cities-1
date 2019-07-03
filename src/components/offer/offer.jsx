@@ -15,11 +15,45 @@ export default class Offer extends PureComponent {
     super(props);
 
     this._formRef = createRef();
-    this._processForm = this._processForm.bind(this);
+    this._submitForm = this._submitForm.bind(this);
   }
 
   static _getPropertyMark(isPremium) {
     return isPremium ? `Premium` : `Mid-price`;
+  }
+
+  static formMapper(target) {
+    return {
+      rating: (value) => {
+        target.rating = value;
+        return target;
+      },
+      review: (value) => {
+        target.comment = value;
+        return target;
+      }
+    };
+  }
+
+  static _processForm(formData) {
+    const entry = {
+      'rating': null,
+      'comment': ``
+    };
+
+    const FormMapper = Offer.formMapper(entry);
+    for (const pair of formData.entries()) {
+
+      const [property, value] = pair;
+      if (FormMapper[property]) {
+
+        value.trim();
+        FormMapper[property](value);
+      }
+    }
+
+    console.log(entry);
+    return entry;
   }
 
   _getCurrentOffer(offers = void (0)) {
@@ -33,13 +67,17 @@ export default class Offer extends PureComponent {
     return null;
   }
 
-  _processForm(e) {
-
-    const {credentials} = this.props;
-
-    // Then process form
+  _submitForm(e) {
+    // Add another state for comments post result
     e.preventDefault();
-    console.log(this._formRef.current[1].checked);
+
+    const {commentsSubmitHandler, match} = this.props;
+    const offerId = +match.url.slice(1);
+
+    const formData = new FormData(this._formRef.current);
+
+    commentsSubmitHandler({
+      submitData: Offer._processForm(formData), hotelId: offerId});
   }
 
   render() {
@@ -48,7 +86,7 @@ export default class Offer extends PureComponent {
       offers,
       credentials,
       bodyElement,
-      comments
+      comments,
     } = this.props;
 
     bodyElement.className = `page`;
@@ -202,7 +240,7 @@ export default class Offer extends PureComponent {
                         To submit review please make sure to set <span className="reviews__star">rating</span> and
                         describe your stay with at least <b className="reviews__text-amount">50 characters</b>.
                       </p>
-                      <button className="reviews__submit form__submit button" type="submit" disabled="" onClick={this._processForm}>Submit</button>
+                      <button className="reviews__submit form__submit button" type="submit" disabled="" onClick={this._submitForm}>Submit</button>
                     </div>
                   </form> : ``}
 
@@ -343,4 +381,5 @@ Offer.propTypes = {
   match: PropTypes.object.isRequired,
   getComments: PropTypes.func.isRequired,
   comments: PropTypes.array.isRequired,
+  commentsSubmitHandler: PropTypes.func.isRequired
 };

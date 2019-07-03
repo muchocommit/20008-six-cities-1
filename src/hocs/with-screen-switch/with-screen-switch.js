@@ -185,7 +185,8 @@ const withScreenSwitch = (Component) => {
         city,
         isAuthorizationRequired,
         getCommentsOnComponentMount,
-        comments} = this.props;
+        comments,
+        onCommentsSubmit} = this.props;
 
       const {cityNames, offers} = cities;
 
@@ -202,7 +203,8 @@ const withScreenSwitch = (Component) => {
             bodyElement={bodyElement}
             offers={offers}
             getComments={getCommentsOnComponentMount}
-            comments={comments}/>} />
+            comments={comments}
+            commentsSubmitHandler={onCommentsSubmit}/>} />
 
           <Route path="/favorites" render={() => this._getFavoritesScreen({
             credentials: storedCredentials, bodyElement, offers})}/>
@@ -238,7 +240,8 @@ const withScreenSwitch = (Component) => {
     isAuthorizationRequired: PropTypes.bool.isRequired,
     checkAuthOnComponentMount: PropTypes.func.isRequired,
     getCommentsOnComponentMount: PropTypes.func.isRequired,
-    comments: PropTypes.array.isRequired
+    comments: PropTypes.array.isRequired,
+    onCommentsSubmit: PropTypes.func.isRequired
   };
 
   return WithScreenSwitch;
@@ -255,6 +258,17 @@ const mapStateToProps = (state, ownProps) => Object.assign(
     });
 
 const mapDispatchToProps = (dispatch) => ({
+  onCommentsSubmit: ({submitData, hotelId}) => {
+
+    dispatch(UserAction.Operation.postComments({submitData, hotelId}))
+
+      .then(() => dispatch(UserAction.Operation.getComments(hotelId)))
+        .then((result) => {
+
+          dispatch(UserAction.ActionCreator.getComments(result));
+        }).catch(() => `do some stuff`);
+  },
+
   getCommentsOnComponentMount: (hotelId) => {
 
     dispatch(UserAction.Operation.getComments(hotelId))

@@ -23,7 +23,7 @@ const ActionCreator = {
     return {
       type: ActionType.AUTHORIZATION_REQUIRED,
       payload: status
-    }
+    };
   },
 
   isAuthorizationFailed: (status) => {
@@ -52,7 +52,7 @@ const getDateFromUTCString = (string) =>
   moment(`${string}`).utc().format(`YYYY-MM-DD`);
 
 const getMonthYearFromUTCString = (string) =>
-  moment("2019-06-27T20:42:47.038Z").utc().format("MMMM YYYY");
+  moment(`2019-06-27T20:42:47.038Z`).utc().format(`MMMM YYYY`);
 
 const formatDateIntoUTCString = () =>
   moment().utc().format(`YYYY-MM-DD[T]HH:mm:ss.SSS[Z]`);
@@ -60,7 +60,7 @@ const formatDateIntoUTCString = () =>
 
 const getCredentials = (credentials) => {
   const localCredentials = JSON.parse(
-    localStorage.getItem(`credentials`));
+      localStorage.getItem(`credentials`));
 
   for (let key in credentials) {
 
@@ -73,6 +73,23 @@ const getCredentials = (credentials) => {
 };
 
 const Operation = {
+  postComments: ({submitData, hotelId}) => {
+    return (dispatch, _getState, api) => {
+
+      return api.post(`/comments/${hotelId}`, submitData)
+        .then((response) => {
+          if (response.status === 200) {
+
+            return response.data;
+          }
+
+          // Response with code 400 (Bad request)
+          // is thrown
+          throw response;
+        });
+    };
+  },
+
   getComments: (hotelId) => {
     return (dispatch, _getState, api) => {
       return api.get(`/comments/${hotelId}`)
@@ -83,8 +100,8 @@ const Operation = {
           }
 
           throw response;
-        })
-    }
+        });
+    };
   },
 
   sendCredentials: (submitData) =>
@@ -142,7 +159,7 @@ const reducer = (state = initialState, action) => {
     case ActionType.GET_COMMENTS:
       return Object.assign({}, state, {
         comments: action.payload
-      })
+      });
   }
 
   return state;
