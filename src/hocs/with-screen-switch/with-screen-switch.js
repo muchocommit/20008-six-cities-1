@@ -40,7 +40,7 @@ const withScreenSwitch = (Component) => {
       this._getScreen = this._getScreen.bind(this);
     }
 
-    _getContainer({offers = void (0), cityName}) {
+    _getContainer({offers, cityName}) {
       if (offers && offers.length === 0) {
         return (<OffersEmpty />);
       }
@@ -78,7 +78,7 @@ const withScreenSwitch = (Component) => {
     }
     _getComponent({key,
       offers = [],
-      cityNames = []}) {
+      cityNames}) {
 
       const {onHandleTabClick, onBookMarkButtonClick} = this.props;
 
@@ -188,10 +188,11 @@ const withScreenSwitch = (Component) => {
         getCommentsOnComponentMount,
         comments,
         onCommentsSubmit,
-        isCommentsDeployFailed} = this.props;
+        isCommentsDeployFailed,
+        onBookMarkButtonClick} = this.props;
 
       const {cityNames, offers} = cities;
-
+      const offersCopy = [...offers];
 
       const storedCredentials = UserAction.getCredentials(credentials);
 
@@ -202,16 +203,17 @@ const withScreenSwitch = (Component) => {
             match={match}
             credentials={credentials}
             bodyElement={bodyElement}
-            offers={offers}
+            offers={offersCopy}
             getComments={getCommentsOnComponentMount}
             comments={comments}
             commentsSubmitHandler={onCommentsSubmit}
-            isCommentsDeployFailed={isCommentsDeployFailed} />} />
+            isCommentsDeployFailed={isCommentsDeployFailed}
+            bookMarkClickHandler={onBookMarkButtonClick}/>} />
 
           <Route path="/favorites" render={() => this._getFavoritesScreen({
-            credentials: storedCredentials, bodyElement, offers})}/>
+            credentials: storedCredentials, bodyElement, offers: offersCopy})}/>
           <Route path="/" exact render={() => this._getMainScreen({
-            credentials: storedCredentials, isAuthorizationRequired, offers, cityNames})} />
+            credentials: storedCredentials, isAuthorizationRequired, offers: offersCopy, cityNames})} />
 
           <Route path="/login" exact render={() => this._getSignInScreen(
               {onAuthorizationScreenSubmit, bodyElement, credentials: storedCredentials})} />

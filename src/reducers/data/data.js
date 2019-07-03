@@ -51,7 +51,22 @@ const ActionCreator = {
   }
 };
 
-const getOfferById = (array, id) => array.find((it) => (it.id === id));
+const getOfferById = (array, id) => {
+  return array.map((it) => {
+
+    return it.find((item) => item.id === id);
+
+  }).filter((it) => it !== void (0));
+};
+
+const getOffersByCityName = (array, name) => {
+  return array.find((city) => {
+
+    return city.filter((offers) => {
+      return offers.city.name === name;
+    })
+  })
+};
 
 const groupByPropertyName = (objectArray, property) => {
   return objectArray.reduce(function (acc, obj) {
@@ -144,6 +159,7 @@ export {
   groupFavoriteOffersByCityName,
   getPureLocations,
   getOfferById,
+  getOffersByCityName,
   getLocationMean,
   accumulateLocationsFromArray,
   ActionCreator,

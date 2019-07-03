@@ -1,7 +1,8 @@
 import React, {PureComponent, createRef} from 'react';
 import PropTypes from 'prop-types';
+import {Link} from 'react-router-dom';
 
-import {getOfferById, getLocations} from '../../reducers/data/data';
+import {getOfferById, getLocations, getOffersByCityName} from '../../reducers/data/data';
 import {getRating} from '../../assets/handler';
 
 import {getDateFromUTCString,
@@ -61,38 +62,38 @@ export default class Offer extends PureComponent {
       <label className="reviews__label form__label" htmlFor="review">Your review</label>
       <div className="reviews__rating-form form__rating">
         <input className="form__rating-input visually-hidden" name="rating" value="5" id="5-stars"
-               type="radio" />
+          type="radio" />
         <label htmlFor="5-stars" className="reviews__rating-label form__rating-label" title="perfect">
           <svg className="form__star-image" width="13" height="12" viewBox="0 0 13 12" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" clipRule="evenodd" d="M6.5 9.644L10.517 12 9.451 7.56 13 4.573l-4.674-.386L6.5 0 4.673 4.187 0 4.573 3.549 7.56 2.483 12 6.5 9.644z"/></svg>
         </label>
 
         <input className="form__rating-input visually-hidden" name="rating" value="4" id="4-stars"
-               type="radio" />
+          type="radio" />
         <label htmlFor="4-stars" className="reviews__rating-label form__rating-label" title="good">
           <svg className="form__star-image" width="13" height="12" viewBox="0 0 13 12" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" clipRule="evenodd" d="M6.5 9.644L10.517 12 9.451 7.56 13 4.573l-4.674-.386L6.5 0 4.673 4.187 0 4.573 3.549 7.56 2.483 12 6.5 9.644z"/></svg>
         </label>
 
         <input className="form__rating-input visually-hidden" name="rating" value="3" id="3-stars"
-               type="radio" />
+          type="radio" />
         <label htmlFor="3-stars" className="reviews__rating-label form__rating-label" title="not bad">
           <svg className="form__star-image" width="13" height="12" viewBox="0 0 13 12" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" clipRule="evenodd" d="M6.5 9.644L10.517 12 9.451 7.56 13 4.573l-4.674-.386L6.5 0 4.673 4.187 0 4.573 3.549 7.56 2.483 12 6.5 9.644z"/></svg>
         </label>
 
         <input className="form__rating-input visually-hidden" name="rating" value="2" id="2-stars"
-               type="radio" />
+          type="radio" />
         <label htmlFor="2-stars" className="reviews__rating-label form__rating-label" title="badly">
           <svg className="form__star-image" width="13" height="12" viewBox="0 0 13 12" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" clipRule="evenodd" d="M6.5 9.644L10.517 12 9.451 7.56 13 4.573l-4.674-.386L6.5 0 4.673 4.187 0 4.573 3.549 7.56 2.483 12 6.5 9.644z"/></svg>
         </label>
 
         <input className="form__rating-input visually-hidden" name="rating" value="1" id="1-star"
-               type="radio" />
+          type="radio" />
         <label htmlFor="1-star" className="reviews__rating-label form__rating-label"
-               title="terribly">
+          title="terribly">
           <svg className="form__star-image" width="13" height="12" viewBox="0 0 13 12" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" clipRule="evenodd" d="M6.5 9.644L10.517 12 9.451 7.56 13 4.573l-4.674-.386L6.5 0 4.673 4.187 0 4.573 3.549 7.56 2.483 12 6.5 9.644z"/></svg>
         </label>
       </div>
       <textarea className="reviews__textarea form__textarea" id="review" name="review"
-                placeholder="Tell how was your stay, what you like and what can be improved"></textarea>
+        placeholder="Tell how was your stay, what you like and what can be improved"></textarea>
       <div className="reviews__button-wrapper">
         <p className="reviews__help">
           To submit review please make sure to set <span className="reviews__star">rating</span> and
@@ -104,16 +105,6 @@ export default class Offer extends PureComponent {
     </form>);
   }
 
-  _getCurrentOffer(offers = void (0)) {
-    const {match} = this.props;
-    const offerId = +match.url.slice(1);
-
-    if (offers && offers.length > 0) {
-      return getOfferById(offers, offerId);
-    }
-
-    return null;
-  }
 
   _submitForm(e) {
     // Add another state for comments post result
@@ -139,20 +130,26 @@ export default class Offer extends PureComponent {
       offers,
       credentials,
       bodyElement,
-      comments
+      comments,
+      bookMarkClickHandler,
+      match
     } = this.props;
+
+    const offerId = +match.url.slice(1);
 
     bodyElement.className = `page`;
 
     if (offers && offers.length > 0) {
 
-      const currentOffers = offers[city];
-      const currentLocations = getLocations(
-        [...currentOffers]).slice(0, 3);
 
-      const offer = this._getCurrentOffer(currentOffers);
-
+      const offer = getOfferById([...offers], offerId)[0];
       const {images} = offer;
+
+      const currentOffers = getOffersByCityName([...offers], offer.city.name).slice(0, 3);
+      const currentLocations = getLocations(
+        [...currentOffers]);
+
+
       const headerImages = images.slice(0, 6);
 
       return (<>
@@ -220,7 +217,7 @@ export default class Offer extends PureComponent {
                   <div className="property__host-user user">
                     <div className="property__avatar-wrapper property__avatar-wrapper--pro user__avatar-wrapper">
                       <img className="property__avatar user__avatar" src={offer.host[`avatar_url`]} width="74" height="74"
-                        alt="Host avatar" />
+                           alt="Host avatar" />
                     </div>
                     <span className="property__user-name">{offer.host.name}</span>
                     <span className="property__user-status">{offer.host[`is_pro`] ? `Pro` : ``}</span>
@@ -237,7 +234,7 @@ export default class Offer extends PureComponent {
                         <div className="reviews__user user">
                           <div className="reviews__avatar-wrapper user__avatar-wrapper">
                             <img className="reviews__avatar user__avatar" src={it.user[`avatar_url`]} width="54" height="54"
-                              alt="Reviews avatar" />
+                                 alt="Reviews avatar" />
                           </div>
                           <span className="reviews__user-name">{it.user.name}</span>
                         </div>
@@ -254,7 +251,7 @@ export default class Offer extends PureComponent {
                       </li>) : ``}
                   </ul>
 
-                  {credentials.id ? this._renderForm(): ``}
+                  {credentials.id ? this._renderForm() : ``}
 
 
                 </section>
@@ -270,40 +267,39 @@ export default class Offer extends PureComponent {
               <h2 className="near-places__title">Other places in the neighbourhood</h2>
               <div className="near-places__list places__list">
 
-                {currentOffers.slice(0, 3).map((currentOffer, i) => <article className="near-places__card place-card" >
+                {currentOffers.slice(0, 3).map((currentOffer, i) => <article className="near-places__card place-card" key={`currentOffer-${i}`}>
                   <div className="near-places__image-wrapper place-card__image-wrapper">
-                    <a href="#">
-                      <img className="place-card__image" src="img/room.jpg" width="260" height="200" alt="Place image" />
-                    </a>
+                    <Link to={`/${currentOffer.id}`}>
+                      <img className="place-card__image" src={currentOffer[`preview_image`]} width="260" height="200" alt="Place image" />
+                    </Link>
                   </div>
                   <div className="place-card__info">
                     <div className="place-card__price-wrapper">
                       <div className="place-card__price">
-                        <b className="place-card__price-value">&euro;80</b>
+                        <b className="place-card__price-value">&euro;{currentOffer.price}</b>
                         <span className="place-card__price-text">&#47;&nbsp;night</span>
                       </div>
-                      <button className="place-card__bookmark-button place-card__bookmark-button--active button"
-                              type="button">
-                        <svg className="place-card__bookmark-icon" width="18" height="19">
-                          <use xlinkHref="#icon-bookmark"></use>
-                        </svg>
+                      <button className={currentOffer[`is_favorite`] ?
+                        `place-card__bookmark-button place-card__bookmark-button--active button` : `place-card__bookmark-button button`}
+                              type="button" onClick={() => bookMarkClickHandler(
+                        {bookMarkIndex: currentOffer.id, isFavorite: currentOffer[`is_favorite`] ? 1 : 0})}>
+
+                        <svg className="place-card__bookmark-icon" width="17" height="18" viewBox="0 0 17 18" xmlns="http://www.w3.org/2000/svg"><path d="M3.993 2.185l.017-.092V2c0-.554.449-1 .99-1h10c.522 0 .957.41.997.923l-2.736 14.59-4.814-2.407-.39-.195-.408.153L1.31 16.44 3.993 2.185z"/></svg>
                         <span className="visually-hidden">In bookmarks</span>
                       </button>
                     </div>
                     <div className="place-card__rating rating">
                       <div className="place-card__stars rating__stars">
-                        <span style={{width: `80%`}}></span>
+                        <span style={{width: `${getRating(currentOffer.rating)}%`}}></span>
                         <span className="visually-hidden">Rating</span>
                       </div>
                     </div>
                     <h2 className="place-card__name">
-                      <a href="#">Wood and stone place</a>
+                      <Link to={`/${currentOffer.id}`}>Wood and stone place</Link>
                     </h2>
                     <p className="place-card__type">Private room</p>
                   </div>
                 </article>)}
-
-
 
               </div>
             </section>
@@ -312,9 +308,9 @@ export default class Offer extends PureComponent {
       </>);
     }
 
-    return <></>;
-
+    return null;
   }
+
 
   componentDidMount() {
     const {
@@ -348,7 +344,7 @@ export default class Offer extends PureComponent {
         commentsError.style.display = `none`;
         submitButton.disabled = false;
 
-        form.querySelector('#review').value = ``;
+        form.querySelector(`#review`).value = ``;
       }
     }
   }
@@ -363,5 +359,6 @@ Offer.propTypes = {
   getComments: PropTypes.func.isRequired,
   comments: PropTypes.array.isRequired,
   commentsSubmitHandler: PropTypes.func.isRequired,
-  isCommentsDeployFailed: PropTypes.bool.isRequired
+  isCommentsDeployFailed: PropTypes.bool.isRequired,
+  bookMarkClickHandler: PropTypes.func.isRequired
 };
