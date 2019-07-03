@@ -23,6 +23,7 @@ export default class Offer extends PureComponent {
 
   render() {
     const {
+      city,
       offers,
       credentials,
       bodyElement} = this.props;
@@ -30,7 +31,7 @@ export default class Offer extends PureComponent {
     bodyElement.className = `page`;
 
 
-    if (this._getCurrentOffer(offers)) {
+    if (offers && this._getCurrentOffer(offers[city])) {
 
       return (<>
         <Header credentials={credentials} />
@@ -359,6 +360,7 @@ export default class Offer extends PureComponent {
 }
 
 Offer.propTypes = {
+  city: PropTypes.number.isRequired,
   offers: PropTypes.array,
   bodyElement: PropTypes.object.isRequired,
   credentials: PropTypes.object.isRequired,

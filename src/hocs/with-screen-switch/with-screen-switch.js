@@ -140,7 +140,7 @@ const withScreenSwitch = (Component) => {
               </section>
             </div>
             <div className="cities__places-wrapper">
-              {this._getContainer({offers, cityName: cityNames[city]})}
+              {this._getContainer({offers: offers[city], cityName: cityNames[city]})}
             </div>
           </>);
     }
@@ -181,6 +181,7 @@ const withScreenSwitch = (Component) => {
         bodyElement,
         credentials,
         cities,
+        city,
         isAuthorizationRequired} = this.props;
 
       const {cityNames, offers} = cities;
@@ -188,15 +189,16 @@ const withScreenSwitch = (Component) => {
 
       return <BrowserRouter>
         <Switch>
-          <Route path={`/:id`} render={({match}) => <Offer
+          <Route path={`/([0-9][0-9]?[0-9]?)`} render={({match}) => <Offer
+            city={city}
             match={match}
             credentials={credentials}
             bodyElement={bodyElement}
             offers={offers}/>} />
 
-          <Route path={`/favorites`} exact render={() => this._getFavoritesScreen({
+          <Route path="/favorites" render={() => this._getFavoritesScreen({
             credentials: storedCredentials, bodyElement, offers})}/>
-          <Route path={[`/`, `/hotels`]} render={() => this._getMainScreen({
+          <Route path="/" exact render={() => this._getMainScreen({
             credentials: storedCredentials, isAuthorizationRequired, offers, cityNames})} />
 
           <Route path="/login" exact render={() => this._getSignInScreen(
