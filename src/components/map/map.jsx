@@ -39,6 +39,7 @@ export default class Map extends PureComponent {
 
   _renderMarkers() {
     const {locations} = this.props;
+
     const {ICON} = MapParams;
 
     const icon = leaflet.icon({

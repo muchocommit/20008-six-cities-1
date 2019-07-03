@@ -39,11 +39,12 @@ const withScreenSwitch = (Component) => {
 
       this._getHeader = this._getHeader.bind(this);
       this._getScreen = this._getScreen.bind(this);
+      this._sortOffers = this._sortOffers.bind(this);
     }
 
-    _sortOffers(filterParam) {
+    _sortOffers(filterParam, offers) {
 
-      // console.log(filterParam)
+      console.log(offers)
     }
 
     _getContainer({offers, cityName}) {
@@ -57,7 +58,7 @@ const withScreenSwitch = (Component) => {
           <b className="places__found">{`${offers ? `${offers.length} places to stay in ${cityName}` : ``}`}</b>
 
 
-          <SortingList handleFilterButtonClick={(filterParam) => this._sortOffers(filterParam)}></SortingList>
+          <SortingList offers={offers}></SortingList>
 
           {this._getComponent({key: `OFFERS`, offers})}
 
@@ -259,6 +260,10 @@ const mapStateToProps = (state, ownProps) => Object.assign(
     });
 
 const mapDispatchToProps = (dispatch) => ({
+  onFilterCities: (citites) => {
+
+  },
+
   onCommentsSubmit: ({submitData, hotelId}) => {
 
     dispatch(UserAction.Operation.postComments({submitData, hotelId}))

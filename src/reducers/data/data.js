@@ -48,6 +48,13 @@ const ActionCreator = {
       type: ActionType.CHANGE_CITY,
       payload: city
     };
+  },
+
+  updateCities: (cities) => {
+    return {
+      type: ActionType.UPDATE_CITIES,
+      payload: cities
+    }
   }
 };
 

@@ -7,27 +7,16 @@ export default class SortingTab extends PureComponent {
     super(props);
 
     this._tab = createRef();
-    this._clickHandler = this._clickHandler.bind(this);
 
-    this.state = {
-      activeItem: null
-    };
-  }
-
-  _clickHandler(i) {
-
-    this.setState({activeItem: i});
-    this.props.clickHandler();
   }
 
   render() {
     const {filterParam, filterIndex} = this.props;
 
     return (<li ref={this._tab}
-                className={this.state.activeItem ? `places__option` :
-                  `places__option places__option--active`}
-                tabIndex={filterIndex}
-                onClick={this._clickHandler(filterIndex)}>{filterParam}</li>);
+      className={`places__option`}
+      tabIndex={filterIndex}
+    >{filterParam}</li>);
   }
 }
 
