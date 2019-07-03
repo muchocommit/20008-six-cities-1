@@ -11,11 +11,13 @@ export default class SortingTab extends PureComponent {
   }
 
   render() {
-    const {filterParam, filterIndex} = this.props;
+    const {filterParam, filterIndex, clickHandler, cities} = this.props;
+
 
     return (<li ref={this._tab}
       className={`places__option`}
       tabIndex={filterIndex}
+      onClick={() => clickHandler(cities, filterParam)}
     >{filterParam}</li>);
   }
 }
@@ -23,5 +25,6 @@ export default class SortingTab extends PureComponent {
 SortingTab.propTypes = {
   filterParam: PropTypes.string.isRequired,
   filterIndex: PropTypes.number.isRequired,
-  clickHandler: PropTypes.func.isRequired
+  clickHandler: PropTypes.func.isRequired,
+  cities: PropTypes.object.isRequired
 };

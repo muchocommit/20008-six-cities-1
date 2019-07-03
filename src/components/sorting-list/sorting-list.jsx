@@ -12,13 +12,8 @@ export default class SortingList extends PureComponent {
 
     this._formRef = createRef();
     this._toggleListVisibility = this._toggleListVisibility.bind(this);
-    this._handleFilter = this._handleFilter.bind(this);
   }
 
-  _handleFilter() {
-
-
-  }
 
   _toggleListVisibility() {
     const form = this._formRef.current;
@@ -33,6 +28,8 @@ export default class SortingList extends PureComponent {
   }
 
   render() {
+
+    const {filterHandler, cities} = this.props;
 
     return (<form className="places__sorting" action="#" method="get" ref={this._formRef}>
       <span className="places__sorting-caption">Sort by</span>
@@ -49,14 +46,14 @@ export default class SortingList extends PureComponent {
             key={`filterParam-${key}`}
             filterParam={SortingParams[it]}
             filterIndex={key}
-            clickHandler={
-              () => this._handleFilter(SortingParams[it])
-            }></SortingTab>)}
+            cities={cities}
+            clickHandler={filterHandler}></SortingTab>)}
       </ul>
     </form>);
   }
 }
 
 SortingList.propTypes = {
-  offers: PropTypes.array
+  cities: PropTypes.object.isRequired,
+  filterHandler: PropTypes.func.isRequired
 };

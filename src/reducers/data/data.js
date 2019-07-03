@@ -6,7 +6,11 @@ const initialState = {
 };
 
 const Operation = {
-  loadCities: () => (dispatch, _getState, api) => {
+  loadCities: (cities = null) => (dispatch, _getState, api) => {
+    if (cities) {
+
+      return dispatch(ActionCreator.loadCities(cities));
+    }
     return api.get(`/hotels`)
       .then((response) => {
 
@@ -152,6 +156,11 @@ const reducer = (state = initialState, action) => {
     case ActionType.CHANGE_CITY:
       return Object.assign({}, state, {
         city: action.payload
+      });
+
+    case ActionType.UPDATE_CITIES:
+      return Object.assign({}, state, {
+        offers: action.payload
       });
   }
 

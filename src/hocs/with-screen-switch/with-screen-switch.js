@@ -2,6 +2,7 @@ import React, {PureComponent} from 'react';
 import {compose} from 'recompose';
 import {BrowserRouter, Switch, Route, Redirect} from 'react-router-dom';
 import {connect} from 'react-redux';
+import {SortingParams} from "../../data";
 
 import * as DataAction from '../../reducers/data/data';
 import * as UserAction from '../../reducers/user/user';
@@ -44,7 +45,6 @@ const withScreenSwitch = (Component) => {
 
     _sortOffers(filterParam, offers) {
 
-      console.log(offers)
     }
 
     _getContainer({offers, cityName}) {
@@ -52,13 +52,16 @@ const withScreenSwitch = (Component) => {
         return (<OffersEmpty />);
       }
 
+      const {cities, onFilterCities} = this.props;
+
       return (<div className="cities__places-container container">
         <section className="cities__places places">
           <h2 className="visually-hidden">Places</h2>
           <b className="places__found">{`${offers ? `${offers.length} places to stay in ${cityName}` : ``}`}</b>
 
 
-          <SortingList offers={offers}></SortingList>
+          <SortingList cities={cities} filterHandler={(citiesToSort, filterParam) =>
+            onFilterCities(citiesToSort, filterParam)}></SortingList>
 
           {this._getComponent({key: `OFFERS`, offers})}
 
@@ -242,7 +245,8 @@ const withScreenSwitch = (Component) => {
     checkAuthOnComponentMount: PropTypes.func.isRequired,
     getCommentsOnComponentMount: PropTypes.func.isRequired,
     comments: PropTypes.array.isRequired,
-    onCommentsSubmit: PropTypes.func.isRequired
+    onCommentsSubmit: PropTypes.func.isRequired,
+    onFilterCities: PropTypes.func.isRequired
   };
 
   return WithScreenSwitch;
@@ -260,7 +264,26 @@ const mapStateToProps = (state, ownProps) => Object.assign(
     });
 
 const mapDispatchToProps = (dispatch) => ({
-  onFilterCities: (citites) => {
+  onFilterCities: (cities, filterParam) => {
+
+    switch (filterParam) {
+
+      case SortingParams.HIGH_TO_LOW:
+        dispatch(DataAction.ActionCreator.updateCities(
+          cities.offers.map((city) => {
+
+            dispatch(DataAction.Operation.loadCities(city.sort((a, b) => a.price > b.price)));
+          })));
+        break;
+
+      case SortingParams.LOW_TO_HIGH:
+        dispatch(DataAction.ActionCreator.updateCities(
+          cities.offers.map((city) => {
+
+            dispatch(DataAction.Operation.loadCities(city.sort((a, b) => a.price < b.price)));
+          })));
+        break;
+    }
 
   },
 
