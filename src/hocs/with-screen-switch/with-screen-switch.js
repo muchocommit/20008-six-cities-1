@@ -49,6 +49,9 @@ const withScreenSwitch = (Component) => {
         <section className="cities__places places">
           <h2 className="visually-hidden">Places</h2>
           <b className="places__found">{`${offers ? `${offers.length} places to stay in ${cityName}` : ``}`}</b>
+
+          {/*{SortingList}*/}
+
           <form className="places__sorting" action="#" method="get">
             <span className="places__sorting-caption">Sort by</span>
             <span className="places__sorting-type" tabIndex="0">

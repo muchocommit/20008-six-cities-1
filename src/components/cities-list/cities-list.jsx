@@ -17,7 +17,7 @@ export default class CitiesList extends PureComponent {
     return cityNames.map((it, i) =>
       <CityTabWrapped
         key={`city-${i}`}
-        isActive={isActiveItem(i)}
+        isActive={isActiveItem(i, true)}
 
         onCityTabButtonClick={() => {
           handleTabClick(i);
