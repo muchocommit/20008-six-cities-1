@@ -18,6 +18,8 @@ export const getOffersByCityName = (cityName, citiesArray) => {
   return citiesArray.filter((it) => it.city.name === cityName);
 };
 
+// Can add several combiners for cities, cityNames, offers, currentOffers
+
 export const combineCities = createSelector(
     getCities,
 

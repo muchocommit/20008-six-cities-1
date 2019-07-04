@@ -43,7 +43,8 @@ const withScreenSwitch = (Component) => {
       this._sortOffers = this._sortOffers.bind(this);
     }
 
-    _sortOffers(filterParam, offers) {
+    _sortOffers(citesToSort, filterParam) {
+
 
     }
 
@@ -61,7 +62,7 @@ const withScreenSwitch = (Component) => {
 
 
           <SortingList cities={cities} filterHandler={(citiesToSort, filterParam) =>
-            onFilterCities(citiesToSort, filterParam)}></SortingList>
+            this._sortOffers(citiesToSort, filterParam)}></SortingList>
 
           {this._getComponent({key: `OFFERS`, offers})}
 
@@ -264,26 +265,11 @@ const mapStateToProps = (state, ownProps) => Object.assign(
     });
 
 const mapDispatchToProps = (dispatch) => ({
+
   onFilterCities: (cities, filterParam) => {
 
-    switch (filterParam) {
 
-      case SortingParams.HIGH_TO_LOW:
-        dispatch(DataAction.ActionCreator.updateCities(
-          cities.offers.map((city) => {
-
-            dispatch(DataAction.Operation.loadCities(city.sort((a, b) => a.price > b.price)));
-          })));
-        break;
-
-      case SortingParams.LOW_TO_HIGH:
-        dispatch(DataAction.ActionCreator.updateCities(
-          cities.offers.map((city) => {
-
-            dispatch(DataAction.Operation.loadCities(city.sort((a, b) => a.price < b.price)));
-          })));
-        break;
-    }
+    console.log(cities, filterParam);
   },
 
   onCommentsSubmit: ({submitData, hotelId}) => {

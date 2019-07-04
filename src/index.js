@@ -28,6 +28,8 @@ const store = createStore(
 
 const init = () => {
   store.dispatch(DataOperation.loadCities());
+
+
   const body = document.getElementById(`root`).parentNode;
 
   ReactDOM.render(
