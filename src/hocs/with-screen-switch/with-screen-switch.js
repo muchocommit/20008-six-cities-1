@@ -36,6 +36,7 @@ import withActiveItem from './../../hocs/with-active-item/with-active-item';
 
 const CitiesListWrapped = withActiveItem(CitiesList);
 const OffersListWrapped = withActiveItem(OffersList);
+const SortingListWrapped = withActiveItem(SortingList);
 
 const withScreenSwitch = (Component) => {
   class WithScreenSwitch extends PureComponent {
@@ -44,52 +45,43 @@ const withScreenSwitch = (Component) => {
 
       this._getHeader = this._getHeader.bind(this);
       this._getScreen = this._getScreen.bind(this);
-      this._sortOffers = this._sortOffers.bind(this);
     }
 
-    _sortOffers(citesToSort, filterParam) {
-
-
-    }
-
-    _getContainer({offers, cityName}) {
-      if (offers && offers.length === 0) {
+    _getContainer({currentOffers, cityName}) {
+      if (currentOffers.length === 0) {
         return (<OffersEmpty />);
       }
 
-      const {cities, onFilterCities} = this.props;
+      const {onFilterCities} = this.props;
 
       return (<div className="cities__places-container container">
         <section className="cities__places places">
           <h2 className="visually-hidden">Places</h2>
-          <b className="places__found">{`${offers ? `${offers.length} places to stay in ${cityName}` : ``}`}</b>
+          <b className="places__found">{`${currentOffers ? `${currentOffers.length} places to stay in ${cityName}` : ``}`}</b>
 
 
-          {/*<SortingList cities={cities} filterHandler={(citiesToSort, filterParam) =>*/}
-          {/*  this._sortOffers(citiesToSort, filterParam)}></SortingList>*/}
+          <SortingListWrapped filterHandler={(filterParam) => onFilterCities({filterParam, currentOffers})} />
 
-          {this._getComponent({key: `OFFERS`, offers})}
+          {this._getComponent({key: `OFFERS`, currentOffers})}
 
         </section>
         <div className="cities__right-section">
 
           <section className="cities__map map">
-            {this._getComponent({key: `LOCATIONS`, offers})}
+            {this._getComponent({key: `LOCATIONS`, currentOffers})}
           </section>
         </div>
       </div>);
     }
-    _getComponent({key,
-      offers = [],
-      cityNames}) {
+    _getComponent({key, currentOffers = [], cityNames}) {
 
       const {onHandleTabClick, onBookMarkButtonClick} = this.props;
 
       switch (key) {
         case `LOCATIONS`:
 
-          if (offers.length !== 0) {
-            const locations = DataAction.getLocations(offers);
+          if (currentOffers.length !== 0) {
+            const locations = DataAction.getLocations(currentOffers);
 
             return (
               <Map
@@ -110,7 +102,7 @@ const withScreenSwitch = (Component) => {
         default:
           return (
             <OffersListWrapped
-              offers={offers}
+              offers={currentOffers}
               handleBookMarkClick={({bookMarkIndex, isFavorite}) =>
                 onBookMarkButtonClick({bookMarkIndex, isFavorite})}
             />);
@@ -125,7 +117,7 @@ const withScreenSwitch = (Component) => {
       />;
     }
 
-    _getScreen({credentials, isAuthorizationRequired, offers, cityNames}) {
+    _getScreen({credentials, isAuthorizationRequired, currentOffers, cityNames}) {
       const {
         city,
         bodyElement} = this.props;
@@ -145,16 +137,16 @@ const withScreenSwitch = (Component) => {
               </section>
             </div>
             <div className="cities__places-wrapper">
-              {this._getContainer({offers, cityName: cityNames[city]})}
+              {this._getContainer({currentOffers, cityName: cityNames[city]})}
             </div>
           </>);
     }
 
-    _getMainScreen({credentials, isAuthorizationRequired, offers, cityNames}) {
+    _getMainScreen({credentials, isAuthorizationRequired, currentOffers, cityNames}) {
       return (<Component
         {...this.props}
         renderScreen={() => this._getScreen({
-          credentials, isAuthorizationRequired, offers, cityNames})}
+          credentials, isAuthorizationRequired, currentOffers, cityNames})}
         renderHeader={() => this._getHeader(credentials, isAuthorizationRequired)}
       />);
     }
@@ -216,7 +208,7 @@ const withScreenSwitch = (Component) => {
           <Route path="/favorites" render={() => this._getFavoritesScreen({
             credentials: storedCredentials, bodyElement, offers: currentOffers})}/>
           <Route path="/" exact render={() => this._getMainScreen({
-            credentials: storedCredentials, isAuthorizationRequired, offers: currentOffers, cityNames})} />
+            credentials: storedCredentials, isAuthorizationRequired, currentOffers, cityNames})} />
 
           <Route path="/login" exact render={() => this._getSignInScreen(
               {onAuthorizationScreenSubmit, bodyElement, credentials: storedCredentials})} />
@@ -275,9 +267,9 @@ const mapStateToProps = (state, ownProps) => Object.assign(
 
 const mapDispatchToProps = (dispatch) => ({
 
-  onFilterCities: (cities, filterParam) => {
+  onFilterCities: ({currentOffers, filterParam}) => {
 
-    console.log(cities, filterParam);
+    console.log({currentOffers, filterParam});
   },
 
   onCommentsSubmit: ({submitData, hotelId}) => {

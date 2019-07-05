@@ -1,19 +1,25 @@
 import React, {PureComponent, createRef} from 'react';
-import SortingTab from './../sorting-tab/sorting-tab.jsx';
 
+import SortingTab from './../sorting-tab/sorting-tab.jsx';
 import PropTypes from 'prop-types';
 
 import {SortingParams} from '../../data';
+
 
 export default class SortingList extends PureComponent {
   constructor(props) {
     super(props);
 
-
     this._formRef = createRef();
     this._toggleListVisibility = this._toggleListVisibility.bind(this);
   }
 
+  _sortingListHandler(filterParam) {
+    const form = this._formRef.current;
+
+    const span = form.querySelector(`.places__sorting-type`);
+    span.firstChild.data = `\xa0${filterParam}`;
+  }
 
   _toggleListVisibility() {
     const form = this._formRef.current;
@@ -29,31 +35,38 @@ export default class SortingList extends PureComponent {
 
   render() {
 
-    const {filterHandler, cities} = this.props;
+    const {filterHandler, isActiveItem,
+      activateItem} = this.props;
+
+    console.log(isActiveItem, activateItem);
 
     return (<form className="places__sorting" action="#" method="get" ref={this._formRef}>
       <span className="places__sorting-caption">Sort by</span>
       <span className="places__sorting-type" tabIndex="0" onClick={this._toggleListVisibility}>
-                        Popular
+                        &nbsp;Popular
         <svg className="places__sorting-arrow" width="7" height="4">
           <use xlinkHref="#icon-arrow-select"></use>
         </svg>
       </span>
-      <ul className="places__options places__options--custom places__options--opened">
-        {Object.keys(SortingParams).map((it, key) =>
+      <ul className="places__options places__options--custom">
+        {Object.keys(SortingParams).map((it, key) => {
 
-          <SortingTab
+
+          return (<SortingTab
             key={`filterParam-${key}`}
             filterParam={SortingParams[it]}
             filterIndex={key}
-            cities={cities}
-            clickHandler={filterHandler}></SortingTab>)}
+            sortingListHandler={(filterParam) => this._sortingListHandler(filterParam)}
+            clickHandler={filterHandler}
+            isActiveItem={isActiveItem(key)}></SortingTab>);
+        })}
       </ul>
     </form>);
   }
 }
 
 SortingList.propTypes = {
-  cities: PropTypes.object.isRequired,
-  filterHandler: PropTypes.func.isRequired
+  filterHandler: PropTypes.func.isRequired,
+  isActiveItem: PropTypes.func.isRequired,
+  activateItem: PropTypes.func.isRequired
 };
