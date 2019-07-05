@@ -18,7 +18,11 @@ import Offer from './../../components/offer/offer.jsx';
 import FavoritesList from './../../components/favorites-list/favorites-list.jsx';
 import SortingList from './../../components/sorting-list/sorting-list.jsx';
 
-import {getCity, combineCities} from '../../reducers/data/selectors';
+import {
+  getCity,
+  getCities,
+  combineOffers,
+  combineCurrentOffers, combineCityNames} from '../../reducers/data/selectors';
 
 import {
   getAuthorizationAttempt,
@@ -61,8 +65,8 @@ const withScreenSwitch = (Component) => {
           <b className="places__found">{`${offers ? `${offers.length} places to stay in ${cityName}` : ``}`}</b>
 
 
-          <SortingList cities={cities} filterHandler={(citiesToSort, filterParam) =>
-            this._sortOffers(citiesToSort, filterParam)}></SortingList>
+          {/*<SortingList cities={cities} filterHandler={(citiesToSort, filterParam) =>*/}
+          {/*  this._sortOffers(citiesToSort, filterParam)}></SortingList>*/}
 
           {this._getComponent({key: `OFFERS`, offers})}
 
@@ -141,7 +145,7 @@ const withScreenSwitch = (Component) => {
               </section>
             </div>
             <div className="cities__places-wrapper">
-              {this._getContainer({offers: offers[city], cityName: cityNames[city]})}
+              {this._getContainer({offers, cityName: cityNames[city]})}
             </div>
           </>);
     }
@@ -183,15 +187,15 @@ const withScreenSwitch = (Component) => {
         credentials,
         cities,
         city,
+        offers,
+        currentOffers,
+        cityNames,
         isAuthorizationRequired,
         getCommentsOnComponentMount,
         comments,
         onCommentsSubmit,
         isCommentsDeployFailed,
         onBookMarkButtonClick} = this.props;
-
-      const {cityNames, offers} = cities;
-      const offersCopy = [...offers];
 
       const storedCredentials = UserAction.getCredentials(credentials);
 
@@ -202,7 +206,7 @@ const withScreenSwitch = (Component) => {
             match={match}
             credentials={credentials}
             bodyElement={bodyElement}
-            offers={offersCopy}
+            offers={offers}
             getComments={getCommentsOnComponentMount}
             comments={comments}
             commentsSubmitHandler={onCommentsSubmit}
@@ -210,9 +214,9 @@ const withScreenSwitch = (Component) => {
             bookMarkClickHandler={onBookMarkButtonClick}/>} />
 
           <Route path="/favorites" render={() => this._getFavoritesScreen({
-            credentials: storedCredentials, bodyElement, offers: offersCopy})}/>
+            credentials: storedCredentials, bodyElement, offers: currentOffers})}/>
           <Route path="/" exact render={() => this._getMainScreen({
-            credentials: storedCredentials, isAuthorizationRequired, offers: offersCopy, cityNames})} />
+            credentials: storedCredentials, isAuthorizationRequired, offers: currentOffers, cityNames})} />
 
           <Route path="/login" exact render={() => this._getSignInScreen(
               {onAuthorizationScreenSubmit, bodyElement, credentials: storedCredentials})} />
@@ -229,10 +233,11 @@ const withScreenSwitch = (Component) => {
 
   WithScreenSwitch.propTypes = {
     city: PropTypes.number.isRequired,
-    cities: PropTypes.shape({
-      cityNames: PropTypes.arrayOf(PropTypes.string).isRequired,
-      offers: PropTypes.array
-    }),
+    cities: PropTypes.array.isRequired,
+    offers: PropTypes.array.isRequired,
+    currentOffers: PropTypes.array.isRequired,
+    cityNames: PropTypes.arrayOf(PropTypes.string).isRequired,
+
     onAuthorizationScreenSubmit: PropTypes.func.isRequired,
     onHandleTabClick: PropTypes.func.isRequired,
     bodyElement: PropTypes.object.isRequired,
@@ -256,7 +261,11 @@ const withScreenSwitch = (Component) => {
 const mapStateToProps = (state, ownProps) => Object.assign(
     {}, ownProps, {
       city: getCity(state),
-      cities: combineCities(state),
+      cities: getCities(state),
+      offers: combineOffers(state),
+      currentOffers: combineCurrentOffers(state),
+      cityNames: combineCityNames(state),
+
       isAuthorizationFailed: getAuthorizationAttempt(state),
       isAuthorizationRequired: getAuthorizationStatus(state),
       credentials: getCredentials(state),
@@ -267,7 +276,6 @@ const mapStateToProps = (state, ownProps) => Object.assign(
 const mapDispatchToProps = (dispatch) => ({
 
   onFilterCities: (cities, filterParam) => {
-
 
     console.log(cities, filterParam);
   },

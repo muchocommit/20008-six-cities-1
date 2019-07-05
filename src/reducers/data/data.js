@@ -2,7 +2,10 @@ import {ActionType} from '../../data';
 
 const initialState = {
   city: 0,
-  cities: []
+  cities: [],
+  offers: [],
+  currentOffers: [],
+  cityNames: []
 };
 
 const Operation = {
@@ -54,10 +57,22 @@ const ActionCreator = {
     };
   },
 
-  updateCities: (cities) => {
+  updateOffers: (offers) => {
     return {
-      type: ActionType.UPDATE_CITIES,
-      payload: cities
+      type: ActionType.UPDATE_OFFERS,
+      payload: offers
+    }
+  },
+
+  updateCurrentOffers: (offers, city) => {
+    return {
+      type: ActionType.UPDATE_CURRENT_OFFERS
+    }
+  },
+
+  updateCityNames: (cityNames) => {
+    return {
+      type: ActionType.UPDATE_CITY_NAMES
     }
   }
 };
@@ -158,10 +173,20 @@ const reducer = (state = initialState, action) => {
         city: action.payload
       });
 
-    case ActionType.UPDATE_CITIES:
+    case ActionType.UPDATE_OFFERS:
       return Object.assign({}, state, {
         offers: action.payload
       });
+
+    case ActionType.UPDATE_CURRENT_OFFERS:
+      return Object.assign({}, state, {
+        currentOffers: action.payload
+      });
+
+    case ActionType.UPDATE_CITY_NAMES:
+      return Object.assign({}, state, {
+        cityNames: action.payload
+      })
   }
 
   return state;
