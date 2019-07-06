@@ -38,7 +38,6 @@ export default class SortingList extends PureComponent {
     const {filterHandler, isActiveItem,
       activateItem} = this.props;
 
-    console.log(isActiveItem, activateItem);
 
     return (<form className="places__sorting" action="#" method="get" ref={this._formRef}>
       <span className="places__sorting-caption">Sort by</span>
@@ -58,7 +57,8 @@ export default class SortingList extends PureComponent {
             filterIndex={key}
             sortingListHandler={(filterParam) => this._sortingListHandler(filterParam)}
             clickHandler={filterHandler}
-            isActiveItem={isActiveItem(key)}></SortingTab>);
+            isActiveItem={isActiveItem(key)}
+            activateItem={() => activateItem(key)}></SortingTab>);
         })}
       </ul>
     </form>);

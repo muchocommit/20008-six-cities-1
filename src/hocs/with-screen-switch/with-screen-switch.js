@@ -21,6 +21,7 @@ import SortingList from './../../components/sorting-list/sorting-list.jsx';
 import {
   getCity,
   getCities,
+  getFilterParam,
   combineOffers,
   combineCurrentOffers, combineCityNames} from '../../reducers/data/selectors';
 
@@ -221,6 +222,12 @@ const withScreenSwitch = (Component) => {
 
       checkAuthOnComponentMount();
     }
+
+    componentDidUpdate() {
+      const {currentOffers} = this.props;
+
+      console.log(currentOffers);
+    }
   }
 
   WithScreenSwitch.propTypes = {
@@ -256,7 +263,9 @@ const mapStateToProps = (state, ownProps) => Object.assign(
       cities: getCities(state),
       offers: combineOffers(state),
       currentOffers: combineCurrentOffers(state),
+      filerParam: getFilterParam(state),
       cityNames: combineCityNames(state),
+      filterParam: getFilterParam(state),
 
       isAuthorizationFailed: getAuthorizationAttempt(state),
       isAuthorizationRequired: getAuthorizationStatus(state),
@@ -269,7 +278,31 @@ const mapDispatchToProps = (dispatch) => ({
 
   onFilterCities: ({currentOffers, filterParam}) => {
 
-    console.log({currentOffers, filterParam});
+    switch (filterParam) {
+
+      case SortingParams.LOW_TO_HIGH:
+        const offersLowPriceToHigh = currentOffers.sort((a, b) => b.price < a.price);
+        dispatch(DataAction.ActionCreator.updateCurrentOffers(offersLowPriceToHigh));
+        dispatch(DataAction.ActionCreator.filterParam(SortingParams.LOW_TO_HIGH));
+        break;
+
+      case SortingParams.HIGH_TO_LOW:
+        const offersHighPriceToLow = currentOffers.sort((a, b) => b.price > a.price);
+        dispatch(DataAction.ActionCreator.updateCurrentOffers(offersHighPriceToLow));
+        dispatch(DataAction.ActionCreator.filterParam(SortingParams.HIGH_TO_LOW));
+        break;
+
+      case SortingParams.TOP_RATED:
+        const offersTopRatedToLow = currentOffers.sort((a, b) => b.rating > a.rating);
+        dispatch(DataAction.ActionCreator.updateCurrentOffers(offersTopRatedToLow));
+        dispatch(DataAction.ActionCreator.filterParam(SortingParams.TOP_RATED));
+        break;
+
+      case SortingParams.POPULAR:
+        dispatch(DataAction.ActionCreator.updateCurrentOffers(currentOffers));
+        dispatch(DataAction.ActionCreator.filterParam(SortingParams.POPULAR));
+        break;
+    }
   },
 
   onCommentsSubmit: ({submitData, hotelId}) => {

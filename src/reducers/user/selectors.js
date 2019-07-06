@@ -22,10 +22,3 @@ export const getCommentsDeployAttempt = (state) => {
   return state[NAME_SPACE].isCommentsDeployFailed;
 };
 
-export const getOffers = (state) => {
-  return state[NAME_SPACE].offers;
-};
-
-export const getCityNames = (state) => {
-  return state[NAME_SPACE].cityNames;
-};

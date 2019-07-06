@@ -5,7 +5,8 @@ const initialState = {
   cities: [],
   offers: [],
   currentOffers: [],
-  cityNames: []
+  cityNames: [],
+  filterParam: ``
 };
 
 const Operation = {
@@ -21,7 +22,6 @@ const Operation = {
 
           return dispatch(ActionCreator.loadCities(response.data));
         }
-
         throw response;
       });
   },
@@ -64,11 +64,20 @@ const ActionCreator = {
     }
   },
 
-  updateCurrentOffers: (offers, city) => {
+  updateCurrentOffers: (currentOffers) => {
     return {
-      type: ActionType.UPDATE_CURRENT_OFFERS
+      type: ActionType.UPDATE_CURRENT_OFFERS,
+      payload: currentOffers
     }
   },
+
+  filterParam: (filterParam) => {
+    return {
+      type: ActionType.FILTER_PARAM,
+      payload: filterParam
+    }
+  },
+
 
   updateCityNames: (cityNames) => {
     return {
@@ -179,6 +188,7 @@ const reducer = (state = initialState, action) => {
       });
 
     case ActionType.UPDATE_CURRENT_OFFERS:
+      console.log(state);
       return Object.assign({}, state, {
         currentOffers: action.payload
       });
@@ -186,7 +196,13 @@ const reducer = (state = initialState, action) => {
     case ActionType.UPDATE_CITY_NAMES:
       return Object.assign({}, state, {
         cityNames: action.payload
-      })
+      });
+
+    case ActionType.FILTER_PARAM:
+      return Object.assign({}, state, {
+        filterParam: action.payload
+      });
+
   }
 
   return state;
