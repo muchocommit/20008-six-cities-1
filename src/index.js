@@ -16,7 +16,7 @@ import {Operation as DataOperation, ActionCreator, sortOffersByCityName} from '.
 const AppWrapped = withRouter(withScreenSwitch(App));
 
 export const api = createAPI();
-const store = createStore(
+export const store = createStore(
   reducer,
 
   compose(
@@ -27,10 +27,7 @@ const store = createStore(
 
 
 const init = () => {
-
   store.dispatch(DataOperation.loadCities());
-  store.getState();
-
 
   const body = document.getElementById(`root`).parentNode;
 

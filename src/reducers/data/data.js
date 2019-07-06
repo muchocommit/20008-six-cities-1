@@ -3,24 +3,26 @@ import {ActionType} from '../../data';
 const initialState = {
   city: 0,
   cities: [],
-  offers: [],
   currentOffers: [],
+  currentOffersDefault: [],
+  offers: [],
   cityNames: [],
   filterParam: ``
 };
 
 const Operation = {
-  loadCities: (cities = null) => (dispatch, _getState, api) => {
-    if (cities) {
+  loadCities: () => (dispatch, _getState, api) => {
 
-      return dispatch(ActionCreator.loadCities(cities));
-    }
+    // console.log(_getState());
     return api.get(`/hotels`)
       .then((response) => {
 
         if (response) {
+          const cities = response.data;
 
-          return dispatch(ActionCreator.loadCities(response.data));
+          dispatch(ActionCreator.loadCities(cities));
+
+          return;
         }
         throw response;
       });
@@ -65,6 +67,7 @@ const ActionCreator = {
   },
 
   updateCurrentOffers: (currentOffers) => {
+
     return {
       type: ActionType.UPDATE_CURRENT_OFFERS,
       payload: currentOffers
@@ -72,6 +75,7 @@ const ActionCreator = {
   },
 
   filterParam: (filterParam) => {
+
     return {
       type: ActionType.FILTER_PARAM,
       payload: filterParam
@@ -188,7 +192,7 @@ const reducer = (state = initialState, action) => {
       });
 
     case ActionType.UPDATE_CURRENT_OFFERS:
-      console.log(state);
+
       return Object.assign({}, state, {
         currentOffers: action.payload
       });

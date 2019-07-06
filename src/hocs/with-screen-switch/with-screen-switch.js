@@ -18,12 +18,15 @@ import Offer from './../../components/offer/offer.jsx';
 import FavoritesList from './../../components/favorites-list/favorites-list.jsx';
 import SortingList from './../../components/sorting-list/sorting-list.jsx';
 
+
 import {
   getCity,
   getCities,
   getFilterParam,
   combineOffers,
-  combineCurrentOffers, combineCityNames} from '../../reducers/data/selectors';
+  combineCurrentOffers,
+  getCurrentOffersDefault,
+  combineCityNames} from '../../reducers/data/selectors';
 
 import {
   getAuthorizationAttempt,
@@ -48,7 +51,7 @@ const withScreenSwitch = (Component) => {
       this._getScreen = this._getScreen.bind(this);
     }
 
-    _getContainer({currentOffers, cityName}) {
+    _getContainer({currentOffersDefault, currentOffers, cityName}) {
       if (currentOffers.length === 0) {
         return (<OffersEmpty />);
       }
@@ -61,7 +64,7 @@ const withScreenSwitch = (Component) => {
           <b className="places__found">{`${currentOffers ? `${currentOffers.length} places to stay in ${cityName}` : ``}`}</b>
 
 
-          <SortingListWrapped filterHandler={(filterParam) => onFilterCities({filterParam, currentOffers})} />
+          <SortingListWrapped filterHandler={(filterParam) => onFilterCities({filterParam, currentOffers, currentOffersDefault})} />
 
           {this._getComponent({key: `OFFERS`, currentOffers})}
 
@@ -118,7 +121,9 @@ const withScreenSwitch = (Component) => {
       />;
     }
 
-    _getScreen({credentials, isAuthorizationRequired, currentOffers, cityNames}) {
+    _getScreen({credentials,
+                 isAuthorizationRequired, currentOffersDefault,
+                 currentOffers, cityNames}) {
       const {
         city,
         bodyElement} = this.props;
@@ -138,16 +143,21 @@ const withScreenSwitch = (Component) => {
               </section>
             </div>
             <div className="cities__places-wrapper">
-              {this._getContainer({currentOffers, cityName: cityNames[city]})}
+              {this._getContainer({currentOffersDefault, currentOffers, cityName: cityNames[city]})}
             </div>
           </>);
     }
 
-    _getMainScreen({credentials, isAuthorizationRequired, currentOffers, cityNames}) {
+    _getMainScreen({credentials,
+                     isAuthorizationRequired,
+                     currentOffers, currentOffersDefault, cityNames}) {
+
       return (<Component
         {...this.props}
         renderScreen={() => this._getScreen({
-          credentials, isAuthorizationRequired, currentOffers, cityNames})}
+          credentials, isAuthorizationRequired,
+          currentOffers, currentOffersDefault, cityNames})}
+
         renderHeader={() => this._getHeader(credentials, isAuthorizationRequired)}
       />);
     }
@@ -175,20 +185,25 @@ const withScreenSwitch = (Component) => {
     render() {
 
       const {
-        onAuthorizationScreenSubmit,
-        bodyElement,
         credentials,
         cities,
         city,
         offers,
         currentOffers,
+        currentOffersDefault,
         cityNames,
+
+        onAuthorizationScreenSubmit,
         isAuthorizationRequired,
         getCommentsOnComponentMount,
         comments,
         onCommentsSubmit,
         isCommentsDeployFailed,
-        onBookMarkButtonClick} = this.props;
+        onBookMarkButtonClick,
+        bodyElement
+      } = this.props;
+
+
 
       const storedCredentials = UserAction.getCredentials(credentials);
 
@@ -209,7 +224,8 @@ const withScreenSwitch = (Component) => {
           <Route path="/favorites" render={() => this._getFavoritesScreen({
             credentials: storedCredentials, bodyElement, offers: currentOffers})}/>
           <Route path="/" exact render={() => this._getMainScreen({
-            credentials: storedCredentials, isAuthorizationRequired, currentOffers, cityNames})} />
+            credentials: storedCredentials, isAuthorizationRequired,
+            currentOffersDefault, currentOffers, cityNames})} />
 
           <Route path="/login" exact render={() => this._getSignInScreen(
               {onAuthorizationScreenSubmit, bodyElement, credentials: storedCredentials})} />
@@ -222,12 +238,6 @@ const withScreenSwitch = (Component) => {
 
       checkAuthOnComponentMount();
     }
-
-    componentDidUpdate() {
-      const {currentOffers} = this.props;
-
-      console.log(currentOffers);
-    }
   }
 
   WithScreenSwitch.propTypes = {
@@ -235,6 +245,7 @@ const withScreenSwitch = (Component) => {
     cities: PropTypes.array.isRequired,
     offers: PropTypes.array.isRequired,
     currentOffers: PropTypes.array.isRequired,
+    currentOffersDefault: PropTypes.array.isRequired,
     cityNames: PropTypes.arrayOf(PropTypes.string).isRequired,
 
     onAuthorizationScreenSubmit: PropTypes.func.isRequired,
@@ -263,7 +274,8 @@ const mapStateToProps = (state, ownProps) => Object.assign(
       cities: getCities(state),
       offers: combineOffers(state),
       currentOffers: combineCurrentOffers(state),
-      filerParam: getFilterParam(state),
+      currentOffersDefault: getCurrentOffersDefault(state),
+
       cityNames: combineCityNames(state),
       filterParam: getFilterParam(state),
 
@@ -276,7 +288,7 @@ const mapStateToProps = (state, ownProps) => Object.assign(
 
 const mapDispatchToProps = (dispatch) => ({
 
-  onFilterCities: ({currentOffers, filterParam}) => {
+  onFilterCities: ({currentOffersDefault, currentOffers, filterParam}) => {
 
     switch (filterParam) {
 
@@ -284,6 +296,7 @@ const mapDispatchToProps = (dispatch) => ({
         const offersLowPriceToHigh = currentOffers.sort((a, b) => b.price < a.price);
         dispatch(DataAction.ActionCreator.updateCurrentOffers(offersLowPriceToHigh));
         dispatch(DataAction.ActionCreator.filterParam(SortingParams.LOW_TO_HIGH));
+
         break;
 
       case SortingParams.HIGH_TO_LOW:
@@ -299,7 +312,8 @@ const mapDispatchToProps = (dispatch) => ({
         break;
 
       case SortingParams.POPULAR:
-        dispatch(DataAction.ActionCreator.updateCurrentOffers(currentOffers));
+
+        dispatch(DataAction.ActionCreator.updateCurrentOffers(currentOffersDefault));
         dispatch(DataAction.ActionCreator.filterParam(SortingParams.POPULAR));
         break;
     }
@@ -315,8 +329,8 @@ const mapDispatchToProps = (dispatch) => ({
           dispatch(UserAction.ActionCreator.resetCommentsDeploy());
         })
       .catch(() => {
-          dispatch(UserAction.ActionCreator.isCommentsDeployFailed(true));
-        });
+        dispatch(UserAction.ActionCreator.isCommentsDeployFailed(true));
+      });
   },
 
   getCommentsOnComponentMount: (hotelId) => {
@@ -340,8 +354,12 @@ const mapDispatchToProps = (dispatch) => ({
       });
   },
 
+  // Here dispatch change to currentOffersDefault
   onHandleTabClick: (activeCity) => {
-    dispatch(DataAction.ActionCreator.changeCity(activeCity));
+    return new Promise((resolve) =>
+      resolve(dispatch(DataAction.ActionCreator.changeCity(activeCity))))
+
+      .then((result) => console.log(result))
   },
 
   onAuthorizationScreenSubmit: (submitData) => {

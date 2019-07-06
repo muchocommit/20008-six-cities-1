@@ -135,6 +135,7 @@ const Operation = {
 
   checkAuth: () => {
     return (dispatch, _getState, api) => {
+
       return api
         .get(`/login`)
         .then((response) => {
@@ -153,6 +154,7 @@ const Operation = {
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
+
     case ActionType.AUTHORIZATION_FAILED:
       return Object.assign({}, state, {
         isAuthorizationFailed: action.payload,

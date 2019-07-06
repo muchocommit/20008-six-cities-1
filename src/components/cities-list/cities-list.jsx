@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import withTab from './../../hocs/with-tab/with-tab';
 import CityTab from './../city-tab/city-tab.jsx';
 
+
 const CityTabWrapped = withTab(CityTab);
 
 export default class CitiesList extends PureComponent {
@@ -13,6 +14,7 @@ export default class CitiesList extends PureComponent {
       handleTabClick,
       activateItem,
       isActiveItem} = this.props;
+
 
     return cityNames.map((it, i) =>
       <CityTabWrapped

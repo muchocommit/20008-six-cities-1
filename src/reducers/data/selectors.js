@@ -56,6 +56,24 @@ export const combineOffers = createSelector(
     }
 );
 
+export const getCurrentOffersDefault = (state) => {
+  const cities = getCities(state);
+  const city = getCity(state);
+
+  if (cities.length > 0) {
+    const cityNames = getCityNamesDistinct(cities);
+    const offers = sortOffersByCityName(cityNames, cities);
+
+    return offers.map((offer, index) => {
+      offer.cityName = cityNames[index];
+
+      return offer;
+    })[city];
+  }
+
+  return [];
+};
+
 export const combineCurrentOffers = createSelector(
     getCities,
     getCity,
