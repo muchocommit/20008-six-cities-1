@@ -1,11 +1,16 @@
 export const TOP_RATING = 5;
 
 export const MapParams = {
-  ZOOM: 5,
+  CITY_ZOOM: 14,
+  ZOOM: 12,
   CITY: [52.38333, 4.9],
   ICON: {
     URL: `img/pin.svg`,
     SIZE: [30, 30]
+  },
+  ICON_FOCUS: {
+    URL: `img/pin-orange.svg`,
+    SIZE: [40, 40]
   },
   TILE_LAYER: {
     URL: `https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png`,

@@ -40,7 +40,7 @@ export default class Map extends PureComponent {
   _renderMarkers() {
     const {locations} = this.props;
 
-    const {ICON} = MapParams;
+    const {ICON, CITY_ZOOM, ICON_FOCUS} = MapParams;
 
     const icon = leaflet.icon({
       iconUrl: ICON.URL,
@@ -49,8 +49,8 @@ export default class Map extends PureComponent {
     });
 
     const newIcon = leaflet.icon({
-      iconUrl: ICON.URL,
-      iconSize: [40, 40],
+      iconUrl: ICON_FOCUS.URL,
+      iconSize: ICON_FOCUS.SIZE,
       id: null
     });
 
@@ -61,7 +61,14 @@ export default class Map extends PureComponent {
         .addTo(this.markerGroup).on(`click`, (e) => {
 
           const {target} = e;
-          target.setIcon(newIcon);
+
+          if (target.getIcon().options.iconUrl === ICON_FOCUS.URL) {
+            target.setIcon(icon);
+          } else {
+            target.setIcon(newIcon);
+          }
+
+          this._map.setView([it.location.latitude, it.location.longitude], CITY_ZOOM);
         });
     });
 
@@ -87,7 +94,7 @@ export default class Map extends PureComponent {
       zoom: ZOOM,
       zoomControl: false,
       marker: true
-    }).setView(CITY, ZOOM);
+    });
 
     this.markerGroup = leaflet.layerGroup().addTo(map);
 
@@ -99,19 +106,20 @@ export default class Map extends PureComponent {
     this._renderMarkers();
     const cityLocation = Map._getCityLocation(locations);
 
-    map.setView([cityLocation.latitude, cityLocation.longitude]);
+    map.setView([cityLocation.latitude, cityLocation.longitude], ZOOM);
 
     this._map = map;
   }
 
   componentDidUpdate() {
+    const {ZOOM} = MapParams;
     const {locations} = this.props;
 
     this.markerGroup.clearLayers();
     this._renderMarkers();
 
     const cityLocation = Map._getCityLocation(locations);
-    this._map.setView([cityLocation.latitude, cityLocation.longitude]);
+    this._map.setView([cityLocation.latitude, cityLocation.longitude], ZOOM);
   }
 }
 
