@@ -218,7 +218,7 @@ const withScreenSwitch = (Component) => {
             bookMarkClickHandler={onBookMarkButtonClick}/>} />
 
           <Route path="/favorites" render={() => this._getFavoritesScreen({
-            credentials: storedCredentials, bodyElement, offers: currentOffers})}/>
+            credentials: storedCredentials, bodyElement, offers})}/>
           <Route path="/" exact render={() => this._getMainScreen({
             credentials: storedCredentials, isAuthorizationRequired,
             currentOffers, cityNames})} />

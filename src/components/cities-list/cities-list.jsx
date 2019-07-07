@@ -1,11 +1,11 @@
 import React, {PureComponent} from 'react';
 import PropTypes from 'prop-types';
 
-import withTab from './../../hocs/with-tab/with-tab';
+import withActiveCityTab from './../../hocs/with-active-city-tab/with-active-city-tab';
 import CityTab from './../city-tab/city-tab.jsx';
 
 
-const CityTabWrapped = withTab(CityTab);
+const CityTabWrapped = withActiveCityTab(CityTab);
 
 export default class CitiesList extends PureComponent {
   _getTabs() {

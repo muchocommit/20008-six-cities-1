@@ -32,7 +32,7 @@ export default class SortingTab extends PureComponent {
     }
   }
 
-  _onSortingTabMouseEnter(e) {
+  _onSortingTabMouseEnter() {
 
 
     this.props.activateItem();

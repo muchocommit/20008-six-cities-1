@@ -159,6 +159,7 @@ const sortOffersByCityName = (namesArray, [...citiesArray]) => {
 };
 
 const getFavoriteOffers = (offersArray) => {
+  console.log(offersArray)
   return offersArray.map((offer) => {
 
     return offer.filter((it) => {

@@ -1,7 +1,7 @@
 import React, {PureComponent, createRef} from 'react';
 import PropTypes from 'prop-types';
 
-const withTab = (Component) => {
+const withActiveCityTab = (Component) => {
   class CityTab extends PureComponent {
     constructor(props) {
       super(props);
@@ -74,5 +74,5 @@ const withTab = (Component) => {
   return CityTab;
 };
 
-export default withTab;
+export default withActiveCityTab;
 
