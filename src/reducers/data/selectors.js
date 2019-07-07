@@ -73,6 +73,8 @@ export const combineCurrentOffers = createSelector(
     getCities,
     getCity,
 
+    // Some filter param
+
     (cities, city) => {
 
       if (cities.length > 0) {

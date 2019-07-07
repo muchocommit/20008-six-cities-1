@@ -293,40 +293,41 @@ const mapDispatchToProps = (dispatch, _getState) => ({
     switch (filterParam) {
 
       case SortingParams.LOW_TO_HIGH:
-        const offersLowPriceToHigh = currentOffers.sort((a, b) => b.price < a.price);
-        dispatch(DataAction.ActionCreator.updateCurrentOffers(offersLowPriceToHigh));
+        const getOffersLowPriceToHigh = () => currentOffers.sort((a, b) => a.price - b.price);
+
+
+        dispatch(DataAction.ActionCreator.updateCurrentOffers(getOffersLowPriceToHigh()));
         dispatch(DataAction.ActionCreator.filterParam(SortingParams.LOW_TO_HIGH));
 
         break;
 
       case SortingParams.HIGH_TO_LOW:
-        console.log(_getState)
-        console.log(currentOffers);
 
-        const offersHighPriceToLow = currentOffers.sort((a, b) => b.price > a.price);
+        const offersHighPriceToLow = currentOffers.sort((a, b) => b.price - a.price);
 
 
         return new Promise((resolve) =>
           resolve(dispatch(DataAction.ActionCreator.updateCurrentOffers(offersHighPriceToLow)))
         ).then((result) => {
 
-          console.log(result)
-          dispatch(DataAction.ActionCreator.filterParam(SortingParams.HIGH_TO_LOW))
-        })
 
+          dispatch(DataAction.ActionCreator.filterParam(SortingParams.HIGH_TO_LOW));
+        });
 
 
       case SortingParams.TOP_RATED:
-        const offersTopRatedToLow = currentOffers.sort((a, b) => b.rating > a.rating);
+        const offersTopRatedToLow = currentOffers.sort((a, b) => b.rating - a.rating);
+
         dispatch(DataAction.ActionCreator.updateCurrentOffers(offersTopRatedToLow));
         dispatch(DataAction.ActionCreator.filterParam(SortingParams.TOP_RATED));
         break;
 
       case SortingParams.POPULAR:
 
+        currentOffers = currentOffersDefault;
+        console.log(currentOffers);
 
-
-        dispatch(DataAction.ActionCreator.updateCurrentOffers(currentOffersDefault));
+        dispatch(DataAction.ActionCreator.updateCurrentOffers(currentOffers));
         dispatch(DataAction.ActionCreator.filterParam(SortingParams.POPULAR));
         break;
     }
@@ -374,7 +375,7 @@ const mapDispatchToProps = (dispatch, _getState) => ({
     return new Promise((resolve) =>
       resolve(dispatch(DataAction.ActionCreator.changeCity(activeCity))))
 
-      .then((result) => console.log(result))
+      // .then((result) => console.log(result))
   },
 
   onAuthorizationScreenSubmit: (submitData) => {
