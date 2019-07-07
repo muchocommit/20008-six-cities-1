@@ -51,7 +51,7 @@ const withScreenSwitch = (Component) => {
       this._getScreen = this._getScreen.bind(this);
     }
 
-    _getContainer({currentOffersDefault, currentOffers, cityName}) {
+    _getContainer({currentOffers, cityName}) {
       if (currentOffers.length === 0) {
         return (<OffersEmpty />);
       }
@@ -64,7 +64,7 @@ const withScreenSwitch = (Component) => {
           <b className="places__found">{`${currentOffers ? `${currentOffers.length} places to stay in ${cityName}` : ``}`}</b>
 
 
-          <SortingListWrapped filterHandler={(filterParam) => onFilterCities({filterParam, currentOffers, currentOffersDefault})} />
+          <SortingListWrapped filterHandler={(filterParam) => onFilterCities({filterParam})} />
 
           {this._getComponent({key: `OFFERS`, currentOffers})}
 
@@ -122,8 +122,8 @@ const withScreenSwitch = (Component) => {
     }
 
     _getScreen({credentials,
-                 isAuthorizationRequired, currentOffersDefault,
-                 currentOffers, cityNames}) {
+      isAuthorizationRequired,
+      currentOffers, cityNames}) {
       const {
         city,
         bodyElement} = this.props;
@@ -143,20 +143,20 @@ const withScreenSwitch = (Component) => {
               </section>
             </div>
             <div className="cities__places-wrapper">
-              {this._getContainer({currentOffersDefault, currentOffers, cityName: cityNames[city]})}
+              {this._getContainer({currentOffers, cityName: cityNames[city]})}
             </div>
           </>);
     }
 
     _getMainScreen({credentials,
-                     isAuthorizationRequired,
-                     currentOffers, currentOffersDefault, cityNames}) {
+      isAuthorizationRequired,
+      currentOffers, cityNames}) {
 
       return (<Component
         {...this.props}
         renderScreen={() => this._getScreen({
           credentials, isAuthorizationRequired,
-          currentOffers, currentOffersDefault, cityNames})}
+          currentOffers, cityNames})}
 
         renderHeader={() => this._getHeader(credentials, isAuthorizationRequired)}
       />);
@@ -190,7 +190,7 @@ const withScreenSwitch = (Component) => {
         city,
         offers,
         currentOffers,
-        currentOffersDefault,
+
         cityNames,
 
         onAuthorizationScreenSubmit,
@@ -224,7 +224,7 @@ const withScreenSwitch = (Component) => {
             credentials: storedCredentials, bodyElement, offers: currentOffers})}/>
           <Route path="/" exact render={() => this._getMainScreen({
             credentials: storedCredentials, isAuthorizationRequired,
-            currentOffersDefault, currentOffers, cityNames})} />
+            currentOffers, cityNames})} />
 
           <Route path="/login" exact render={() => this._getSignInScreen(
               {onAuthorizationScreenSubmit, bodyElement, credentials: storedCredentials})} />
@@ -237,7 +237,6 @@ const withScreenSwitch = (Component) => {
 
       checkAuthOnComponentMount();
     }
-
   }
 
   WithScreenSwitch.propTypes = {
@@ -286,48 +285,29 @@ const mapStateToProps = (state, ownProps) => Object.assign(
       isCommentsDeployFailed: getCommentsDeployAttempt(state)
     });
 
-const mapDispatchToProps = (dispatch, _getState) => ({
+const mapDispatchToProps = (dispatch) => ({
 
-  onFilterCities: ({currentOffersDefault, currentOffers, filterParam}) => {
+  onFilterCities: ({filterParam}) => {
 
     switch (filterParam) {
 
       case SortingParams.LOW_TO_HIGH:
-        const getOffersLowPriceToHigh = () => currentOffers.sort((a, b) => a.price - b.price);
 
-
-        dispatch(DataAction.ActionCreator.updateCurrentOffers(getOffersLowPriceToHigh()));
         dispatch(DataAction.ActionCreator.filterParam(SortingParams.LOW_TO_HIGH));
-
         break;
 
       case SortingParams.HIGH_TO_LOW:
 
-        const offersHighPriceToLow = currentOffers.sort((a, b) => b.price - a.price);
-
-
-        return new Promise((resolve) =>
-          resolve(dispatch(DataAction.ActionCreator.updateCurrentOffers(offersHighPriceToLow)))
-        ).then((result) => {
-
-
-          dispatch(DataAction.ActionCreator.filterParam(SortingParams.HIGH_TO_LOW));
-        });
-
+        dispatch(DataAction.ActionCreator.filterParam(SortingParams.HIGH_TO_LOW));
+        break;
 
       case SortingParams.TOP_RATED:
-        const offersTopRatedToLow = currentOffers.sort((a, b) => b.rating - a.rating);
 
-        dispatch(DataAction.ActionCreator.updateCurrentOffers(offersTopRatedToLow));
         dispatch(DataAction.ActionCreator.filterParam(SortingParams.TOP_RATED));
         break;
 
       case SortingParams.POPULAR:
 
-        currentOffers = currentOffersDefault;
-        console.log(currentOffers);
-
-        dispatch(DataAction.ActionCreator.updateCurrentOffers(currentOffers));
         dispatch(DataAction.ActionCreator.filterParam(SortingParams.POPULAR));
         break;
     }
@@ -373,9 +353,9 @@ const mapDispatchToProps = (dispatch, _getState) => ({
   // Here dispatch change to currentOffersDefault
   onHandleTabClick: (activeCity) => {
     return new Promise((resolve) =>
-      resolve(dispatch(DataAction.ActionCreator.changeCity(activeCity))))
+      resolve(dispatch(DataAction.ActionCreator.changeCity(activeCity))));
 
-      // .then((result) => console.log(result))
+    // .then((result) => console.log(result))
   },
 
   onAuthorizationScreenSubmit: (submitData) => {

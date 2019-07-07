@@ -1,6 +1,7 @@
 import {createSelector} from 'reselect';
 import {NameSpace} from './../name-space';
 import {sortOffersByCityName} from './data';
+import {SortingParams} from '../../data';
 
 const NAME_SPACE = NameSpace.DATA;
 
@@ -35,6 +36,16 @@ export const getFilterParam = (state) => {
   return state[NAME_SPACE].filterParam;
 };
 
+export const getCurrentCityOffers = (cities, city) => {
+  const cityNames = getCityNamesDistinct(cities);
+  const offers = sortOffersByCityName(cityNames, cities);
+
+  return offers.map((offer, index) => {
+    offer.cityName = cityNames[index];
+
+    return offer;
+  })[city];
+};
 
 export const combineOffers = createSelector(
     getCities,
@@ -56,37 +67,30 @@ export const combineOffers = createSelector(
     }
 );
 
-export const updateCurrentOffersDefault = (cities, city) => {
-
-  const cityNames = getCityNamesDistinct(cities);
-  const offers = sortOffersByCityName(cityNames, cities);
-
-  return offers.map((offer, index) => {
-    offer.cityName = cityNames[index];
-
-    return offer;
-  })[city];
-
-};
 
 export const combineCurrentOffers = createSelector(
     getCities,
     getCity,
+    getFilterParam,
 
-    // Some filter param
-
-    (cities, city) => {
+    (cities, city, filterParam) => {
 
       if (cities.length > 0) {
 
-        const cityNames = getCityNamesDistinct(cities);
-        const offers = sortOffersByCityName(cityNames, cities);
+        switch (filterParam) {
 
-        return offers.map((offer, index) => {
-          offer.cityName = cityNames[index];
+          case SortingParams.LOW_TO_HIGH:
+            return getCurrentCityOffers(cities, city).sort((a, b) => a.price - b.price);
 
-          return offer;
-        })[city];
+          case SortingParams.HIGH_TO_LOW:
+            return getCurrentCityOffers(cities, city).sort((a, b) => b.price - a.price);
+
+          case SortingParams.TOP_RATED:
+            return getCurrentCityOffers(cities, city).sort((a, b) => b.rating - a.rating);
+
+          case SortingParams.POPULAR:
+            return getCurrentCityOffers(cities, city);
+        }
       }
 
       return [];

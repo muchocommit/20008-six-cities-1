@@ -1,5 +1,5 @@
-import {ActionType} from '../../data';
-import {updateCurrentOffersDefault} from './selectors';
+import {ActionType, SortingParams} from '../../data';
+import {getCurrentCityOffers} from './selectors';
 
 const initialState = {
   city: 0,
@@ -8,7 +8,7 @@ const initialState = {
   currentOffersDefault: [],
   offers: [],
   cityNames: [],
-  filterParam: `bla`
+  filterParam: SortingParams.POPULAR
 };
 
 const Operation = {
@@ -23,7 +23,7 @@ const Operation = {
           const city = _getState().DATA.city;
 
 
-          const currentOffersDefault = updateCurrentOffersDefault(cities, city);
+          const currentOffersDefault = getCurrentCityOffers(cities, city);
 
           dispatch(ActionCreator.loadCities(cities));
           dispatch(ActionCreator.updateCurrentOffersDefault(currentOffersDefault));
