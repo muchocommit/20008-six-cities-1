@@ -204,7 +204,6 @@ const withScreenSwitch = (Component) => {
       } = this.props;
 
 
-
       const storedCredentials = UserAction.getCredentials(credentials);
 
       return <BrowserRouter>
@@ -238,6 +237,7 @@ const withScreenSwitch = (Component) => {
 
       checkAuthOnComponentMount();
     }
+
   }
 
   WithScreenSwitch.propTypes = {
@@ -286,7 +286,7 @@ const mapStateToProps = (state, ownProps) => Object.assign(
       isCommentsDeployFailed: getCommentsDeployAttempt(state)
     });
 
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = (dispatch, _getState) => ({
 
   onFilterCities: ({currentOffersDefault, currentOffers, filterParam}) => {
 
@@ -300,10 +300,21 @@ const mapDispatchToProps = (dispatch) => ({
         break;
 
       case SortingParams.HIGH_TO_LOW:
+        console.log(_getState)
+        console.log(currentOffers);
+
         const offersHighPriceToLow = currentOffers.sort((a, b) => b.price > a.price);
-        dispatch(DataAction.ActionCreator.updateCurrentOffers(offersHighPriceToLow));
-        dispatch(DataAction.ActionCreator.filterParam(SortingParams.HIGH_TO_LOW));
-        break;
+
+
+        return new Promise((resolve) =>
+          resolve(dispatch(DataAction.ActionCreator.updateCurrentOffers(offersHighPriceToLow)))
+        ).then((result) => {
+
+          console.log(result)
+          dispatch(DataAction.ActionCreator.filterParam(SortingParams.HIGH_TO_LOW))
+        })
+
+
 
       case SortingParams.TOP_RATED:
         const offersTopRatedToLow = currentOffers.sort((a, b) => b.rating > a.rating);
@@ -313,10 +324,14 @@ const mapDispatchToProps = (dispatch) => ({
 
       case SortingParams.POPULAR:
 
+
+
         dispatch(DataAction.ActionCreator.updateCurrentOffers(currentOffersDefault));
         dispatch(DataAction.ActionCreator.filterParam(SortingParams.POPULAR));
         break;
     }
+
+    return null;
   },
 
   onCommentsSubmit: ({submitData, hotelId}) => {
