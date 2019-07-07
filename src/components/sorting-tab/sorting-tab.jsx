@@ -12,7 +12,8 @@ export default class SortingTab extends PureComponent {
       isActive: props.isActiveItem
     };
 
-    this._onSortingTabMouseOver = this._onSortingTabMouseOver.bind(this);
+    this._onSortingTabMouseEnter = this._onSortingTabMouseEnter.bind(this);
+    this._onSortingTabMouseOut = this._onSortingTabMouseOut.bind(this);
   }
 
   _activateTab() {
@@ -20,14 +21,27 @@ export default class SortingTab extends PureComponent {
 
     if (this.props.isActiveItem) {
       tab.style.backgroundColor = `#f2f2f2`;
-    } else {
+    }
+  }
+
+  _deactivateTab() {
+    const tab = this._tab.current;
+
+    if (!this.props.isActiveItem) {
       tab.style.backgroundColor = `#ffffff`;
     }
   }
 
-  _onSortingTabMouseOver() {
+  _onSortingTabMouseEnter(e) {
+
 
     this.props.activateItem();
+    this.setState({isActive: !this.state.isActive});
+  }
+
+  _onSortingTabMouseOut() {
+
+    this.props.deactivateItem();
     this.setState({isActive: !this.state.isActive});
   }
 
@@ -47,16 +61,19 @@ export default class SortingTab extends PureComponent {
         clickHandler(filterParam);
         sortingListHandler(filterParam);
       }}
-      onMouseEnter={this._onSortingTabMouseOver}
+      onMouseEnter={this._onSortingTabMouseEnter}
+      onMouseOut={this._onSortingTabMouseOut}
     >{filterParam}</li>);
   }
 
   componentDidMount() {
     this._activateTab();
+    this._deactivateTab();
   }
 
   componentDidUpdate() {
     this._activateTab();
+    this._deactivateTab();
   }
 }
 
@@ -66,5 +83,6 @@ SortingTab.propTypes = {
   clickHandler: PropTypes.func.isRequired,
   sortingListHandler: PropTypes.func.isRequired,
   isActiveItem: PropTypes.bool.isRequired,
-  activateItem: PropTypes.func.isRequired
+  activateItem: PropTypes.func.isRequired,
+  deactivateItem: PropTypes.func.isRequired
 };

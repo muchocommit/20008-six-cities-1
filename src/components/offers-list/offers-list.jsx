@@ -26,7 +26,6 @@ class OffersList extends PureComponent {
 
       target = target.parentNode;
     }
-
     return null;
   }
 

@@ -2,7 +2,7 @@ import React, {PureComponent} from 'react';
 import {compose} from 'recompose';
 import {BrowserRouter, Switch, Route, Redirect} from 'react-router-dom';
 import {connect} from 'react-redux';
-import {SortingParams} from "../../data";
+import {SortingParams} from '../../data';
 
 import * as DataAction from '../../reducers/data/data';
 import * as UserAction from '../../reducers/user/user';
@@ -18,14 +18,12 @@ import Offer from './../../components/offer/offer.jsx';
 import FavoritesList from './../../components/favorites-list/favorites-list.jsx';
 import SortingList from './../../components/sorting-list/sorting-list.jsx';
 
-
 import {
   getCity,
   getCities,
   getFilterParam,
   combineOffers,
   combineCurrentOffers,
-  getCurrentOffersDefault,
   combineCityNames} from '../../reducers/data/selectors';
 
 import {
@@ -190,7 +188,6 @@ const withScreenSwitch = (Component) => {
         city,
         offers,
         currentOffers,
-
         cityNames,
 
         onAuthorizationScreenSubmit,
@@ -244,7 +241,6 @@ const withScreenSwitch = (Component) => {
     cities: PropTypes.array.isRequired,
     offers: PropTypes.array.isRequired,
     currentOffers: PropTypes.array.isRequired,
-    currentOffersDefault: PropTypes.array.isRequired,
     cityNames: PropTypes.arrayOf(PropTypes.string).isRequired,
 
     onAuthorizationScreenSubmit: PropTypes.func.isRequired,
@@ -273,7 +269,6 @@ const mapStateToProps = (state, ownProps) => Object.assign(
       cities: getCities(state),
       offers: combineOffers(state),
       currentOffers: combineCurrentOffers(state),
-      currentOffersDefault: getCurrentOffersDefault(state),
 
       cityNames: combineCityNames(state),
       filterParam: getFilterParam(state),
@@ -292,17 +287,14 @@ const mapDispatchToProps = (dispatch) => ({
     switch (filterParam) {
 
       case SortingParams.LOW_TO_HIGH:
-
         dispatch(DataAction.ActionCreator.filterParam(SortingParams.LOW_TO_HIGH));
         break;
 
       case SortingParams.HIGH_TO_LOW:
-
         dispatch(DataAction.ActionCreator.filterParam(SortingParams.HIGH_TO_LOW));
         break;
 
       case SortingParams.TOP_RATED:
-
         dispatch(DataAction.ActionCreator.filterParam(SortingParams.TOP_RATED));
         break;
 

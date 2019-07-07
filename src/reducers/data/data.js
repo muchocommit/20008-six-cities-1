@@ -1,11 +1,9 @@
 import {ActionType, SortingParams} from '../../data';
-import {getCurrentCityOffers} from './selectors';
 
 const initialState = {
   city: 0,
   cities: [],
   currentOffers: [],
-  currentOffersDefault: [],
   offers: [],
   cityNames: [],
   filterParam: SortingParams.POPULAR
@@ -16,18 +14,9 @@ const Operation = {
 
     return api.get(`/hotels`)
       .then((response) => {
-
         if (response) {
 
-          const cities = response.data;
-          const city = _getState().DATA.city;
-
-
-          const currentOffersDefault = getCurrentCityOffers(cities, city);
-
-          dispatch(ActionCreator.loadCities(cities));
-          dispatch(ActionCreator.updateCurrentOffersDefault(currentOffersDefault));
-
+          dispatch(ActionCreator.loadCities(response.data));
           return;
         }
         throw response;
@@ -77,14 +66,6 @@ const ActionCreator = {
     return {
       type: ActionType.UPDATE_CURRENT_OFFERS,
       payload: currentOffers
-    };
-  },
-
-  updateCurrentOffersDefault: (currentOffersDefault) => {
-
-    return {
-      type: ActionType.UPDATE_CURRENT_OFFERS_DEFAULT,
-      payload: currentOffersDefault
     };
   },
 
@@ -208,12 +189,6 @@ const reducer = (state = initialState, action) => {
 
       return Object.assign({}, state, {
         currentOffers: action.payload
-      });
-
-    case ActionType.UPDATE_CURRENT_OFFERS_DEFAULT:
-
-      return Object.assign({}, state, {
-        currentOffersDefault: action.payload
       });
 
     case ActionType.UPDATE_CITY_NAMES:

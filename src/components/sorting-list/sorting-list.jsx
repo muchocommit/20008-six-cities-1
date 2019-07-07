@@ -36,7 +36,7 @@ export default class SortingList extends PureComponent {
   render() {
 
     const {filterHandler, isActiveItem,
-      activateItem} = this.props;
+      activateItem, deactivateItem} = this.props;
 
 
     return (<form className="places__sorting" action="#" method="get" ref={this._formRef}>
@@ -57,8 +57,9 @@ export default class SortingList extends PureComponent {
             filterIndex={key}
             sortingListHandler={(filterParam) => this._sortingListHandler(filterParam)}
             clickHandler={filterHandler}
-            isActiveItem={isActiveItem(key)}
-            activateItem={() => activateItem(key)}></SortingTab>);
+            isActiveItem={isActiveItem(key, true)}
+            activateItem={() => activateItem(key)}
+            deactivateItem={() => deactivateItem()}></SortingTab>);
         })}
       </ul>
     </form>);
@@ -68,5 +69,6 @@ export default class SortingList extends PureComponent {
 SortingList.propTypes = {
   filterHandler: PropTypes.func.isRequired,
   isActiveItem: PropTypes.func.isRequired,
-  activateItem: PropTypes.func.isRequired
+  activateItem: PropTypes.func.isRequired,
+  deactivateItem: PropTypes.func.isRequired
 };

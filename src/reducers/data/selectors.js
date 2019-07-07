@@ -20,10 +20,6 @@ export const getOffersByCityName = (cityName, citiesArray) => {
   return citiesArray.filter((it) => it.city.name === cityName);
 };
 
-export const getCurrentOffersDefault = (state) => {
-  return state[NAME_SPACE].currentOffersDefault;
-};
-
 export const getOffers = (state) => {
   return state[NAME_SPACE].offers;
 };
@@ -36,7 +32,7 @@ export const getFilterParam = (state) => {
   return state[NAME_SPACE].filterParam;
 };
 
-export const getCurrentCityOffers = (cities, city) => {
+const getCurrentCityOffers = (cities, city) => {
   const cityNames = getCityNamesDistinct(cities);
   const offers = sortOffersByCityName(cityNames, cities);
 
@@ -51,7 +47,6 @@ export const combineOffers = createSelector(
     getCities,
 
     (cities) => {
-
       if (cities.length > 0) {
         const cityNames = getCityNamesDistinct(cities);
         const offers = sortOffersByCityName(cityNames, cities);
