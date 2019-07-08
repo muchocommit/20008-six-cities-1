@@ -302,7 +302,11 @@ describe(`DataReducer works correctly`, () => {
   it(`Returns initial state if undefined state is provided with empty object`, () => {
     expect(reducer(undefined, {})).toEqual({
       city: 0,
-      cities: []});
+      cities: [],
+      cityNames: [],
+      currentOffers: [],
+      filterParam: `Popular`,
+      offers: []});
   });
 
   it(`Returns modified initial state if action type with payload is provided`, () => {
@@ -311,7 +315,11 @@ describe(`DataReducer works correctly`, () => {
       payload: 3
     })).toEqual({
       city: 3,
-      cities: []});
+      cities: [],
+      cityNames: [],
+      currentOffers: [],
+      filterParam: `Popular`,
+      offers: []});
   });
 
   it(`Returns modified state if action type with payload is provided`, () => {
