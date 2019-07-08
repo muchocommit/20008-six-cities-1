@@ -30,6 +30,7 @@ export default class Map extends PureComponent {
     return {};
   }
 
+
   static _getCityLocation(locations) {
     const pureLocations = getPureLocations(locations);
     const accumulatedLocation = accumulateLocationsFromArray(pureLocations);
