@@ -1,24 +1,24 @@
-import {ActionType} from '../../data';
+import {ActionType, SortingParams} from '../../data';
 
 const initialState = {
   city: 0,
-  cities: []
+  cities: [],
+  currentOffers: [],
+  offers: [],
+  cityNames: [],
+  filterParam: SortingParams.POPULAR
 };
 
 const Operation = {
-  loadCities: (cities = null) => (dispatch, _getState, api) => {
-    if (cities) {
+  loadCities: () => (dispatch, _getState, api) => {
 
-      return dispatch(ActionCreator.loadCities(cities));
-    }
     return api.get(`/hotels`)
       .then((response) => {
-
         if (response) {
 
-          return dispatch(ActionCreator.loadCities(response.data));
+          dispatch(ActionCreator.loadCities(response.data));
+          return;
         }
-
         throw response;
       });
   },
@@ -26,7 +26,7 @@ const Operation = {
   addBookMark: ({bookMarkIndex, isFavorite}) =>
     (dispatch, _getState, api) => {
 
-    isFavorite = +!isFavorite;
+      isFavorite = +!isFavorite;
       return api.post(`/favorite/${bookMarkIndex}/${isFavorite}`)
       .then((response) => {
 
@@ -54,11 +54,33 @@ const ActionCreator = {
     };
   },
 
-  updateCities: (cities) => {
+  updateOffers: (offers) => {
     return {
-      type: ActionType.UPDATE_CITIES,
-      payload: cities
-    }
+      type: ActionType.UPDATE_OFFERS,
+      payload: offers
+    };
+  },
+
+  updateCurrentOffers: (currentOffers) => {
+
+    return {
+      type: ActionType.UPDATE_CURRENT_OFFERS,
+      payload: currentOffers
+    };
+  },
+
+  filterParam: (filterParam) => {
+
+    return {
+      type: ActionType.FILTER_PARAM,
+      payload: filterParam
+    };
+  },
+
+  updateCityNames: (cityNames) => {
+    return {
+      type: ActionType.UPDATE_CITY_NAMES
+    };
   }
 };
 
@@ -75,8 +97,8 @@ const getOffersByCityName = (array, name) => {
 
     return city.filter((offers) => {
       return offers.city.name === name;
-    })
-  })
+    });
+  });
 };
 
 const groupByPropertyName = (objectArray, property) => {
@@ -113,7 +135,7 @@ const accumulateLocationsFromArray = (array) => {
     const longitude = (acc.longitude + val[1]);
 
     return Object.assign({}, acc, {latitude, longitude});
-  }, {latitude: 0, longitude: 0})
+  }, {latitude: 0, longitude: 0});
 };
 
 const getLocationMean = (accumulatedObject, arrayLength) => {
@@ -137,6 +159,7 @@ const sortOffersByCityName = (namesArray, [...citiesArray]) => {
 };
 
 const getFavoriteOffers = (offersArray) => {
+  console.log(offersArray)
   return offersArray.map((offer) => {
 
     return offer.filter((it) => {
@@ -158,10 +181,27 @@ const reducer = (state = initialState, action) => {
         city: action.payload
       });
 
-    case ActionType.UPDATE_CITIES:
+    case ActionType.UPDATE_OFFERS:
       return Object.assign({}, state, {
         offers: action.payload
       });
+
+    case ActionType.UPDATE_CURRENT_OFFERS:
+
+      return Object.assign({}, state, {
+        currentOffers: action.payload
+      });
+
+    case ActionType.UPDATE_CITY_NAMES:
+      return Object.assign({}, state, {
+        cityNames: action.payload
+      });
+
+    case ActionType.FILTER_PARAM:
+      return Object.assign({}, state, {
+        filterParam: action.payload
+      });
+
   }
 
   return state;

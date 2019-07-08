@@ -21,3 +21,4 @@ export const getComments = (state) => {
 export const getCommentsDeployAttempt = (state) => {
   return state[NAME_SPACE].isCommentsDeployFailed;
 };
+

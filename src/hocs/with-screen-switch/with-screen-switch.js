@@ -2,7 +2,7 @@ import React, {PureComponent} from 'react';
 import {compose} from 'recompose';
 import {BrowserRouter, Switch, Route, Redirect} from 'react-router-dom';
 import {connect} from 'react-redux';
-import {SortingParams} from "../../data";
+import {SortingParams} from '../../data';
 
 import * as DataAction from '../../reducers/data/data';
 import * as UserAction from '../../reducers/user/user';
@@ -18,7 +18,13 @@ import Offer from './../../components/offer/offer.jsx';
 import FavoritesList from './../../components/favorites-list/favorites-list.jsx';
 import SortingList from './../../components/sorting-list/sorting-list.jsx';
 
-import {getCity, combineCities} from '../../reducers/data/selectors';
+import {
+  getCity,
+  getCities,
+  getFilterParam,
+  combineOffers,
+  combineCurrentOffers,
+  combineCityNames} from '../../reducers/data/selectors';
 
 import {
   getAuthorizationAttempt,
@@ -32,6 +38,7 @@ import withActiveItem from './../../hocs/with-active-item/with-active-item';
 
 const CitiesListWrapped = withActiveItem(CitiesList);
 const OffersListWrapped = withActiveItem(OffersList);
+const SortingListWrapped = withActiveItem(SortingList);
 
 const withScreenSwitch = (Component) => {
   class WithScreenSwitch extends PureComponent {
@@ -40,51 +47,43 @@ const withScreenSwitch = (Component) => {
 
       this._getHeader = this._getHeader.bind(this);
       this._getScreen = this._getScreen.bind(this);
-      this._sortOffers = this._sortOffers.bind(this);
     }
 
-    _sortOffers(filterParam, offers) {
-
-    }
-
-    _getContainer({offers, cityName}) {
-      if (offers && offers.length === 0) {
+    _getContainer({currentOffers, cityName}) {
+      if (currentOffers.length === 0) {
         return (<OffersEmpty />);
       }
 
-      const {cities, onFilterCities} = this.props;
+      const {onFilterCities} = this.props;
 
       return (<div className="cities__places-container container">
         <section className="cities__places places">
           <h2 className="visually-hidden">Places</h2>
-          <b className="places__found">{`${offers ? `${offers.length} places to stay in ${cityName}` : ``}`}</b>
+          <b className="places__found">{`${currentOffers ? `${currentOffers.length} places to stay in ${cityName}` : ``}`}</b>
 
 
-          <SortingList cities={cities} filterHandler={(citiesToSort, filterParam) =>
-            onFilterCities(citiesToSort, filterParam)}></SortingList>
+          <SortingListWrapped filterHandler={(filterParam) => onFilterCities({filterParam})} />
 
-          {this._getComponent({key: `OFFERS`, offers})}
+          {this._getComponent({key: `OFFERS`, currentOffers})}
 
         </section>
         <div className="cities__right-section">
 
           <section className="cities__map map">
-            {this._getComponent({key: `LOCATIONS`, offers})}
+            {this._getComponent({key: `LOCATIONS`, currentOffers})}
           </section>
         </div>
       </div>);
     }
-    _getComponent({key,
-      offers = [],
-      cityNames}) {
+    _getComponent({key, currentOffers = [], cityNames}) {
 
       const {onHandleTabClick, onBookMarkButtonClick} = this.props;
 
       switch (key) {
         case `LOCATIONS`:
 
-          if (offers.length !== 0) {
-            const locations = DataAction.getLocations(offers);
+          if (currentOffers.length !== 0) {
+            const locations = DataAction.getLocations(currentOffers);
 
             return (
               <Map
@@ -105,7 +104,7 @@ const withScreenSwitch = (Component) => {
         default:
           return (
             <OffersListWrapped
-              offers={offers}
+              offers={currentOffers}
               handleBookMarkClick={({bookMarkIndex, isFavorite}) =>
                 onBookMarkButtonClick({bookMarkIndex, isFavorite})}
             />);
@@ -120,7 +119,9 @@ const withScreenSwitch = (Component) => {
       />;
     }
 
-    _getScreen({credentials, isAuthorizationRequired, offers, cityNames}) {
+    _getScreen({credentials,
+      isAuthorizationRequired,
+      currentOffers, cityNames}) {
       const {
         city,
         bodyElement} = this.props;
@@ -140,16 +141,21 @@ const withScreenSwitch = (Component) => {
               </section>
             </div>
             <div className="cities__places-wrapper">
-              {this._getContainer({offers: offers[city], cityName: cityNames[city]})}
+              {this._getContainer({currentOffers, cityName: cityNames[city]})}
             </div>
           </>);
     }
 
-    _getMainScreen({credentials, isAuthorizationRequired, offers, cityNames}) {
+    _getMainScreen({credentials,
+      isAuthorizationRequired,
+      currentOffers, cityNames}) {
+
       return (<Component
         {...this.props}
         renderScreen={() => this._getScreen({
-          credentials, isAuthorizationRequired, offers, cityNames})}
+          credentials, isAuthorizationRequired,
+          currentOffers, cityNames})}
+
         renderHeader={() => this._getHeader(credentials, isAuthorizationRequired)}
       />);
     }
@@ -177,20 +183,23 @@ const withScreenSwitch = (Component) => {
     render() {
 
       const {
-        onAuthorizationScreenSubmit,
-        bodyElement,
         credentials,
         cities,
         city,
+        offers,
+        currentOffers,
+        cityNames,
+
+        onAuthorizationScreenSubmit,
         isAuthorizationRequired,
         getCommentsOnComponentMount,
         comments,
         onCommentsSubmit,
         isCommentsDeployFailed,
-        onBookMarkButtonClick} = this.props;
+        onBookMarkButtonClick,
+        bodyElement
+      } = this.props;
 
-      const {cityNames, offers} = cities;
-      const offersCopy = [...offers];
 
       const storedCredentials = UserAction.getCredentials(credentials);
 
@@ -201,7 +210,7 @@ const withScreenSwitch = (Component) => {
             match={match}
             credentials={credentials}
             bodyElement={bodyElement}
-            offers={offersCopy}
+            offers={offers}
             getComments={getCommentsOnComponentMount}
             comments={comments}
             commentsSubmitHandler={onCommentsSubmit}
@@ -209,9 +218,10 @@ const withScreenSwitch = (Component) => {
             bookMarkClickHandler={onBookMarkButtonClick}/>} />
 
           <Route path="/favorites" render={() => this._getFavoritesScreen({
-            credentials: storedCredentials, bodyElement, offers: offersCopy})}/>
+            credentials: storedCredentials, bodyElement, offers})}/>
           <Route path="/" exact render={() => this._getMainScreen({
-            credentials: storedCredentials, isAuthorizationRequired, offers: offersCopy, cityNames})} />
+            credentials: storedCredentials, isAuthorizationRequired,
+            currentOffers, cityNames})} />
 
           <Route path="/login" exact render={() => this._getSignInScreen(
               {onAuthorizationScreenSubmit, bodyElement, credentials: storedCredentials})} />
@@ -228,10 +238,11 @@ const withScreenSwitch = (Component) => {
 
   WithScreenSwitch.propTypes = {
     city: PropTypes.number.isRequired,
-    cities: PropTypes.shape({
-      cityNames: PropTypes.arrayOf(PropTypes.string).isRequired,
-      offers: PropTypes.array
-    }),
+    cities: PropTypes.array.isRequired,
+    offers: PropTypes.array.isRequired,
+    currentOffers: PropTypes.array.isRequired,
+    cityNames: PropTypes.arrayOf(PropTypes.string).isRequired,
+
     onAuthorizationScreenSubmit: PropTypes.func.isRequired,
     onHandleTabClick: PropTypes.func.isRequired,
     bodyElement: PropTypes.object.isRequired,
@@ -255,7 +266,13 @@ const withScreenSwitch = (Component) => {
 const mapStateToProps = (state, ownProps) => Object.assign(
     {}, ownProps, {
       city: getCity(state),
-      cities: combineCities(state),
+      cities: getCities(state),
+      offers: combineOffers(state),
+      currentOffers: combineCurrentOffers(state),
+
+      cityNames: combineCityNames(state),
+      filterParam: getFilterParam(state),
+
       isAuthorizationFailed: getAuthorizationAttempt(state),
       isAuthorizationRequired: getAuthorizationStatus(state),
       credentials: getCredentials(state),
@@ -264,26 +281,30 @@ const mapStateToProps = (state, ownProps) => Object.assign(
     });
 
 const mapDispatchToProps = (dispatch) => ({
-  onFilterCities: (cities, filterParam) => {
+
+  onFilterCities: ({filterParam}) => {
 
     switch (filterParam) {
 
-      case SortingParams.HIGH_TO_LOW:
-        dispatch(DataAction.ActionCreator.updateCities(
-          cities.offers.map((city) => {
-
-            dispatch(DataAction.Operation.loadCities(city.sort((a, b) => a.price > b.price)));
-          })));
+      case SortingParams.LOW_TO_HIGH:
+        dispatch(DataAction.ActionCreator.filterParam(SortingParams.LOW_TO_HIGH));
         break;
 
-      case SortingParams.LOW_TO_HIGH:
-        dispatch(DataAction.ActionCreator.updateCities(
-          cities.offers.map((city) => {
+      case SortingParams.HIGH_TO_LOW:
+        dispatch(DataAction.ActionCreator.filterParam(SortingParams.HIGH_TO_LOW));
+        break;
 
-            dispatch(DataAction.Operation.loadCities(city.sort((a, b) => a.price < b.price)));
-          })));
+      case SortingParams.TOP_RATED:
+        dispatch(DataAction.ActionCreator.filterParam(SortingParams.TOP_RATED));
+        break;
+
+      case SortingParams.POPULAR:
+
+        dispatch(DataAction.ActionCreator.filterParam(SortingParams.POPULAR));
         break;
     }
+
+    return null;
   },
 
   onCommentsSubmit: ({submitData, hotelId}) => {
@@ -296,8 +317,8 @@ const mapDispatchToProps = (dispatch) => ({
           dispatch(UserAction.ActionCreator.resetCommentsDeploy());
         })
       .catch(() => {
-          dispatch(UserAction.ActionCreator.isCommentsDeployFailed(true));
-        });
+        dispatch(UserAction.ActionCreator.isCommentsDeployFailed(true));
+      });
   },
 
   getCommentsOnComponentMount: (hotelId) => {
@@ -321,8 +342,12 @@ const mapDispatchToProps = (dispatch) => ({
       });
   },
 
+  // Here dispatch change to currentOffersDefault
   onHandleTabClick: (activeCity) => {
-    dispatch(DataAction.ActionCreator.changeCity(activeCity));
+    return new Promise((resolve) =>
+      resolve(dispatch(DataAction.ActionCreator.changeCity(activeCity))));
+
+    // .then((result) => console.log(result))
   },
 
   onAuthorizationScreenSubmit: (submitData) => {

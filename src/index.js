@@ -11,12 +11,12 @@ import withScreenSwitch from './hocs/with-screen-switch/with-screen-switch.js';
 
 import {createAPI} from './api';
 import reducer from './reducers/reducer';
-import {Operation as DataOperation} from './reducers/data/data';
+import {Operation as DataOperation, ActionCreator, sortOffersByCityName} from './reducers/data/data';
 
 const AppWrapped = withRouter(withScreenSwitch(App));
 
 export const api = createAPI();
-const store = createStore(
+export const store = createStore(
   reducer,
 
   compose(
@@ -28,6 +28,8 @@ const store = createStore(
 
 const init = () => {
   store.dispatch(DataOperation.loadCities());
+
+
   const body = document.getElementById(`root`).parentNode;
 
   ReactDOM.render(
