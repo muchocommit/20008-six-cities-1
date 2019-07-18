@@ -40,7 +40,7 @@ export default class Map extends PureComponent {
   _renderMarkers() {
     const {locations} = this.props;
 
-    const {ICON, CITY_ZOOM, ICON_FOCUS} = MapParams;
+    const {ICON, ICON_FOCUS} = MapParams;
 
     const icon = leaflet.icon({
       iconUrl: ICON.URL,
@@ -67,8 +67,6 @@ export default class Map extends PureComponent {
           } else {
             target.setIcon(newIcon);
           }
-
-          this._map.setView([it.location.latitude, it.location.longitude], CITY_ZOOM);
         });
     });
 
@@ -86,7 +84,7 @@ export default class Map extends PureComponent {
 
     currentMap.id = mapId;
     const {
-      ZOOM, CITY, TILE_LAYER
+      ZOOM, CITY, TILE_LAYER, LATITUDE_CONSTANT
     } = MapParams;
 
     const map = leaflet.map(currentMap, {
@@ -106,20 +104,22 @@ export default class Map extends PureComponent {
     this._renderMarkers();
     const cityLocation = Map._getCityLocation(locations);
 
-    map.setView([cityLocation.latitude, cityLocation.longitude], ZOOM);
+    map.setView([cityLocation.latitude - LATITUDE_CONSTANT,
+      cityLocation.longitude], ZOOM);
 
     this._map = map;
   }
 
   componentDidUpdate() {
-    const {ZOOM} = MapParams;
+    const {ZOOM, LATITUDE_CONSTANT} = MapParams;
     const {locations} = this.props;
 
     this.markerGroup.clearLayers();
     this._renderMarkers();
 
     const cityLocation = Map._getCityLocation(locations);
-    this._map.setView([cityLocation.latitude, cityLocation.longitude], ZOOM);
+    this._map.setView([cityLocation.latitude - LATITUDE_CONSTANT,
+      cityLocation.longitude], ZOOM);
   }
 }
 
