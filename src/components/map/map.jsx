@@ -40,7 +40,7 @@ export default class Map extends PureComponent {
   _renderMarkers() {
     const {locations} = this.props;
 
-    const {ICON, ICON_FOCUS} = MapParams;
+    const {ICON, ICON_FOCUS, ZOOM, mapId, LATITUDE_CONSTANT} = MapParams;
 
     const icon = leaflet.icon({
       iconUrl: ICON.URL,
@@ -63,8 +63,19 @@ export default class Map extends PureComponent {
           const {target} = e;
 
           if (target.getIcon().options.iconUrl === ICON_FOCUS.URL) {
+
             target.setIcon(icon);
           } else {
+
+
+            if (mapId === `offerMap`) {
+              this._map.setView([it.location.latitude,
+                it.location.longitude], ZOOM);
+            } else {
+              this._map.setView([it.location.latitude - LATITUDE_CONSTANT,
+                it.location.longitude], ZOOM);
+            }
+
             target.setIcon(newIcon);
           }
         });
@@ -84,42 +95,52 @@ export default class Map extends PureComponent {
 
     currentMap.id = mapId;
     const {
-      ZOOM, CITY, TILE_LAYER, LATITUDE_CONSTANT
+      CITY_ZOOM, CITY, TILE_LAYER, LATITUDE_CONSTANT
     } = MapParams;
 
-    const map = leaflet.map(currentMap, {
+    this._map = leaflet.map(currentMap, {
       center: CITY,
-      zoom: ZOOM,
       zoomControl: false,
       marker: true
     });
 
-    this.markerGroup = leaflet.layerGroup().addTo(map);
+    this.markerGroup = leaflet.layerGroup().addTo(this._map);
 
     leaflet.tileLayer(TILE_LAYER.URL, {
       attribution: TILE_LAYER.OPTIONS.ATTRIBUTION
     })
-      .addTo(map);
+      .addTo(this._map);
 
     this._renderMarkers();
     const cityLocation = Map._getCityLocation(locations);
 
-    map.setView([cityLocation.latitude - LATITUDE_CONSTANT,
-      cityLocation.longitude], ZOOM);
+    if (mapId === `offerMap`) {
 
-    this._map = map;
+      this._map.setView([cityLocation.latitude,
+        cityLocation.longitude], CITY_ZOOM);
+    } else {
+
+      this._map.setView([cityLocation.latitude - LATITUDE_CONSTANT,
+        cityLocation.longitude], CITY_ZOOM);
+    }
   }
 
   componentDidUpdate() {
-    const {ZOOM, LATITUDE_CONSTANT} = MapParams;
+    const {ZOOM, CITY_ZOOM, LATITUDE_CONSTANT, mapId} = MapParams;
     const {locations} = this.props;
 
     this.markerGroup.clearLayers();
     this._renderMarkers();
 
     const cityLocation = Map._getCityLocation(locations);
-    this._map.setView([cityLocation.latitude - LATITUDE_CONSTANT,
-      cityLocation.longitude], ZOOM);
+    if (mapId === `offerMap`) {
+      this._map.setView([cityLocation.latitude,
+        cityLocation.longitude], CITY_ZOOM);
+    } else {
+
+      this._map.setView([cityLocation.latitude - LATITUDE_CONSTANT,
+        cityLocation.longitude], CITY_ZOOM);
+    }
   }
 }
 

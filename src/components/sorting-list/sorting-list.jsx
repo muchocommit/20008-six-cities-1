@@ -5,7 +5,6 @@ import PropTypes from 'prop-types';
 
 import {SortingParams} from '../../data';
 
-
 export default class SortingList extends PureComponent {
   constructor(props) {
     super(props);
