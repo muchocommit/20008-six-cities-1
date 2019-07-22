@@ -91,7 +91,6 @@ const withScreenSwitch = (Component) => {
                 mapId={`map`}
               />);
           }
-
           break;
 
         case `CITY_NAMES`:
@@ -283,7 +282,6 @@ const mapStateToProps = (state, ownProps) => Object.assign(
 const mapDispatchToProps = (dispatch) => ({
 
   onFilterCities: ({filterParam}) => {
-
     switch (filterParam) {
 
       case SortingParams.LOW_TO_HIGH:

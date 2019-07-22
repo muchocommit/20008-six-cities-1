@@ -11,7 +11,7 @@ import withScreenSwitch from './hocs/with-screen-switch/with-screen-switch.js';
 
 import {createAPI} from './api';
 import reducer from './reducers/reducer';
-import {Operation as DataOperation, ActionCreator, sortOffersByCityName} from './reducers/data/data';
+import {Operation as DataOperation} from './reducers/data/data';
 
 const AppWrapped = withRouter(withScreenSwitch(App));
 

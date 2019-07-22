@@ -80,7 +80,6 @@ export default class Map extends PureComponent {
           }
         });
     });
-
   }
 
   render() {
@@ -125,7 +124,7 @@ export default class Map extends PureComponent {
     }
   }
 
-  componentDidUpdate() {
+  componentDidUpdate () {
     const {ZOOM, CITY_ZOOM, LATITUDE_CONSTANT, mapId} = MapParams;
     const {locations} = this.props;
 
