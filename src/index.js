@@ -6,7 +6,7 @@ import thunk from 'redux-thunk';
 import {compose} from 'recompose';
 import {BrowserRouter, withRouter} from 'react-router-dom';
 
-import {App} from './components/app/app.jsx';
+import {App} from './components/app/app.tsx';
 import withScreenSwitch from './hocs/with-screen-switch/with-screen-switch.js';
 
 import {createAPI} from './api';

@@ -1,13 +1,19 @@
-import React, {PureComponent} from 'react';
-import PropTypes from 'prop-types';
+import * as React from 'react';
+
+import {CityNames} from '../../types';
 
 import withActiveCityTab from './../../hocs/with-active-city-tab/with-active-city-tab';
 import CityTab from './../city-tab/city-tab.jsx';
 
-
 const CityTabWrapped = withActiveCityTab(CityTab);
 
-export default class CitiesList extends PureComponent {
+interface Props {
+  cityNames: CityNames,
+  handleTabClick: (index: number) => void,
+  activateItem: (index: number) => void
+}
+
+export default class CitiesList extends React.PureComponent<Props, null> {
   _getTabs() {
     const {
       cityNames,

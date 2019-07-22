@@ -1,7 +1,11 @@
-import React, {Component} from 'react';
-import PropTypes from 'prop-types';
+import * as React from 'react';
 
-class App extends Component {
+interface Props {
+  renderHeader: () => React.ReactElement,
+  renderScreen: () => React.ReactElement
+}
+
+class App extends React.Component<Props, null> {
   render() {
     const {renderHeader, renderScreen} = this.props;
 
@@ -32,11 +36,6 @@ class App extends Component {
     );
   }
 }
-
-App.propTypes = {
-  renderHeader: PropTypes.func.isRequired,
-  renderScreen: PropTypes.func.isRequired,
-};
 
 export {App};
 
