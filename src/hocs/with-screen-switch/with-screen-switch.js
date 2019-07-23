@@ -8,7 +8,7 @@ import * as DataAction from '../../reducers/data/data';
 import * as UserAction from '../../reducers/user/user';
 
 import Header from './../../components/header/header.jsx';
-import CitiesList from './../../components/cities-list/cities-list.jsx';
+import CitiesList from './../../components/cities-list/cities-list.tsx';
 import OffersList from './../../components/offers-list/offers-list.jsx';
 import Map from './../../components/map/map.jsx';
 import {OffersEmpty} from './../../components/offers-empty/offers-empty.jsx';

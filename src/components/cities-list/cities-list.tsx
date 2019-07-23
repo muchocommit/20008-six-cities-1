@@ -1,19 +1,18 @@
 import * as React from 'react';
 
-import {CityNames} from '../../types';
-
 import withActiveCityTab from './../../hocs/with-active-city-tab/with-active-city-tab';
 import CityTab from './../city-tab/city-tab.jsx';
 
 const CityTabWrapped = withActiveCityTab(CityTab);
 
 interface Props {
-  cityNames: CityNames,
+  cityNames: string[],
   handleTabClick: (index: number) => void,
-  activateItem: (index: number) => void
+  activateItem: (index: number) => void,
+  isActiveItem: (index: number, isCityTab: boolean) => boolean
 }
 
-export default class CitiesList extends React.PureComponent<Props, null> {
+class CitiesList extends React.PureComponent<Props, null> {
   _getTabs() {
     const {
       cityNames,
@@ -45,9 +44,4 @@ export default class CitiesList extends React.PureComponent<Props, null> {
   }
 }
 
-CitiesList.propTypes = {
-  activateItem: PropTypes.func.isRequired,
-  isActiveItem: PropTypes.func.isRequired,
-  cityNames: PropTypes.arrayOf(PropTypes.string).isRequired,
-  handleTabClick: PropTypes.func.isRequired
-};
+export default CitiesList;

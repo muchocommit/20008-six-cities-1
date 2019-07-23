@@ -1,6 +1,6 @@
 import React from 'react';
 import renderer from 'react-test-renderer';
-import CitiesList from './cities-list.jsx';
+import CitiesList from './cities-list.tsx';
 
 const mock = {
   names: [`Manila`, `Delhi`, `Abu Dhabi`, `Burkina Faso`, `Kaya`],
