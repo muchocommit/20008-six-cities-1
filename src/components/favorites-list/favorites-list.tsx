@@ -1,7 +1,6 @@
-import React, {PureComponent} from 'react';
-import PropTypes from 'prop-types';
+import * as React from 'react';
 import {Link} from 'react-router-dom';
-import Header from './../../components/header/header.jsx';
+import Header from './../../components/header/header';
 
 import {
   getFavoriteOffers,
@@ -9,7 +8,7 @@ import {
 
 import OfferCard from './../../components/offer-card/offer-card.jsx';
 
-export default class FavoritesList extends PureComponent {
+export default class FavoritesList extends React.PureComponent<Props, null> {
   constructor(props) {
     super(props);
   }

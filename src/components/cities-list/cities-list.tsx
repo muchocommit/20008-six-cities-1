@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import withActiveCityTab from './../../hocs/with-active-city-tab/with-active-city-tab';
-import CityTab from './../city-tab/city-tab.jsx';
+import CityTab from './../city-tab/city-tab';
 
 const CityTabWrapped = withActiveCityTab(CityTab);
 
