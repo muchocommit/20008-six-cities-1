@@ -10,7 +10,14 @@ import leaflet from 'leaflet';
 
 interface Props {
   mapId: string,
-  locations: number[]
+  locations: {
+    id: number,
+    location: {
+      latitude: number,
+      longitude: number,
+      zoom: number
+    }
+  }[]
 }
 
 export default class Map extends React.PureComponent<Props, null> {
@@ -133,7 +140,7 @@ export default class Map extends React.PureComponent<Props, null> {
   }
 
   componentDidUpdate () {
-    const {ZOOM, CITY_ZOOM, LATITUDE_CONSTANT, mapId} = MapParams;
+    const {CITY_ZOOM, LATITUDE_CONSTANT, mapId} = MapParams;
     const {locations} = this.props;
 
     this.markerGroup.clearLayers();

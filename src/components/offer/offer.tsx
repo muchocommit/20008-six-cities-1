@@ -1,5 +1,5 @@
-import React, {PureComponent, createRef} from 'react';
-import PropTypes from 'prop-types';
+import * as React from 'react';
+
 import {Link} from 'react-router-dom';
 
 import {getOfferById, getLocations, getOffersByCityName} from '../../reducers/data/data';
