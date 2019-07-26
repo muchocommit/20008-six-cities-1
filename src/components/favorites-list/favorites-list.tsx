@@ -6,12 +6,17 @@ import {
   getFavoriteOffers,
   groupFavoriteOffersByCityName} from '../../reducers/data/data';
 
-import OfferCard from './../../components/offer-card/offer-card.jsx';
+import OfferCard from './../../components/offer-card/offer-card';
+
+import {Offer, CityName, Credentials} from '../../types';
+
+interface Props {
+  offers: [Offer[], CityName],
+  credentials: Credentials,
+  bodyElement: HTMLBodyElement
+}
 
 export default class FavoritesList extends React.PureComponent<Props, null> {
-  constructor(props) {
-    super(props);
-  }
 
   render() {
     const {bodyElement, offers, credentials} = this.props;
@@ -76,9 +81,3 @@ export default class FavoritesList extends React.PureComponent<Props, null> {
     </main>);
   }
 }
-
-FavoritesList.propTypes = {
-  bodyElement: PropTypes.object.isRequired,
-  offers: PropTypes.array.isRequired,
-  credentials: PropTypes.object.isRequired
-};

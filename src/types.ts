@@ -4,7 +4,7 @@ interface Location {
   zoom: number
 }
 
-interface Offer {
+export interface Offer {
   city: {
     name: string,
     location: Location
@@ -35,20 +35,24 @@ interface Offer {
   id: number
 }
 
+export interface Credentials {
+  avatar_url: string,
+  email: string,
+  id: null | number,
+  is_pro: false,
+  name: string
+}
+
 interface City {
   city: number
 }
 
-interface CityName {
+export interface CityName {
   cityName: string
 }
 
 interface Cities {
   cities: Offer[]
-}
-
-interface Offers {
-  offers: [Offer[], CityName],
 }
 
 interface CurrentOffers {

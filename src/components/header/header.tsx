@@ -1,9 +1,13 @@
-import React, {PureComponent} from 'react';
-import PropTypes from 'prop-types';
+import * as React from 'react';
 import {Link} from 'react-router-dom';
 
+import {Credentials} from '../../types';
 
-export default class Header extends PureComponent {
+interface Props {
+  credentials: Credentials
+}
+
+export default class Header extends React.PureComponent<Props, null> {
   constructor(props) {
     super(props);
 
@@ -46,7 +50,3 @@ export default class Header extends PureComponent {
     </header>);
   }
 }
-
-Header.propTypes = {
-  credentials: PropTypes.object.isRequired
-};

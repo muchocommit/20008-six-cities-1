@@ -1,5 +1,4 @@
-import React, {PureComponent, createRef} from 'react';
-import PropTypes from 'prop-types';
+import * as React from 'react';
 
 import {MapParams} from '../../data';
 import {
@@ -9,13 +8,22 @@ import {
 
 import leaflet from 'leaflet';
 
-export default class Map extends PureComponent {
+interface Props {
+  mapId: string,
+  locations: number[]
+}
+
+export default class Map extends React.PureComponent<Props, null> {
+  private _mapRef: React.RefObject<HTMLDivElement>;
+  private _markerGroup: any;
+  private _map: any;
+
   constructor(props) {
     super(props);
 
     this._map = {};
     this._markerGroup = null;
-    this._mapRef = createRef();
+    this._mapRef = React.createRef();
   }
 
   set markerGroup(object) {
@@ -143,7 +151,3 @@ export default class Map extends PureComponent {
   }
 }
 
-Map.propTypes = {
-  mapId: PropTypes.string.isRequired,
-  locations: PropTypes.array.isRequired
-};
