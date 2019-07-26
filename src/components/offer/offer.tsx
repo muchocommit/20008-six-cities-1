@@ -11,12 +11,18 @@ import {getDateFromUTCString,
 import Header from './../../components/header/header.jsx';
 import Map from './../../components/map/map.jsx';
 
-export default class Offer extends PureComponent {
+interface Props {
+
+}
+
+export default class Offer extends React.PureComponent<Props, null> {
+  private _formRef: React.RefObject<HTMLFormElement>;
+
   constructor(props) {
     super(props);
 
 
-    this._formRef = createRef();
+    this._formRef = React.createRef();
     this._submitForm = this._submitForm.bind(this);
   }
 
