@@ -43,22 +43,25 @@ export interface Credentials {
   name: string
 }
 
-interface City {
-  city: number
+export interface Match {
+  path: string,
+  url: string,
+  isExact: boolean,
+  params: {
+    [key: string]: string
+  }
+}
+
+export interface Comments {
+  id: number,
+  rating: number,
+  comment: string
 }
 
 export interface CityName {
   cityName: string
 }
 
-interface Cities {
-  cities: Offer[]
-}
-
-interface CurrentOffers {
-  offers: [Offer[], CityName],
-}
-
-interface CityNames {
-  cityNames: CityName[]
+interface City {
+  city: number
 }

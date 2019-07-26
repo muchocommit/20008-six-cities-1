@@ -11,8 +11,19 @@ import {getDateFromUTCString,
 import Header from './../../components/header/header.jsx';
 import Map from './../../components/map/map.jsx';
 
-interface Props {
+import {
+  Offer as OfferProp,
+  Credentials, Match, Comments} from '../../types';
 
+interface Props {
+  city: number,
+  offers: OfferProp[],
+  bodyElement: HTMLBodyElement,
+  credentials: Credentials,
+  match: Match,
+  getComments: (hotelId: number) => void,
+  comments: Comments,
+  commentsSubmitHandler
 }
 
 export default class Offer extends React.PureComponent<Props, null> {
