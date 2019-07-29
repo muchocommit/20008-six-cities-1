@@ -52,10 +52,24 @@ export interface Match {
   }
 }
 
-export interface Comments {
+export interface User {
+  id: number,
+  is_pro: boolean,
+  name: string,
+  avatar_url: string
+}
+
+
+export interface Comment {
   id: number,
   rating: number,
-  comment: string
+  comment: string,
+  date: string,
+  user: User
+}
+
+export interface SubmitData {
+  rating: string, comment: string
 }
 
 export interface CityName {

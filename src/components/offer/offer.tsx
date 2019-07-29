@@ -13,7 +13,7 @@ import Map from './../../components/map/map.jsx';
 
 import {
   Offer as OfferProp,
-  Credentials, Match, Comments} from '../../types';
+  Credentials, Match, Comment, SubmitData as SubmitDataType} from '../../types';
 
 interface Props {
   city: number,
@@ -22,8 +22,12 @@ interface Props {
   credentials: Credentials,
   match: Match,
   getComments: (hotelId: number) => void,
-  comments: Comments,
-  commentsSubmitHandler
+  comments: Comment[],
+
+  commentsSubmitHandler: (submitDataObject: {submitData:
+      SubmitDataType, hotelId: number}) => void
+  isCommentsDeployFailed: boolean,
+  bookMarkClickHandler: (bookMarkObject: {bookMarkIndex: number, isFavorite: boolean}) => void
 }
 
 export default class Offer extends React.PureComponent<Props, null> {
@@ -116,7 +120,7 @@ export default class Offer extends React.PureComponent<Props, null> {
           To submit review please make sure to set <span className="reviews__star">rating</span> and
           describe your stay with at least <b className="reviews__text-amount">50 characters</b>.
         </p>
-        <button className="reviews__submit form__submit button" type="submit" disabled="" onClick={this._submitForm}>Submit</button>
+        <button className="reviews__submit form__submit button" type="submit" disabled={true} onClick={this._submitForm}>Submit</button>
       </div>
       <span className="login__error" style={{display: `none`, textAlign: `center`, paddingTop: `10px`}}>Вы забыли поставить оценку или оставить комментарий</span>
     </form>);
@@ -132,7 +136,7 @@ export default class Offer extends React.PureComponent<Props, null> {
 
     const form = this._formRef.current;
 
-    const submitButton = form.querySelector(`.form__submit`);
+    const submitButton = form.querySelector<HTMLButtonElement>(`.form__submit`);
     submitButton.disabled = true;
 
     const formData = new FormData(this._formRef.current);
@@ -298,7 +302,7 @@ export default class Offer extends React.PureComponent<Props, null> {
                       <button className={currentOffer[`is_favorite`] ?
                         `place-card__bookmark-button place-card__bookmark-button--active button` : `place-card__bookmark-button button`}
                       type="button" onClick={() => bookMarkClickHandler(
-                          {bookMarkIndex: currentOffer.id, isFavorite: currentOffer[`is_favorite`] ? 1 : 0})}>
+                          {bookMarkIndex: currentOffer.id, isFavorite: currentOffer[`is_favorite`]})}>
 
                         <svg className="place-card__bookmark-icon" width="17" height="18" viewBox="0 0 17 18" xmlns="http://www.w3.org/2000/svg"><path d="M3.993 2.185l.017-.092V2c0-.554.449-1 .99-1h10c.522 0 .957.41.997.923l-2.736 14.59-4.814-2.407-.39-.195-.408.153L1.31 16.44 3.993 2.185z"/></svg>
                         <span className="visually-hidden">In bookmarks</span>
@@ -343,8 +347,8 @@ export default class Offer extends React.PureComponent<Props, null> {
 
       if (credentials.id && isCommentsDeployFailed) {
         const form = this._formRef.current;
-        const submitButton = form.querySelector(`.form__submit`);
-        const commentsError = form.querySelector(`.login__error`);
+        const submitButton = form.querySelector<HTMLButtonElement>(`.form__submit`);
+        const commentsError = form.querySelector<HTMLSpanElement>(`.login__error`);
 
         commentsError.style.display = `block`;
         submitButton.disabled = false;
@@ -354,27 +358,14 @@ export default class Offer extends React.PureComponent<Props, null> {
       if (credentials.id && !isCommentsDeployFailed) {
 
         const form = this._formRef.current;
-        const submitButton = form.querySelector(`.form__submit`);
-        const commentsError = form.querySelector(`.login__error`);
+        const submitButton = form.querySelector<HTMLButtonElement>(`.form__submit`);
+        const commentsError = form.querySelector<HTMLSpanElement>(`.login__error`);
 
         commentsError.style.display = `none`;
         submitButton.disabled = false;
 
-        form.querySelector(`#review`).value = ``;
+        form.querySelector<HTMLTextAreaElement>(`#review`).value = ``;
       }
     }
   }
 }
-
-Offer.propTypes = {
-  city: PropTypes.number.isRequired,
-  offers: PropTypes.array,
-  bodyElement: PropTypes.object.isRequired,
-  credentials: PropTypes.object.isRequired,
-  match: PropTypes.object.isRequired,
-  getComments: PropTypes.func.isRequired,
-  comments: PropTypes.array.isRequired,
-  commentsSubmitHandler: PropTypes.func.isRequired,
-  isCommentsDeployFailed: PropTypes.bool.isRequired,
-  bookMarkClickHandler: PropTypes.func.isRequired
-};
