@@ -1,32 +1,11 @@
-import React, {PureComponent} from 'react';
+import * as React from 'react';
 import PropTypes from 'prop-types';
 
 import OfferCard from '../offer-card/offer-card.jsx';
 
-class OffersList extends PureComponent {
+class OffersList extends React.PureComponent<Props, null> {
   constructor(props) {
     super(props);
-
-    this._handleMouseOver = this._handleMouseOver.bind(this);
-  }
-
-  _handleMouseOver(e) {
-    let {target} = e;
-    const {activateItem} = this.props;
-
-    if (target.dataset.index) {
-      return activateItem(target.dataset.index);
-    }
-
-    while (target !== `ARTICLE`) {
-      if (target.parentNode.dataset.index) {
-
-        return activateItem(target.parentNode.dataset.index);
-      }
-
-      target = target.parentNode;
-    }
-    return null;
   }
 
   _getOffers() {
@@ -37,7 +16,6 @@ class OffersList extends PureComponent {
       return <OfferCard
         key={i}
         offer={it}
-        mouseOverHandler={this._handleMouseOver}
         index={it.id}
         isFavorite={it[`is_favorite`]}
         bookMarkClickHandler={handleBookMarkClick}
@@ -54,7 +32,6 @@ class OffersList extends PureComponent {
 }
 
 OffersList.propTypes = {
-  activateItem: PropTypes.func.isRequired,
   offers: PropTypes.array.isRequired,
   handleBookMarkClick: PropTypes.func.isRequired
 };

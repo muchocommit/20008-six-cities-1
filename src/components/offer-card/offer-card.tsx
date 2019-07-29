@@ -1,10 +1,18 @@
-import React, {PureComponent} from 'react';
-import PropTypes from 'prop-types';
+import * as React from 'react';
 import {Link} from 'react-router-dom';
 
+import {Offer} from '../../types';
 import {getRating} from '../../assets/handler';
 
-export default class OfferCard extends PureComponent {
+interface Props {
+  isFavorite: boolean,
+  offer: Offer,
+  bookMarkClickHandler: (bookMarkObject: {
+    bookMarkIndex: number, isFavorite: boolean}) => void,
+  index?: number
+}
+
+export default class OfferCard extends React.PureComponent<Props, null> {
   constructor(props) {
     super(props);
 
@@ -19,11 +27,7 @@ export default class OfferCard extends PureComponent {
     const {isFavorite, offer, bookMarkClickHandler, index} = this.props;
 
     if (!isFavorite) {
-      const {
-        mouseOverHandler,
-      } = this.props;
-
-      return (<article className="cities__place-card place-card" onMouseEnter={mouseOverHandler} data-index={index}>
+      return (<article className="cities__place-card place-card">
         <div className="place-card__mark">
           <span>{OfferCard._getPropertyMark(offer[`is_premium`])}</span>
         </div>
@@ -40,7 +44,7 @@ export default class OfferCard extends PureComponent {
               <span className="place-card__price-text">&#47;&nbsp;night</span>
             </div>
             <button className="place-card__bookmark-button button"
-              type="button" onClick={() => bookMarkClickHandler({bookMarkIndex: index, isFavorite: isFavorite ? 1 : 0})}>
+              type="button" onClick={() => bookMarkClickHandler({bookMarkIndex: index, isFavorite})}>
 
               <svg className="place-card__bookmark-icon" width="18" height="19">
                 <use xlinkHref="#icon-bookmark"></use>
@@ -77,7 +81,7 @@ export default class OfferCard extends PureComponent {
             <span className="place-card__price-text">&#47;&nbsp;night</span>
           </div>
           <button className="place-card__bookmark-button place-card__bookmark-button--active button"
-            type="button" onClick={() => bookMarkClickHandler({bookMarkIndex: index, isFavorite: isFavorite ? 1 : 0})}>
+            type="button" onClick={() => bookMarkClickHandler({bookMarkIndex: index, isFavorite})}>
             <svg className="place-card__bookmark-icon" width="18" height="19">
               <use xlinkHref="#icon-bookmark"></use>
             </svg>
@@ -106,18 +110,4 @@ export default class OfferCard extends PureComponent {
   }
 }
 
-OfferCard.propTypes = {
-  offer: PropTypes.shape({
-    id: PropTypes.number.isRequired,
-    [`is_premium`]: PropTypes.bool.isRequired,
-    [`preview_image`]: PropTypes.string.isRequired,
-    price: PropTypes.number.isRequired,
-    type: PropTypes.string.isRequired,
-    rating: PropTypes.number.isRequired,
-    title: PropTypes.string.isRequired
-  }),
-  mouseOverHandler: PropTypes.func,
-  index: PropTypes.number,
-  isFavorite: PropTypes.bool.isRequired,
-  bookMarkClickHandler: PropTypes.func
-};
+
