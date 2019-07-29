@@ -14,7 +14,7 @@ export interface Offer {
 
   images: string[],
   title: string,
-  is_favorite: string,
+  is_favorite: boolean,
   is_premium: string,
   rating: number,
   type: string,

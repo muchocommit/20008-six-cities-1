@@ -1,15 +1,31 @@
-import React, {createRef, PureComponent} from 'react';
-import PropTypes from 'prop-types';
+import * as React from 'react';
 import {Redirect} from 'react-router-dom';
 import {connect} from 'react-redux';
 
-import {getAuthorizationAttempt, getAuthorizationStatus, getCredentials} from '../../reducers/user/selectors';
+import {
+  getAuthorizationAttempt,
+  getAuthorizationStatus, getCredentials} from '../../reducers/user/selectors';
 
-class SignInScreen extends PureComponent {
+// SignInScreen.propTypes = {
+//   handleSubmit: PropTypes.func.isRequired,
+//   bodyElement: PropTypes.object.isRequired,
+//   credentials: PropTypes.object.isRequired,
+//
+//   isAuthorizationFailed: PropTypes.bool.isRequired,
+//   isAuthorizationRequired: PropTypes.bool.isRequired
+// };
+
+interface Props {
+
+}
+
+class SignInScreen extends React.PureComponent<Props, null> {
+  private _formRef: React.RefObject<HTMLFormElement>;
+
   constructor(props) {
     super(props);
 
-    this._formRef = createRef();
+    this._formRef = React.createRef();
     this._submitForm = this._submitForm.bind(this);
   }
 
@@ -148,15 +164,6 @@ class SignInScreen extends PureComponent {
     </>);
   }
 }
-
-SignInScreen.propTypes = {
-  handleSubmit: PropTypes.func.isRequired,
-  bodyElement: PropTypes.object.isRequired,
-  credentials: PropTypes.object.isRequired,
-
-  isAuthorizationFailed: PropTypes.bool.isRequired,
-  isAuthorizationRequired: PropTypes.bool.isRequired
-};
 
 const mapStateToProps = (state, ownProps) => Object.assign(
     {}, ownProps, {

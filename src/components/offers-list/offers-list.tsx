@@ -1,7 +1,12 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
 
+import {Offer} from '../../types';
 import OfferCard from '../offer-card/offer-card.jsx';
+
+interface Props {
+  offers: Offer[],
+  handleBookMarkClick: () => void
+}
 
 class OffersList extends React.PureComponent<Props, null> {
   constructor(props) {
@@ -30,10 +35,5 @@ class OffersList extends React.PureComponent<Props, null> {
       </div>);
   }
 }
-
-OffersList.propTypes = {
-  offers: PropTypes.array.isRequired,
-  handleBookMarkClick: PropTypes.func.isRequired
-};
 
 export default OffersList;
