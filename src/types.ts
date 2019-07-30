@@ -76,6 +76,11 @@ export interface CityName {
   cityName: string
 }
 
+export interface SignIn {
+  email: string,
+  password: string
+}
+
 interface City {
   city: number
 }

@@ -6,17 +6,15 @@ import {
   getAuthorizationAttempt,
   getAuthorizationStatus, getCredentials} from '../../reducers/user/selectors';
 
-// SignInScreen.propTypes = {
-//   handleSubmit: PropTypes.func.isRequired,
-//   bodyElement: PropTypes.object.isRequired,
-//   credentials: PropTypes.object.isRequired,
-//
-//   isAuthorizationFailed: PropTypes.bool.isRequired,
-//   isAuthorizationRequired: PropTypes.bool.isRequired
-// };
+import {SignIn, Credentials} from '../../types';
 
 interface Props {
+  handleSubmit: (submitData: SignIn) => void,
+  bodyElement: HTMLBodyElement,
+  credentials: Credentials,
 
+  isAuthorizationFailed: boolean,
+  isAuthorizationRequired: boolean
 }
 
 class SignInScreen extends React.PureComponent<Props, null> {
@@ -80,7 +78,7 @@ class SignInScreen extends React.PureComponent<Props, null> {
 
 
     if (isAuthorizationFailed) {
-      const formError = this._formRef.current.querySelector(`.login__error`);
+      const formError = this._formRef.current.querySelector<HTMLSpanElement>(`.login__error`);
       formError.style.display = `block`;
     }
 
@@ -139,12 +137,12 @@ class SignInScreen extends React.PureComponent<Props, null> {
             <form className="login__form form" action="#" ref={this._formRef} method="post">
               <div className="login__input-wrapper form__input-wrapper">
                 <label className="visually-hidden">E-mail</label>
-                <input className="login__input form__input" type="email" name="email" placeholder="Email" required="" />
+                <input className="login__input form__input" type="email" name="email" placeholder="Email" required={false} />
               </div>
               <div className="login__input-wrapper form__input-wrapper">
                 <label className="visually-hidden">Password</label>
                 <input className="login__input form__input" type="password" name="password" placeholder="Password"
-                  required="" />
+                  required={false} />
               </div>
               <button className="login__submit form__submit button"
                 type="submit" onClick={this._submitForm}>Sign in</button>
