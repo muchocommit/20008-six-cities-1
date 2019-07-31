@@ -1,7 +1,7 @@
 import {createStore, applyMiddleware} from 'redux';
 import {Provider} from 'react-redux';
-import React from 'react';
-import ReactDOM from 'react-dom';
+import * as React from 'react';
+import * as ReactDOM from 'react-dom';
 import thunk from 'redux-thunk';
 import {compose} from 'recompose';
 import {BrowserRouter, withRouter} from 'react-router-dom';
@@ -13,6 +13,8 @@ import {createAPI} from './api';
 import reducer from './reducers/reducer';
 import {Operation as DataOperation} from './reducers/data/data';
 
+declare const __REDUX_DEVTOOLS_EXTENSION__: () => void;
+
 const AppWrapped = withRouter(withScreenSwitch(App));
 
 export const api = createAPI();
@@ -21,8 +23,8 @@ export const store = createStore(
 
   compose(
     applyMiddleware(thunk.withExtraArgument(api)),
-    window.__REDUX_DEVTOOLS_EXTENSION__ &&
-    window.__REDUX_DEVTOOLS_EXTENSION__()
+    __REDUX_DEVTOOLS_EXTENSION__ &&
+    __REDUX_DEVTOOLS_EXTENSION__()
   ));
 
 

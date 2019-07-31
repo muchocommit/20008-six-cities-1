@@ -1,12 +1,23 @@
-import React, {PureComponent, createRef} from 'react';
-import PropTypes from 'prop-types';
+import * as React from 'react';
+
+interface Props {
+  isActive: boolean,
+  onCityTabButtonClick: () => void,
+  city: string
+}
+
+interface State {
+  isActive: boolean
+}
 
 const withActiveCityTab = (Component) => {
-  class CityTab extends PureComponent {
+  class CityTab extends React.PureComponent<Props, State> {
+    private _tabRef: React.RefObject<HTMLAnchorElement>;
+
     constructor(props) {
       super(props);
 
-      this._tabRef = createRef();
+      this._tabRef = React.createRef();
 
       this.state = {
         isActive: props.isActive
@@ -46,7 +57,6 @@ const withActiveCityTab = (Component) => {
           </li>);
     }
 
-
     render() {
       const {city} = this.props;
 
@@ -64,12 +74,6 @@ const withActiveCityTab = (Component) => {
       this._activateTab();
     }
   }
-
-  CityTab.propTypes = {
-    isActive: PropTypes.bool.isRequired,
-    onCityTabButtonClick: PropTypes.func.isRequired,
-    city: PropTypes.string.isRequired
-  };
 
   return CityTab;
 };
