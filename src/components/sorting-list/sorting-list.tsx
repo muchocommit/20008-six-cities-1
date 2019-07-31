@@ -55,7 +55,6 @@ export default class SortingList extends React.PureComponent<Props, null> {
       <ul className="places__options places__options--custom">
         {Object.keys(SortingParams).map((it, key) => {
 
-
           return (<SortingTab
             key={`filterParam-${key}`}
             filterParam={SortingParams[it]}

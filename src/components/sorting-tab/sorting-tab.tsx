@@ -1,12 +1,26 @@
-import React, {PureComponent, createRef} from 'react';
-import PropTypes from 'prop-types';
+import * as React from 'react';
 
+interface Props {
+  filterParam: string,
+  filterIndex: number,
+  clickHandler: (filterParam: string) => void,
+  sortingListHandler: (filterParam: string) => void,
+  isActiveItem: boolean,
+  activateItem: () => void,
+  deactivateItem: () => void
+}
 
-export default class SortingTab extends PureComponent {
+interface State {
+  isActive: boolean
+}
+
+export default class SortingTab extends React.PureComponent<Props, State> {
+  private _tabRef: React.RefObject<HTMLLIElement>;
+
   constructor(props) {
     super(props);
 
-    this._tab = createRef();
+    this._tabRef = React.createRef();
 
     this.state = {
       isActive: props.isActiveItem
@@ -17,7 +31,7 @@ export default class SortingTab extends PureComponent {
   }
 
   _activateTab() {
-    const tab = this._tab.current;
+    const tab = this._tabRef.current;
 
     if (this.props.isActiveItem) {
       tab.style.backgroundColor = `#f2f2f2`;
@@ -25,7 +39,7 @@ export default class SortingTab extends PureComponent {
   }
 
   _deactivateTab() {
-    const tab = this._tab.current;
+    const tab = this._tabRef.current;
 
     if (!this.props.isActiveItem) {
       tab.style.backgroundColor = `#ffffff`;
@@ -33,7 +47,6 @@ export default class SortingTab extends PureComponent {
   }
 
   _onSortingTabMouseEnter() {
-
 
     this.props.activateItem();
     this.setState({isActive: !this.state.isActive});
@@ -54,10 +67,11 @@ export default class SortingTab extends PureComponent {
     } = this.props;
 
 
-    return (<li ref={this._tab}
+    return (<li ref={this._tabRef}
       className={`places__option`}
       tabIndex={filterIndex}
       onClick={() => {
+
         clickHandler(filterParam);
         sortingListHandler(filterParam);
       }}
@@ -76,13 +90,3 @@ export default class SortingTab extends PureComponent {
     this._deactivateTab();
   }
 }
-
-SortingTab.propTypes = {
-  filterParam: PropTypes.string.isRequired,
-  filterIndex: PropTypes.number.isRequired,
-  clickHandler: PropTypes.func.isRequired,
-  sortingListHandler: PropTypes.func.isRequired,
-  isActiveItem: PropTypes.bool.isRequired,
-  activateItem: PropTypes.func.isRequired,
-  deactivateItem: PropTypes.func.isRequired
-};
