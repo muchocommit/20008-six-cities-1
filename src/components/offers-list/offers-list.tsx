@@ -1,10 +1,10 @@
 import * as React from 'react';
 
-import {Offer} from '../../types';
-import OfferCard from '../offer-card/offer-card.jsx';
+import {Offer, CityName} from '../../types';
+import OfferCard from '../offer-card/offer-card';
 
 interface Props {
-  offers: Offer[],
+  offers: Offer[] & CityName,
   handleBookMarkClick: () => void
 }
 

@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import SortingTab from './../sorting-tab/sorting-tab.jsx';
+import SortingTab from './../sorting-tab/sorting-tab';
 import {SortingParams} from '../../data';
 
 interface Props {

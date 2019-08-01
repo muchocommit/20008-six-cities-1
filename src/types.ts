@@ -35,6 +35,10 @@ export interface Offer {
   id: number
 }
 
+export interface CityName {
+  cityName: string
+}
+
 export interface Credentials {
   avatar_url: string,
   email: string,

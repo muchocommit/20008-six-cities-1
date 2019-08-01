@@ -8,16 +8,16 @@ import {getRating} from '../../assets/handler';
 import {getDateFromUTCString,
   getMonthYearFromUTCString} from '../../reducers/user/user';
 
-import Header from './../../components/header/header.jsx';
-import Map from './../../components/map/map.jsx';
+import Header from './../../components/header/header';
+import Map from './../../components/map/map';
 
 import {
-  Offer as OfferProp,
+  Offer as OfferProp, CityName,
   Credentials, Match, Comment, SubmitData as SubmitDataType} from '../../types';
 
 interface Props {
   city: number,
-  offers: OfferProp[],
+  offers: OfferProp[] & CityName,
   bodyElement: HTMLBodyElement,
   credentials: Credentials,
   match: Match,

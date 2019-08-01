@@ -1,9 +1,10 @@
 import * as React from 'react';
+import {CityName} from '../../types';
 
 interface Props {
   handleTabClick: () => void,
-  cityNames: string[],
-  renderTabs: (cityNames: string[],
+  cityNames: CityName[],
+  renderTabs: (cityNames: CityName[],
                handleTabClick: () => void) => React.ReactElement
 }
 

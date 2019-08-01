@@ -42,15 +42,15 @@ const SortingListWrapped = withActiveItem(SortingList);
 
 import {
   Offer as OfferProp,
-  SignIn, Credentials, Comment, SubmitData as SubmitDataType
+  SignIn, Credentials, Comment, SubmitData as SubmitDataType, CityName
 } from './../../types';
 
 interface Props {
   city: number,
   cities: OfferProp[]
-  offers: [OfferProp[], string],
-  currentOffers: [OfferProp[], string],
-  cityNames: string[],
+  offers: OfferProp[] & CityName,
+  currentOffers: OfferProp[] & CityName,
+  cityNames: CityName[],
 
   onAuthorizationScreenSubmit:(submitData: SignIn) => void
   onHandleTabClick: (cityIndex: number) => void,
@@ -93,7 +93,7 @@ const withScreenSwitch = (Component) => {
           <b className="places__found">{`${currentOffers ? `${currentOffers.length} places to stay in ${cityName}` : ``}`}</b>
 
 
-          {/*<SortingListWrapped filterHandler={(filterParam) => onFilterCities({filterParam})} />*/}
+          <SortingListWrapped filterHandler={(filterParam) => onFilterCities({filterParam})} />
 
           {this._getComponent({key: `OFFERS`, currentOffers})}
 
@@ -101,7 +101,7 @@ const withScreenSwitch = (Component) => {
         <div className="cities__right-section">
 
           <section className="cities__map map">
-            {/*{this._getComponent({key: `LOCATIONS`, currentOffers})}*/}
+            {this._getComponent({key: `LOCATIONS`, currentOffers})}
           </section>
         </div>
       </div>);
@@ -187,7 +187,7 @@ const withScreenSwitch = (Component) => {
           credentials, isAuthorizationRequired,
           currentOffers, cityNames})}
 
-        renderHeader={() => this._getHeader(credentials, isAuthorizationRequired)}
+        renderHeader={() => this._getHeader(credentials)}
       />);
     }
 
@@ -305,7 +305,6 @@ const mapDispatchToProps = (dispatch) => ({
         break;
 
       default:
-
         dispatch(DataAction.ActionCreator.filterParam(SortingParams.POPULAR));
         break;
     }
