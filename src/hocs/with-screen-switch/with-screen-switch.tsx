@@ -152,6 +152,7 @@ const withScreenSwitch = (Component) => {
     _getScreen({credentials,
       isAuthorizationRequired,
       currentOffers, cityNames}) {
+
       const {
         city,
         bodyElement} = this.props;
