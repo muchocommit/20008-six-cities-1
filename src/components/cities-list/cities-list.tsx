@@ -1,4 +1,5 @@
 import * as React from 'react';
+import {Subtract} from 'utility-types';
 
 import withActiveCityTab from './../../hocs/with-active-city-tab/with-active-city-tab';
 import CityTab from './../city-tab/city-tab';

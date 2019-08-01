@@ -4,6 +4,10 @@ interface State {
   activeItem: any
 }
 
+interface InjectedProps {
+
+}
+
 const withActiveItem = (Component) => {
   class WithActiveItem extends React.PureComponent<null, State> {
     constructor(props) {

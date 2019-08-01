@@ -69,11 +69,8 @@ export interface Comment {
 }
 
 export interface SubmitData {
-  rating: string, comment: string
-}
-
-export interface CityName {
-  cityName: string
+  rating: string,
+  comment: string
 }
 
 export interface SignIn {

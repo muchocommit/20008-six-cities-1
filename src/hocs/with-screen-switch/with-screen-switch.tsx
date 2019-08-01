@@ -7,16 +7,16 @@ import {SortingParams} from '../../data';
 import * as DataAction from '../../reducers/data/data';
 import * as UserAction from '../../reducers/user/user';
 
-import Header from './../../components/header/header.jsx';
-import CitiesList from './../../components/cities-list/cities-list.tsx';
-import OffersList from './../../components/offers-list/offers-list.jsx';
-import Map from './../../components/map/map.jsx';
-import {OffersEmpty} from './../../components/offers-empty/offers-empty.jsx';
-import SignInScreen from './../../components/sign-in/sign-in.jsx';
-import Offer from './../../components/offer/offer.jsx';
+import Header from './../../components/header/header';
+import CitiesList from './../../components/cities-list/cities-list';
+import OffersList from './../../components/offers-list/offers-list';
+import Map from './../../components/map/map';
+import {OffersEmpty} from '../../components/offers-empty/offers-empty';
+import SignInScreen from './../../components/sign-in/sign-in';
+import Offer from './../../components/offer/offer';
 
-import FavoritesList from './../../components/favorites-list/favorites-list.jsx';
-import SortingList from './../../components/sorting-list/sorting-list.jsx';
+import FavoritesList from './../../components/favorites-list/favorites-list';
+import SortingList from './../../components/sorting-list/sorting-list';
 
 import {
   getCity,
@@ -39,40 +39,35 @@ const CitiesListWrapped = withActiveItem(CitiesList);
 const OffersListWrapped = withActiveItem(OffersList);
 const SortingListWrapped = withActiveItem(SortingList);
 
-import {Offer as OfferProp, CityName, SignIn} from './../../types';
-
-// WithScreenSwitch.propTypes = {
-//   city: PropTypes.number.isRequired,
-//   cities: PropTypes.array.isRequired,
-//   offers: PropTypes.array.isRequired,
-//   currentOffers: PropTypes.array.isRequired,
-//   cityNames: PropTypes.arrayOf(PropTypes.string).isRequired,
-//
-//   onAuthorizationScreenSubmit: PropTypes.func.isRequired,
-//   onHandleTabClick: PropTypes.func.isRequired,
-//   bodyElement: PropTypes.object.isRequired,
-//   credentials: PropTypes.object.isRequired,
-//   onBookMarkButtonClick: PropTypes.func.isRequired,
-//
-//   isAuthorizationFailed: PropTypes.bool.isRequired,
-//   isAuthorizationRequired: PropTypes.bool.isRequired,
-//   isCommentsDeployFailed: PropTypes.bool.isRequired,
-//
-//   checkAuthOnComponentMount: PropTypes.func.isRequired,
-//   getCommentsOnComponentMount: PropTypes.func.isRequired,
-//   comments: PropTypes.array.isRequired,
-//   onCommentsSubmit: PropTypes.func.isRequired,
-//   onFilterCities: PropTypes.func.isRequired
-// };
+import {
+  Offer as OfferProp,
+  SignIn, Credentials, Comment, SubmitData as SubmitDataType
+} from './../../types';
 
 interface Props {
   city: number,
   cities: OfferProp[]
-  offers: [OfferProp[], CityName],
-  currentOffers: [OfferProp[], CityName],
-  cityNames: CityName[],
+  offers: [OfferProp[], string],
+  currentOffers: [OfferProp[], string],
+  cityNames: string[],
 
   onAuthorizationScreenSubmit:(submitData: SignIn) => void
+  onHandleTabClick: (cityIndex: number) => void,
+  bodyElement: HTMLBodyElement,
+  credentials: Credentials,
+  onBookMarkButtonClick: (bookMarkObject: {
+    bookMarkIndex: number, isFavorite: boolean}) => void,
+
+  isAuthorizationFailed: boolean,
+  isAuthorizationRequired: boolean,
+  isCommentsDeployFailed: boolean,
+
+  checkAuthOnComponentMount: () => void,
+  getCommentsOnComponentMount: (hotelId: number) => void,
+  comments: Comment[],
+  onCommentsSubmit: (submitDataObject: {submitData:
+      SubmitDataType, hotelId: number}) => void,
+  onFilterCities: (filterParam: {filterParam: string}) => void
 }
 
 const withScreenSwitch = (Component) => {
@@ -97,7 +92,7 @@ const withScreenSwitch = (Component) => {
           <b className="places__found">{`${currentOffers ? `${currentOffers.length} places to stay in ${cityName}` : ``}`}</b>
 
 
-          <SortingListWrapped filterHandler={(filterParam) => onFilterCities({filterParam})} />
+          {/*<SortingListWrapped filterHandler={(filterParam) => onFilterCities({filterParam})} />*/}
 
           {this._getComponent({key: `OFFERS`, currentOffers})}
 
@@ -105,12 +100,12 @@ const withScreenSwitch = (Component) => {
         <div className="cities__right-section">
 
           <section className="cities__map map">
-            {this._getComponent({key: `LOCATIONS`, currentOffers})}
+            {/*{this._getComponent({key: `LOCATIONS`, currentOffers})}*/}
           </section>
         </div>
       </div>);
     }
-    _getComponent({key, currentOffers = [], cityNames}) {
+    _getComponent({key, currentOffers = [], cityNames = []}) {
 
       const {onHandleTabClick, onBookMarkButtonClick} = this.props;
 
@@ -131,6 +126,8 @@ const withScreenSwitch = (Component) => {
         case `CITY_NAMES`:
           return (
             <CitiesListWrapped
+              activateItem={() => {}}
+              isActiveItem={() => {}}
               cityNames={cityNames}
               handleTabClick={(activeCity) => onHandleTabClick(activeCity)}
             />);
@@ -307,13 +304,11 @@ const mapDispatchToProps = (dispatch) => ({
         dispatch(DataAction.ActionCreator.filterParam(SortingParams.TOP_RATED));
         break;
 
-      case SortingParams.POPULAR:
+      default:
 
         dispatch(DataAction.ActionCreator.filterParam(SortingParams.POPULAR));
         break;
     }
-
-    return null;
   },
 
   onCommentsSubmit: ({submitData, hotelId}) => {

@@ -8,10 +8,10 @@ import {
 
 import OfferCard from './../../components/offer-card/offer-card';
 
-import {Offer, CityName, Credentials} from '../../types';
+import {Offer, Credentials} from '../../types';
 
 interface Props {
-  offers: [Offer[], CityName],
+  offers: [Offer[], string],
   credentials: Credentials,
   bodyElement: HTMLBodyElement
 }
