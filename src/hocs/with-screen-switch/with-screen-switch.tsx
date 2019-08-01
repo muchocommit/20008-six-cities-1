@@ -1,4 +1,4 @@
-import React, {PureComponent} from 'react';
+import * as React from 'react';
 import {compose} from 'recompose';
 import {BrowserRouter, Switch, Route, Redirect} from 'react-router-dom';
 import {connect} from 'react-redux';
@@ -33,15 +33,50 @@ import {
   getComments,
   getCommentsDeployAttempt} from '../../reducers/user/selectors';
 
-import PropTypes from 'prop-types';
 import withActiveItem from './../../hocs/with-active-item/with-active-item';
 
 const CitiesListWrapped = withActiveItem(CitiesList);
 const OffersListWrapped = withActiveItem(OffersList);
 const SortingListWrapped = withActiveItem(SortingList);
 
+import {Offer as OfferProp, CityName, SignIn} from './../../types';
+
+// WithScreenSwitch.propTypes = {
+//   city: PropTypes.number.isRequired,
+//   cities: PropTypes.array.isRequired,
+//   offers: PropTypes.array.isRequired,
+//   currentOffers: PropTypes.array.isRequired,
+//   cityNames: PropTypes.arrayOf(PropTypes.string).isRequired,
+//
+//   onAuthorizationScreenSubmit: PropTypes.func.isRequired,
+//   onHandleTabClick: PropTypes.func.isRequired,
+//   bodyElement: PropTypes.object.isRequired,
+//   credentials: PropTypes.object.isRequired,
+//   onBookMarkButtonClick: PropTypes.func.isRequired,
+//
+//   isAuthorizationFailed: PropTypes.bool.isRequired,
+//   isAuthorizationRequired: PropTypes.bool.isRequired,
+//   isCommentsDeployFailed: PropTypes.bool.isRequired,
+//
+//   checkAuthOnComponentMount: PropTypes.func.isRequired,
+//   getCommentsOnComponentMount: PropTypes.func.isRequired,
+//   comments: PropTypes.array.isRequired,
+//   onCommentsSubmit: PropTypes.func.isRequired,
+//   onFilterCities: PropTypes.func.isRequired
+// };
+
+interface Props {
+  city: number,
+  cities: OfferProp[]
+  offers: [OfferProp[], CityName],
+  currentOffers: [OfferProp[], CityName],
+  cityNames: CityName[],
+
+  onAuthorizationScreenSubmit:(submitData: SignIn) => void
+}
+
 const withScreenSwitch = (Component) => {
-  class WithScreenSwitch extends PureComponent {
+  class WithScreenSwitch extends React.PureComponent<Props, null> {
     constructor(props) {
       super(props);
 
@@ -234,30 +269,6 @@ const withScreenSwitch = (Component) => {
       checkAuthOnComponentMount();
     }
   }
-
-  WithScreenSwitch.propTypes = {
-    city: PropTypes.number.isRequired,
-    cities: PropTypes.array.isRequired,
-    offers: PropTypes.array.isRequired,
-    currentOffers: PropTypes.array.isRequired,
-    cityNames: PropTypes.arrayOf(PropTypes.string).isRequired,
-
-    onAuthorizationScreenSubmit: PropTypes.func.isRequired,
-    onHandleTabClick: PropTypes.func.isRequired,
-    bodyElement: PropTypes.object.isRequired,
-    credentials: PropTypes.object.isRequired,
-    onBookMarkButtonClick: PropTypes.func.isRequired,
-
-    isAuthorizationFailed: PropTypes.bool.isRequired,
-    isAuthorizationRequired: PropTypes.bool.isRequired,
-    isCommentsDeployFailed: PropTypes.bool.isRequired,
-
-    checkAuthOnComponentMount: PropTypes.func.isRequired,
-    getCommentsOnComponentMount: PropTypes.func.isRequired,
-    comments: PropTypes.array.isRequired,
-    onCommentsSubmit: PropTypes.func.isRequired,
-    onFilterCities: PropTypes.func.isRequired
-  };
 
   return WithScreenSwitch;
 };

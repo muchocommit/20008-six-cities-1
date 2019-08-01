@@ -1,7 +1,11 @@
-import React, {PureComponent} from 'react';
+import * as React from 'react';
+
+interface State {
+  activeItem: any
+}
 
 const withActiveItem = (Component) => {
-  class WithActiveItem extends PureComponent {
+  class WithActiveItem extends React.PureComponent<null, State> {
     constructor(props) {
       super(props);
 
@@ -29,7 +33,6 @@ const withActiveItem = (Component) => {
     }
   }
 
-  WithActiveItem.propTypes = {};
   return WithActiveItem;
 };
 

@@ -27,7 +27,6 @@ export const store = createStore(
     __REDUX_DEVTOOLS_EXTENSION__()
   ));
 
-
 const init = () => {
   store.dispatch(DataOperation.loadCities());
 
