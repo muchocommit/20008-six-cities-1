@@ -1,46 +1,20 @@
 import * as React from 'react';
-import {Subtract} from 'utility-types';
-
-import withActiveCityTab from './../../hocs/with-active-city-tab/with-active-city-tab';
-import CityTab from './../city-tab/city-tab';
-
-const CityTabWrapped = withActiveCityTab(CityTab);
 
 interface Props {
+  handleTabClick: () => void,
   cityNames: string[],
-  handleTabClick: (index: number) => void,
-  activateItem: (index: number) => void,
-  isActiveItem: (index: number, isCityTab: boolean) => boolean
+  renderTabs: (cityNames: string[],
+               handleTabClick: () => void) => React.ReactElement
 }
 
 class CitiesList extends React.PureComponent<Props, null> {
-  _getTabs() {
-    const {
-      cityNames,
-      handleTabClick,
-      activateItem,
-      isActiveItem} = this.props;
-
-
-    return cityNames.map((it, i) =>
-      <CityTabWrapped
-        key={`city-${i}`}
-        isActive={isActiveItem(i, false)}
-
-        onCityTabButtonClick={() => {
-          handleTabClick(i);
-
-          activateItem(i);
-        }}
-        city={it}
-      />);
-  }
 
   render() {
+    const {renderTabs, cityNames, handleTabClick} = this.props;
 
     return (
       <ul className="locations__list tabs__list">
-        {this._getTabs()}
+        {renderTabs(cityNames, handleTabClick)}
       </ul>);
   }
 }

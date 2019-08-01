@@ -34,8 +34,9 @@ import {
   getCommentsDeployAttempt} from '../../reducers/user/selectors';
 
 import withActiveItem from './../../hocs/with-active-item/with-active-item';
+import withActiveCityTabs from './../../hocs/with-active-city-tabs/with-active-city-tabs';
 
-const CitiesListWrapped = withActiveItem(CitiesList);
+const CitiesListWrapped = withActiveCityTabs(CitiesList);
 const OffersListWrapped = withActiveItem(OffersList);
 const SortingListWrapped = withActiveItem(SortingList);
 
@@ -126,8 +127,6 @@ const withScreenSwitch = (Component) => {
         case `CITY_NAMES`:
           return (
             <CitiesListWrapped
-              activateItem={() => {}}
-              isActiveItem={() => {}}
               cityNames={cityNames}
               handleTabClick={(activeCity) => onHandleTabClick(activeCity)}
             />);
