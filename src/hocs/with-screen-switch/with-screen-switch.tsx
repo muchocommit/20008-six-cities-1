@@ -36,7 +36,7 @@ import {
 import withActiveItem from './../../hocs/with-active-item/with-active-item';
 import withActiveCityTabs from './../../hocs/with-active-city-tabs/with-active-city-tabs';
 
-const CitiesListWrapped = withActiveCityTabs(CitiesList);
+const CitiesListWrapped = withActiveItem(withActiveCityTabs(CitiesList));
 const OffersListWrapped = withActiveItem(OffersList);
 const SortingListWrapped = withActiveItem(SortingList);
 

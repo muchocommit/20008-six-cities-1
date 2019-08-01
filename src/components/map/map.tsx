@@ -6,7 +6,7 @@ import {
   getPureLocations, getLocationMean,
   accumulateLocationsFromArray} from '../../reducers/data/data';
 
-import leaflet from 'leaflet';
+import * as leaflet from 'leaflet';
 
 interface Props {
   mapId: string,
@@ -54,6 +54,8 @@ export default class Map extends React.PureComponent<Props, null> {
 
   _renderMarkers() {
     const {locations} = this.props;
+
+    console.log(leaflet)
 
     const {ICON, ICON_FOCUS, ZOOM, mapId, LATITUDE_CONSTANT} = MapParams;
 
