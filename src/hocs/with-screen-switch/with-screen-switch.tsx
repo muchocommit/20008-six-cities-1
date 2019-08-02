@@ -13,6 +13,7 @@ import OffersList from './../../components/offers-list/offers-list';
 import Map from './../../components/map/map';
 import {OffersEmpty} from '../../components/offers-empty/offers-empty';
 import SignInScreen from './../../components/sign-in/sign-in';
+
 import Offer from './../../components/offer/offer';
 
 import FavoritesList from './../../components/favorites-list/favorites-list';
@@ -30,15 +31,16 @@ import {
   getAuthorizationAttempt,
   getCredentials,
   getAuthorizationStatus,
-  getComments,
   getCommentsDeployAttempt} from '../../reducers/user/selectors';
 
 import withActiveItem from './../../hocs/with-active-item/with-active-item';
 import withActiveCityTabs from './../../hocs/with-active-city-tabs/with-active-city-tabs';
+import withActiveOffer from './../../hocs/with-active-offer/with-active-offer';
 
 const CitiesListWrapped = withActiveItem(withActiveCityTabs(CitiesList));
 const OffersListWrapped = withActiveItem(OffersList);
 const SortingListWrapped = withActiveItem(SortingList);
+const OfferWrapped = withActiveOffer(Offer);
 
 import {
   Offer as OfferProp,
@@ -137,12 +139,6 @@ const withScreenSwitch = (Component) => {
             />);
 
         default:
-
-          const offers = <OffersListWrapped
-            offers={currentOffers}
-            handleBookMarkClick={({bookMarkIndex, isFavorite}) =>
-              onBookMarkButtonClick({bookMarkIndex, isFavorite})}
-          />;
 
           return (
             <OffersListWrapped
@@ -243,12 +239,11 @@ const withScreenSwitch = (Component) => {
         bodyElement
       } = this.props;
 
-
       const storedCredentials = UserAction.getCredentials(credentials);
 
       return <BrowserRouter>
         <Switch>
-          <Route path={`/([0-9][0-9]?[0-9]?)`} render={({match}) => <Offer
+          <Route path={`/([0-9][0-9]?[0-9]?)`} render={({match}) => <OfferWrapped
             city={city}
             match={match}
             credentials={credentials}
@@ -295,7 +290,8 @@ const mapStateToProps = (state, ownProps) => Object.assign(
       isAuthorizationFailed: getAuthorizationAttempt(state),
       isAuthorizationRequired: getAuthorizationStatus(state),
       credentials: getCredentials(state),
-      comments: getComments(state),
+
+      // comments: getComments(state),
       isCommentsDeployFailed: getCommentsDeployAttempt(state)
     });
 
@@ -336,17 +332,16 @@ const mapDispatchToProps = (dispatch) => ({
       });
   },
 
-  getCommentsOnComponentMount: (hotelId) => {
-
-    dispatch(UserAction.Operation.getComments(hotelId))
-      .then((result) => {
-
-        dispatch(UserAction.ActionCreator.getComments(result));
-      }).catch(() => {});
-  },
+  // getCommentsOnComponentMount: (hotelId) => {
+  //
+  //   dispatch(UserAction.Operation.getComments(hotelId))
+  //     .then((result) => {
+  //
+  //       dispatch(UserAction.ActionCreator.getComments(result));
+  //     }).catch(() => {});
+  // },
 
   onBookMarkButtonClick: ({bookMarkIndex, isFavorite}) => {
-
     dispatch(DataAction.Operation.addBookMark({bookMarkIndex, isFavorite}))
       .then(() => {
 
