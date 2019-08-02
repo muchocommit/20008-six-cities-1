@@ -88,6 +88,8 @@ const Operation = {
   postComments: ({submitData, hotelId}) => {
     return (dispatch, _getState, api) => {
 
+      console.log(dispatch)
+
       return api.post(`/comments/${hotelId}`, submitData)
         .then((response) => {
           if (response.status === 200) {

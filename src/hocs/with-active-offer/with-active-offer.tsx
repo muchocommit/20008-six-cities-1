@@ -18,7 +18,7 @@ import {
   Offer as OfferProp, CityName,
   Credentials, Match, Comment, SubmitData as SubmitDataType} from '../../types';
 
-import {getComments} from '../../reducers/user/selectors';
+import {getComments, getCommentsDeployAttempt} from '../../reducers/user/selectors';
 
 interface Props {
   city: number,
@@ -128,7 +128,7 @@ const withActiveOffer = (Component) => {
             To submit review please make sure to set <span className="reviews__star">rating</span> and
             describe your stay with at least <b className="reviews__text-amount">50 characters</b>.
           </p>
-          <button className="reviews__submit form__submit button" type="submit" disabled={true} onClick={this._submitForm}>Submit</button>
+          <button className="reviews__submit form__submit button" type="submit" onClick={this._submitForm}>Submit</button>
         </div>
         <span className="login__error" style={{display: `none`, textAlign: `center`, paddingTop: `10px`}}>Вы забыли поставить оценку или оставить комментарий</span>
       </form>);
@@ -387,12 +387,13 @@ const withActiveOffer = (Component) => {
   }
 
   return Offer;
-}
+};
 
 
 const mapStateToProps = (state, ownProps) => Object.assign(
   {}, ownProps, {
     comments: getComments(state),
+    isCommentsDeployFailed: getCommentsDeployAttempt(state)
   });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -403,6 +404,20 @@ const mapDispatchToProps = (dispatch) => ({
 
         dispatch(UserAction.ActionCreator.getComments(result));
       }).catch(() => {});
+  },
+
+  commentsSubmitHandler: ({submitData, hotelId}) => {
+
+    dispatch(UserAction.Operation.postComments({submitData, hotelId}))
+      .then(() => dispatch(UserAction.Operation.getComments(hotelId)))
+      .then((result) => {
+
+        dispatch(UserAction.ActionCreator.getComments(result));
+        dispatch(UserAction.ActionCreator.resetCommentsDeploy());
+      })
+      .catch(() => {
+        dispatch(UserAction.ActionCreator.isCommentsDeployFailed(true));
+      });
   },
 });
 

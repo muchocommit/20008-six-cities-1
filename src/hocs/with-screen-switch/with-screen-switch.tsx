@@ -30,8 +30,8 @@ import {
 import {
   getAuthorizationAttempt,
   getCredentials,
-  getAuthorizationStatus,
-  getCommentsDeployAttempt} from '../../reducers/user/selectors';
+  getAuthorizationStatus
+} from '../../reducers/user/selectors';
 
 import withActiveItem from './../../hocs/with-active-item/with-active-item';
 import withActiveCityTabs from './../../hocs/with-active-city-tabs/with-active-city-tabs';
@@ -44,7 +44,7 @@ const OfferWrapped = withActiveOffer(Offer);
 
 import {
   Offer as OfferProp,
-  SignIn, Credentials, Comment, SubmitData as SubmitDataType, CityName
+  SignIn, Credentials, CityName
 } from './../../types';
 
 interface Props {
@@ -63,13 +63,9 @@ interface Props {
 
   isAuthorizationFailed: boolean,
   isAuthorizationRequired: boolean,
-  isCommentsDeployFailed: boolean,
 
   checkAuthOnComponentMount: () => void,
-  getCommentsOnComponentMount: (hotelId: number) => void,
-  comments: Comment[],
-  onCommentsSubmit: (submitDataObject: {submitData:
-      SubmitDataType, hotelId: number}) => void,
+
   onFilterCities: (filterParam: {filterParam: string}) => void
 }
 
@@ -231,10 +227,8 @@ const withScreenSwitch = (Component) => {
 
         onAuthorizationScreenSubmit,
         isAuthorizationRequired,
-        getCommentsOnComponentMount,
-        comments,
-        onCommentsSubmit,
-        isCommentsDeployFailed,
+
+
         onBookMarkButtonClick,
         bodyElement
       } = this.props;
@@ -249,10 +243,7 @@ const withScreenSwitch = (Component) => {
             credentials={credentials}
             bodyElement={bodyElement}
             offers={offers}
-            getComments={getCommentsOnComponentMount}
-            comments={comments}
-            commentsSubmitHandler={onCommentsSubmit}
-            isCommentsDeployFailed={isCommentsDeployFailed}
+
             bookMarkClickHandler={onBookMarkButtonClick}/>} />
 
           <Route path="/favorites" render={() => this._getFavoritesScreen({
@@ -292,7 +283,6 @@ const mapStateToProps = (state, ownProps) => Object.assign(
       credentials: getCredentials(state),
 
       // comments: getComments(state),
-      isCommentsDeployFailed: getCommentsDeployAttempt(state)
     });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -317,29 +307,6 @@ const mapDispatchToProps = (dispatch) => ({
         break;
     }
   },
-
-  onCommentsSubmit: ({submitData, hotelId}) => {
-
-    dispatch(UserAction.Operation.postComments({submitData, hotelId}))
-      .then(() => dispatch(UserAction.Operation.getComments(hotelId)))
-        .then((result) => {
-
-          dispatch(UserAction.ActionCreator.getComments(result));
-          dispatch(UserAction.ActionCreator.resetCommentsDeploy());
-        })
-      .catch(() => {
-        dispatch(UserAction.ActionCreator.isCommentsDeployFailed(true));
-      });
-  },
-
-  // getCommentsOnComponentMount: (hotelId) => {
-  //
-  //   dispatch(UserAction.Operation.getComments(hotelId))
-  //     .then((result) => {
-  //
-  //       dispatch(UserAction.ActionCreator.getComments(result));
-  //     }).catch(() => {});
-  // },
 
   onBookMarkButtonClick: ({bookMarkIndex, isFavorite}) => {
     dispatch(DataAction.Operation.addBookMark({bookMarkIndex, isFavorite}))
