@@ -22,7 +22,7 @@ interface Props {
 
 export default class Map extends React.PureComponent<Props, null> {
   private _mapRef: React.RefObject<HTMLDivElement>;
-  private _markerGroup: any;
+  public _markerGroup: any;
   private _map: any;
 
   constructor(props) {
@@ -54,8 +54,6 @@ export default class Map extends React.PureComponent<Props, null> {
 
   _renderMarkers() {
     const {locations} = this.props;
-
-    console.log(leaflet)
 
     const {ICON, ICON_FOCUS, ZOOM, mapId, LATITUDE_CONSTANT} = MapParams;
 
@@ -150,6 +148,7 @@ export default class Map extends React.PureComponent<Props, null> {
 
     const cityLocation = Map._getCityLocation(locations);
     if (mapId === `offerMap`) {
+
       this._map.setView([cityLocation.latitude,
         cityLocation.longitude], CITY_ZOOM);
     } else {

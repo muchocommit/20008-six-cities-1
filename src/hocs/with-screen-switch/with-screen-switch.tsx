@@ -116,6 +116,11 @@ const withScreenSwitch = (Component) => {
           if (currentOffers.length !== 0) {
             const locations = DataAction.getLocations(currentOffers);
 
+            const map = <Map
+              locations={locations}
+              mapId={`map`}
+            />;
+
             return (
               <Map
                 locations={locations}
@@ -132,6 +137,13 @@ const withScreenSwitch = (Component) => {
             />);
 
         default:
+
+          const offers = <OffersListWrapped
+            offers={currentOffers}
+            handleBookMarkClick={({bookMarkIndex, isFavorite}) =>
+              onBookMarkButtonClick({bookMarkIndex, isFavorite})}
+          />;
+
           return (
             <OffersListWrapped
               offers={currentOffers}
@@ -349,8 +361,6 @@ const mapDispatchToProps = (dispatch) => ({
   onHandleTabClick: (activeCity) => {
     return new Promise((resolve) =>
       resolve(dispatch(DataAction.ActionCreator.changeCity(activeCity))));
-
-    // .then((result) => console.log(result))
   },
 
   onAuthorizationScreenSubmit: (submitData) => {
