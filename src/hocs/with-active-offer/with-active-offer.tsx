@@ -416,7 +416,7 @@ const mapDispatchToProps = (dispatch) => ({
         dispatch(UserAction.ActionCreator.resetCommentsDeploy());
       })
       .catch(() => {
-        dispatch(UserAction.ActionCreator.isCommentsDeployFailed(true));
+        dispatch(UserAction.ActionCreator.getCommentsDeployAttempt(true));
       });
   },
 });

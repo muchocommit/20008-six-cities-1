@@ -161,7 +161,6 @@ const withScreenSwitch = (Component) => {
         city,
         bodyElement} = this.props;
 
-
       if (isAuthorizationRequired || credentials.id === null) {
         return <Redirect to="/login"/>;
       }
@@ -224,10 +223,8 @@ const withScreenSwitch = (Component) => {
         offers,
         currentOffers,
         cityNames,
-
         onAuthorizationScreenSubmit,
         isAuthorizationRequired,
-
 
         onBookMarkButtonClick,
         bodyElement
@@ -281,8 +278,6 @@ const mapStateToProps = (state, ownProps) => Object.assign(
       isAuthorizationFailed: getAuthorizationAttempt(state),
       isAuthorizationRequired: getAuthorizationStatus(state),
       credentials: getCredentials(state),
-
-      // comments: getComments(state),
     });
 
 const mapDispatchToProps = (dispatch) => ({

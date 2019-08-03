@@ -34,7 +34,7 @@ const ActionCreator = {
     };
   },
 
-  isCommentsDeployFailed: (status) => {
+  getCommentsDeployAttempt: (status) => {
     return {
       type: ActionType.COMMENTS_DEPLOY_FAILED,
       payload: status

@@ -10,21 +10,13 @@ interface Props {
   deactivateItem: () => void
 }
 
-interface State {
-  isActive: boolean
-}
-
-export default class SortingTab extends React.PureComponent<Props, State> {
+export default class SortingTab extends React.PureComponent<Props, null> {
   private _tabRef: React.RefObject<HTMLLIElement>;
 
   constructor(props) {
     super(props);
 
     this._tabRef = React.createRef();
-
-    this.state = {
-      isActive: props.isActiveItem
-    };
 
     this._onSortingTabMouseEnter = this._onSortingTabMouseEnter.bind(this);
     this._onSortingTabMouseOut = this._onSortingTabMouseOut.bind(this);
@@ -49,13 +41,11 @@ export default class SortingTab extends React.PureComponent<Props, State> {
   _onSortingTabMouseEnter() {
 
     this.props.activateItem();
-    this.setState({isActive: !this.state.isActive});
   }
 
   _onSortingTabMouseOut() {
 
     this.props.deactivateItem();
-    this.setState({isActive: !this.state.isActive});
   }
 
   render() {
@@ -65,7 +55,6 @@ export default class SortingTab extends React.PureComponent<Props, State> {
       clickHandler,
       sortingListHandler
     } = this.props;
-
 
     return (<li ref={this._tabRef}
       className={`places__option`}
