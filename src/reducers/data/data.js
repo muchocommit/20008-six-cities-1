@@ -69,7 +69,7 @@ const ActionCreator = {
     };
   },
 
-  filterParam: (filterParam) => {
+  getFilterParam: (filterParam) => {
 
     return {
       type: ActionType.FILTER_PARAM,

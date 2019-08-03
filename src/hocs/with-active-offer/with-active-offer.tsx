@@ -154,7 +154,6 @@ const withActiveOffer = (Component) => {
     }
 
     _getScreen() {
-
       const {
         offers,
         credentials,
@@ -165,11 +164,9 @@ const withActiveOffer = (Component) => {
       } = this.props;
 
       const offerId = +match.url.slice(1);
-
       bodyElement.className = `page`;
 
       if (offers && offers.length > 0) {
-
 
         const offer = getOfferById([...offers], offerId)[0];
         const {images} = offer;
@@ -178,7 +175,7 @@ const withActiveOffer = (Component) => {
         const currentLocations = getLocations(
           [...currentOffers]);
 
-
+//** TODO: Check for double sliced HeaderImages **//
         const headerImages = images.slice(0, 6);
 
         return (<>
@@ -282,7 +279,6 @@ const withActiveOffer = (Component) => {
 
                     {credentials.id ? this._renderForm() : ``}
 
-
                   </section>
                 </div>
               </div>
@@ -345,7 +341,7 @@ const withActiveOffer = (Component) => {
 
       return (<Component
         {...this.props}
-        renderScreen={() => this._getScreen()}/>);
+        renderOffer={this._getScreen}/>);
     }
 
 

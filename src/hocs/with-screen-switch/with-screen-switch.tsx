@@ -2,7 +2,6 @@ import * as React from 'react';
 import {compose} from 'recompose';
 import {BrowserRouter, Switch, Route, Redirect} from 'react-router-dom';
 import {connect} from 'react-redux';
-import {SortingParams} from '../../data';
 
 import * as DataAction from '../../reducers/data/data';
 import * as UserAction from '../../reducers/user/user';
@@ -15,14 +14,12 @@ import {OffersEmpty} from '../../components/offers-empty/offers-empty';
 import SignInScreen from './../../components/sign-in/sign-in';
 
 import Offer from './../../components/offer/offer';
-
 import FavoritesList from './../../components/favorites-list/favorites-list';
 import SortingList from './../../components/sorting-list/sorting-list';
 
 import {
   getCity,
   getCities,
-  getFilterParam,
   combineOffers,
   combineCurrentOffers,
   combineCityNames} from '../../reducers/data/selectors';
@@ -36,10 +33,12 @@ import {
 import withActiveItem from './../../hocs/with-active-item/with-active-item';
 import withActiveCityTabs from './../../hocs/with-active-city-tabs/with-active-city-tabs';
 import withActiveOffer from './../../hocs/with-active-offer/with-active-offer';
+import withActiveSortingList from './../../hocs/with-active-sorting-list/with-active-sorting-list';
 
 const CitiesListWrapped = withActiveItem(withActiveCityTabs(CitiesList));
 const OffersListWrapped = withActiveItem(OffersList);
-const SortingListWrapped = withActiveItem(SortingList);
+const SortingListWrapped = withActiveItem(withActiveSortingList(SortingList));
+
 const OfferWrapped = withActiveOffer(Offer);
 
 import {
@@ -65,8 +64,6 @@ interface Props {
   isAuthorizationRequired: boolean,
 
   checkAuthOnComponentMount: () => void,
-
-  onFilterCities: (filterParam: {filterParam: string}) => void
 }
 
 const withScreenSwitch = (Component) => {
@@ -83,15 +80,13 @@ const withScreenSwitch = (Component) => {
         return (<OffersEmpty />);
       }
 
-      const {onFilterCities} = this.props;
-
       return (<div className="cities__places-container container">
         <section className="cities__places places">
           <h2 className="visually-hidden">Places</h2>
           <b className="places__found">{`${currentOffers ? `${currentOffers.length} places to stay in ${cityName}` : ``}`}</b>
 
 
-          <SortingListWrapped filterHandler={(filterParam) => onFilterCities({filterParam})} />
+          <SortingListWrapped />
 
           {this._getComponent({key: `OFFERS`, currentOffers})}
 
@@ -110,14 +105,8 @@ const withScreenSwitch = (Component) => {
 
       switch (key) {
         case `LOCATIONS`:
-
           if (currentOffers.length !== 0) {
             const locations = DataAction.getLocations(currentOffers);
-
-            const map = <Map
-              locations={locations}
-              mapId={`map`}
-            />;
 
             return (
               <Map
@@ -143,8 +132,6 @@ const withScreenSwitch = (Component) => {
                 onBookMarkButtonClick({bookMarkIndex, isFavorite})}
             />);
       }
-
-      return null;
     }
 
     _getHeader(credentials) {
@@ -215,7 +202,6 @@ const withScreenSwitch = (Component) => {
     }
 
     render() {
-
       const {
         credentials,
         cities,
@@ -257,7 +243,6 @@ const withScreenSwitch = (Component) => {
 
     componentDidMount() {
       const {checkAuthOnComponentMount} = this.props;
-
       checkAuthOnComponentMount();
     }
   }
@@ -273,35 +258,12 @@ const mapStateToProps = (state, ownProps) => Object.assign(
       currentOffers: combineCurrentOffers(state),
 
       cityNames: combineCityNames(state),
-      filterParam: getFilterParam(state),
-
       isAuthorizationFailed: getAuthorizationAttempt(state),
       isAuthorizationRequired: getAuthorizationStatus(state),
       credentials: getCredentials(state),
-    });
+});
 
 const mapDispatchToProps = (dispatch) => ({
-
-  onFilterCities: ({filterParam}) => {
-    switch (filterParam) {
-
-      case SortingParams.LOW_TO_HIGH:
-        dispatch(DataAction.ActionCreator.filterParam(SortingParams.LOW_TO_HIGH));
-        break;
-
-      case SortingParams.HIGH_TO_LOW:
-        dispatch(DataAction.ActionCreator.filterParam(SortingParams.HIGH_TO_LOW));
-        break;
-
-      case SortingParams.TOP_RATED:
-        dispatch(DataAction.ActionCreator.filterParam(SortingParams.TOP_RATED));
-        break;
-
-      default:
-        dispatch(DataAction.ActionCreator.filterParam(SortingParams.POPULAR));
-        break;
-    }
-  },
 
   onBookMarkButtonClick: ({bookMarkIndex, isFavorite}) => {
     dispatch(DataAction.Operation.addBookMark({bookMarkIndex, isFavorite}))

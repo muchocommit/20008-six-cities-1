@@ -39,12 +39,10 @@ export default class SortingTab extends React.PureComponent<Props, null> {
   }
 
   _onSortingTabMouseEnter() {
-
     this.props.activateItem();
   }
 
   _onSortingTabMouseOut() {
-
     this.props.deactivateItem();
   }
 

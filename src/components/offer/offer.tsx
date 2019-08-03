@@ -1,17 +1,17 @@
 import * as React from 'react';
 
 interface Props {
-  renderScreen: () => void
+  renderOffer: () => void
 }
 
 export default class Offer extends React.PureComponent<Props, null> {
 
   render() {
-    const {renderScreen} = this.props;
+    const {renderOffer} = this.props;
 
     return (
       <>
-        {renderScreen()}
+        {renderOffer()}
       </>
     );
   }
