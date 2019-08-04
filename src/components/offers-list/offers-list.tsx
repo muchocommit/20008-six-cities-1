@@ -5,7 +5,8 @@ import OfferCard from '../offer-card/offer-card';
 
 interface Props {
   offers: Offer[] & CityName,
-  handleBookMarkClick: () => void
+  handleBookMarkClick: () => void,
+  activateOffer: () => void
 }
 
 class OffersList extends React.PureComponent<Props, null> {
@@ -14,7 +15,7 @@ class OffersList extends React.PureComponent<Props, null> {
   }
 
   _getOffers() {
-    const {offers, handleBookMarkClick} = this.props;
+    const {offers, handleBookMarkClick, activateOffer} = this.props;
 
     return offers.map((it, i) => {
 
@@ -24,6 +25,7 @@ class OffersList extends React.PureComponent<Props, null> {
         index={it.id}
         isFavorite={it[`is_favorite`]}
         bookMarkClickHandler={handleBookMarkClick}
+        activateOffer={activateOffer}
       />;
     });
   }

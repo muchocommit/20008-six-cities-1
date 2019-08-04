@@ -13,13 +13,14 @@ import {Offer, Credentials, CityName} from '../../types';
 interface Props {
   offers: Offer[] & CityName,
   credentials: Credentials,
-  bodyElement: HTMLBodyElement
+  bodyElement: HTMLBodyElement,
+  activateOffer: () => void
 }
 
 export default class FavoritesList extends React.PureComponent<Props, null> {
 
   render() {
-    const {bodyElement, offers, credentials} = this.props;
+    const {bodyElement, offers, credentials, activateOffer} = this.props;
     bodyElement.className = `page`;
 
     const favoriteOffers = getFavoriteOffers(offers);
@@ -50,7 +51,8 @@ export default class FavoritesList extends React.PureComponent<Props, null> {
                         return <OfferCard
                           key={`favorite-${key}`}
                           isFavorite={offer[`is_favorite`]}
-                          offer={offer}/>;
+                          offer={offer}
+                          activateOffer={activateOffer}/>;
                       })}
                     </div>
                   </li>;

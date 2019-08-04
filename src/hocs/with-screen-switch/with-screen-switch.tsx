@@ -61,7 +61,7 @@ interface Props {
   onBookMarkButtonClick: (bookMarkObject: {
     bookMarkIndex: number, isFavorite: boolean}) => void,
 
-  activateOffer: (i: number) => void,
+  activateOffer: () => void,
   deactivateOffer: () => void,
   isActiveOffer:(i: number, sortingTab: boolean) => void,
 
@@ -77,9 +77,10 @@ const withScreenSwitch = (Component) => {
 
       this._getHeader = this._getHeader.bind(this);
       this._getScreen = this._getScreen.bind(this);
+      this._getFavoritesScreen = this._getFavoritesScreen.bind(this);
     }
 
-    _getContainer({currentOffers, cityName}) {
+    _getContainer({currentOffers, cityName, activateOffer}) {
       if (currentOffers.length === 0) {
         return (<OffersEmpty />);
       }
@@ -92,7 +93,7 @@ const withScreenSwitch = (Component) => {
 
           <SortingListWrapped />
 
-          {this._getComponent({key: `OFFERS`, currentOffers})}
+          {this._getComponent({key: `OFFERS`, currentOffers, activateOffer})}
 
         </section>
         <div className="cities__right-section">
@@ -103,7 +104,8 @@ const withScreenSwitch = (Component) => {
         </div>
       </div>);
     }
-    _getComponent({key, currentOffers = [], cityNames = []}) {
+    _getComponent({key, currentOffers = [],
+                    cityNames = [], activateOffer = () => {}}) {
 
       const {onHandleTabClick, onBookMarkButtonClick} = this.props;
 
@@ -131,6 +133,8 @@ const withScreenSwitch = (Component) => {
 
           return (
             <OffersListWrapped
+
+              activateOffer={activateOffer}
               offers={currentOffers}
               handleBookMarkClick={({bookMarkIndex, isFavorite}) =>
                 onBookMarkButtonClick({bookMarkIndex, isFavorite})}
@@ -146,7 +150,7 @@ const withScreenSwitch = (Component) => {
 
     _getScreen({credentials,
       isAuthorizationRequired,
-      currentOffers, cityNames}) {
+      currentOffers, cityNames, activateOffer}) {
 
       const {
         city,
@@ -166,20 +170,21 @@ const withScreenSwitch = (Component) => {
               </section>
             </div>
             <div className="cities__places-wrapper">
-              {this._getContainer({currentOffers, cityName: cityNames[city]})}
+              {this._getContainer({currentOffers, cityName: cityNames[city],
+                activateOffer})}
             </div>
           </>);
     }
 
     _getMainScreen({credentials,
       isAuthorizationRequired,
-      currentOffers, cityNames}) {
+      currentOffers, cityNames, activateOffer}) {
 
       return (<Component
         {...this.props}
         renderScreen={() => this._getScreen({
           credentials, isAuthorizationRequired,
-          currentOffers, cityNames})}
+          currentOffers, cityNames, activateOffer})}
 
         renderHeader={() => this._getHeader(credentials)}
       />);
@@ -194,7 +199,8 @@ const withScreenSwitch = (Component) => {
         credentials={credentials} />);
     }
 
-    _getFavoritesScreen({credentials, bodyElement, offers}) {
+    _getFavoritesScreen({credentials, bodyElement, offers, activateOffer}) {
+
       if (credentials.id === null) {
         return <Redirect to="/login"/>;
       }
@@ -202,7 +208,8 @@ const withScreenSwitch = (Component) => {
       return <FavoritesList
         bodyElement={bodyElement}
         offers={offers}
-        credentials={credentials}/>;
+        credentials={credentials}
+        activateOffer={activateOffer}/>;
     }
 
     render() {
@@ -214,7 +221,7 @@ const withScreenSwitch = (Component) => {
         currentOffers,
         cityNames,
 
-        isActiveOffer,
+        activateOffer,
 
         onAuthorizationScreenSubmit,
         isAuthorizationRequired,
@@ -222,9 +229,9 @@ const withScreenSwitch = (Component) => {
         bodyElement
       } = this.props;
 
-      console.log(isActiveOffer)
-
       const storedCredentials = UserAction.getCredentials(credentials);
+
+      /** TODO: Later add pushState for history manipulation and correct GET url without offer */
 
       return <BrowserRouter>
         <Switch>
@@ -238,10 +245,10 @@ const withScreenSwitch = (Component) => {
             bookMarkClickHandler={onBookMarkButtonClick}/>} />
 
           <Route path="/favorites" render={() => this._getFavoritesScreen({
-            credentials: storedCredentials, bodyElement, offers})}/>
+            credentials: storedCredentials, bodyElement, offers, activateOffer})}/>
           <Route path="/" exact render={() => this._getMainScreen({
             credentials: storedCredentials, isAuthorizationRequired,
-            currentOffers, cityNames})} />
+            currentOffers, cityNames, activateOffer})} />
 
           <Route path="/login" exact render={() => this._getSignInScreen(
               {onAuthorizationScreenSubmit, bodyElement, credentials: storedCredentials})} />

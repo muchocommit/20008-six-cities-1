@@ -9,18 +9,24 @@ interface Props {
   offer: Offer,
   bookMarkClickHandler?: (bookMarkObject: {
     bookMarkIndex: number, isFavorite: boolean}) => void,
-  index?: number
+  index?: number,
+  activateOffer: (i: number) => void
 }
 
 export default class OfferCard extends React.PureComponent<Props, null> {
   constructor(props) {
     super(props);
 
+    this._activateOffer = this._activateOffer.bind(this);
     this._getCardScreen = this._getCardScreen.bind(this);
   }
 
   static _getPropertyMark(isPremium) {
     return isPremium ? `Premium` : `Mid-price`;
+  }
+
+  _activateOffer(index) {
+    this.props.activateOffer(index);
   }
 
   _getCardScreen() {
@@ -31,11 +37,9 @@ export default class OfferCard extends React.PureComponent<Props, null> {
         <div className="place-card__mark">
           <span>{OfferCard._getPropertyMark(offer[`is_premium`])}</span>
         </div>
-        <div className="cities__image-wrapper place-card__image-wrapper">
-          <Link to={`/${offer.id}`}>
+        <div className="cities__image-wrapper place-card__image-wrapper" onClick={() => this._activateOffer(offer.id)}>
             <img className="place-card__image" src={offer[`preview_image`]} width="260" height="200"
-              alt="Place image" />
-          </Link>
+              alt="Place image"/>
         </div>
         <div className="place-card__info">
           <div className="place-card__price-wrapper">
@@ -104,7 +108,6 @@ export default class OfferCard extends React.PureComponent<Props, null> {
 
   render() {
     return (
-
       <>{this._getCardScreen()}</>
     );
   }
