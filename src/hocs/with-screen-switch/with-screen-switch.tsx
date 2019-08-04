@@ -32,6 +32,7 @@ import {
 
 import withActiveItem from './../../hocs/with-active-item/with-active-item';
 import withActiveCityTabs from './../../hocs/with-active-city-tabs/with-active-city-tabs';
+
 import withActiveOffer from './../../hocs/with-active-offer/with-active-offer';
 import withActiveSortingList from './../../hocs/with-active-sorting-list/with-active-sorting-list';
 
@@ -60,9 +61,12 @@ interface Props {
   onBookMarkButtonClick: (bookMarkObject: {
     bookMarkIndex: number, isFavorite: boolean}) => void,
 
+  activateOffer: (i: number) => void,
+  deactivateOffer: () => void,
+  isActiveOffer:(i: number, sortingTab: boolean) => void,
+
   isAuthorizationFailed: boolean,
   isAuthorizationRequired: boolean,
-
   checkAuthOnComponentMount: () => void,
 }
 
@@ -209,12 +213,16 @@ const withScreenSwitch = (Component) => {
         offers,
         currentOffers,
         cityNames,
+
+        isActiveOffer,
+
         onAuthorizationScreenSubmit,
         isAuthorizationRequired,
-
         onBookMarkButtonClick,
         bodyElement
       } = this.props;
+
+      console.log(isActiveOffer)
 
       const storedCredentials = UserAction.getCredentials(credentials);
 
@@ -286,23 +294,24 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(UserAction.Operation.sendCredentials(submitData))
       .then((result) => {
 
-        dispatch(UserAction.ActionCreator.isAuthorizationRequired(false));
+        dispatch(UserAction.ActionCreator.getAuthorizationStatus(false));
         dispatch(UserAction.ActionCreator.sendCredentials(result));
       }).catch(() => {
         // If user is not Authorized, then redirect
-        dispatch(UserAction.ActionCreator.isAuthorizationFailed(true));
+        dispatch(UserAction.ActionCreator.getAuthorizationAttempt(true));
       });
   },
 
   checkAuthOnComponentMount: () => {
     dispatch(UserAction.Operation.checkAuth()).then(
         () => {
-          dispatch(UserAction.ActionCreator.isAuthorizationRequired(false));
+          dispatch(UserAction.ActionCreator.getAuthorizationStatus(false));
         })
-        .catch(() => dispatch(UserAction.ActionCreator.isAuthorizationRequired(true)));
+        .catch(() => dispatch(UserAction.ActionCreator.getAuthorizationStatus(true)));
   }
 });
 
-export default compose(connect(mapStateToProps, mapDispatchToProps), withScreenSwitch);
+export default compose(connect(mapStateToProps, mapDispatchToProps),
+  withScreenSwitch);
 
 

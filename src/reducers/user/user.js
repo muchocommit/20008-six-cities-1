@@ -20,14 +20,14 @@ const initialState = {
 };
 
 const ActionCreator = {
-  isAuthorizationRequired: (status) => {
+  getAuthorizationStatus: (status) => {
     return {
       type: ActionType.AUTHORIZATION_REQUIRED,
       payload: status
     };
   },
 
-  isAuthorizationFailed: (status) => {
+  getAuthorizationAttempt: (status) => {
     return {
       type: ActionType.AUTHORIZATION_FAILED,
       payload: status,
@@ -87,8 +87,6 @@ const getCredentials = (credentials) => {
 const Operation = {
   postComments: ({submitData, hotelId}) => {
     return (dispatch, _getState, api) => {
-
-      console.log(dispatch)
 
       return api.post(`/comments/${hotelId}`, submitData)
         .then((response) => {

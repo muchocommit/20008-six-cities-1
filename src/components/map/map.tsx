@@ -55,7 +55,7 @@ export default class Map extends React.PureComponent<Props, null> {
   _renderMarkers() {
     const {locations} = this.props;
 
-    const {ICON, ICON_FOCUS, ZOOM, mapId, LATITUDE_CONSTANT} = MapParams;
+    const {ICON, ICON_FOCUS, ZOOM, mapId} = MapParams;
 
     const icon = leaflet.icon({
       iconUrl: ICON.URL,
@@ -82,12 +82,11 @@ export default class Map extends React.PureComponent<Props, null> {
             target.setIcon(icon);
           } else {
 
-
             if (mapId === `offerMap`) {
               this._map.setView([it.location.latitude,
                 it.location.longitude], ZOOM);
             } else {
-              this._map.setView([it.location.latitude - LATITUDE_CONSTANT,
+              this._map.setView([it.location.latitude,
                 it.location.longitude], ZOOM);
             }
 
@@ -109,7 +108,7 @@ export default class Map extends React.PureComponent<Props, null> {
 
     currentMap.id = mapId;
     const {
-      CITY_ZOOM, CITY, TILE_LAYER, LATITUDE_CONSTANT
+      CITY_ZOOM, CITY, TILE_LAYER
     } = MapParams;
 
     this._map = leaflet.map(currentMap, {
@@ -134,13 +133,13 @@ export default class Map extends React.PureComponent<Props, null> {
         cityLocation.longitude], CITY_ZOOM);
     } else {
 
-      this._map.setView([cityLocation.latitude - LATITUDE_CONSTANT,
+      this._map.setView([cityLocation.latitude,
         cityLocation.longitude], CITY_ZOOM);
     }
   }
 
   componentDidUpdate () {
-    const {CITY_ZOOM, LATITUDE_CONSTANT, mapId} = MapParams;
+    const {CITY_ZOOM, mapId} = MapParams;
     const {locations} = this.props;
 
     this.markerGroup.clearLayers();
@@ -153,7 +152,7 @@ export default class Map extends React.PureComponent<Props, null> {
         cityLocation.longitude], CITY_ZOOM);
     } else {
 
-      this._map.setView([cityLocation.latitude - LATITUDE_CONSTANT,
+      this._map.setView([cityLocation.latitude,
         cityLocation.longitude], CITY_ZOOM);
     }
   }

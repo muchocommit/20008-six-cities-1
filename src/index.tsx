@@ -13,9 +13,28 @@ import {createAPI} from './api';
 import reducer from './reducers/reducer';
 import {Operation as DataOperation} from './reducers/data/data';
 
+import withActiveItem from './hocs/with-active-item/with-active-item';
+import withTransformProps from './hocs/with-transform-props/with-transform-props';
+
 declare const __REDUX_DEVTOOLS_EXTENSION__: () => void;
 
-const AppWrapped = withRouter(withScreenSwitch(App));
+const transformItemToOffer = (props) => {
+  const newProps = Object.assign({}, props, {
+    activateOffer: props.activateItem,
+    deactivateOffer: props.deactivateItem,
+    isActiveOffer: props.isActiveItem
+  });
+
+  delete newProps.activateItem;
+  delete newProps.deactivateItem;
+  delete newProps.isActiveItem;
+
+  return newProps;
+};
+/** TODO: must decide whether withRouter is needed at all */
+
+const AppWrapped = withRouter(withActiveItem(
+  withTransformProps(transformItemToOffer)(withScreenSwitch(App))));
 
 export const api = createAPI();
 export const store = createStore(
