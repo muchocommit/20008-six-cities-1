@@ -7,7 +7,7 @@ import CityTab from './../../components/city-tab/city-tab';
 const CityTabWrapped = withActiveCityTab(CityTab);
 
 interface InjectedProps {
-  renderTabs: (cityNames, handleTabClick) => typeof CityTabWrapped;
+  renderTabs: (cityNames, handleTabClick, deactivateOffer) => typeof CityTabWrapped;
 }
 
 const withActiveCityTabs = (Component) => {
@@ -15,7 +15,7 @@ const withActiveCityTabs = (Component) => {
   type T = Subtract<P, InjectedProps>;
 
   class ActiveCityTab extends React.PureComponent<T, null> {
-    _getTabs(cityNames, handleTabClick) {
+    _getTabs(cityNames, handleTabClick, deactivateOffer) {
       const {
         activateItem,
         isActiveItem} = this.props;
@@ -26,6 +26,7 @@ const withActiveCityTabs = (Component) => {
           isActive={isActiveItem(i, true)}
 
           onCityTabButtonClick={() => {
+            deactivateOffer();
             handleTabClick(i);
             activateItem(i);
           }}
@@ -37,8 +38,8 @@ const withActiveCityTabs = (Component) => {
       return (
         <Component
           {...this.props}
-          renderTabs={(cityNames, handleTabClick) => this._getTabs(cityNames,
-            handleTabClick)}
+          renderTabs={(cityNames, handleTabClick, deactivateOffer) => this._getTabs(cityNames,
+            handleTabClick, deactivateOffer)}
       />);
     }
   }

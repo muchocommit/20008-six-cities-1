@@ -109,7 +109,7 @@ const withScreenSwitch = (Component) => {
 
       const {onHandleTabClick,
         onBookMarkButtonClick,
-        getActiveOffer} = this.props;
+        getActiveOffer, deactivateOffer} = this.props;
 
       switch (key) {
         case `LOCATIONS`:
@@ -128,6 +128,7 @@ const withScreenSwitch = (Component) => {
         case `CITY_NAMES`:
           return (
             <CitiesListWrapped
+              deactivateOffer={deactivateOffer}
               cityNames={cityNames}
               handleTabClick={(activeCity) => onHandleTabClick(activeCity)}
             />);
@@ -237,7 +238,6 @@ const withScreenSwitch = (Component) => {
       const storedCredentials = UserAction.getCredentials(credentials);
 
       /** TODO: Later add pushState for history manipulation and correct GET url without offer */
-
       return <BrowserRouter>
         <Switch>
           <Route path={`/([0-9][0-9]?[0-9]?)`} render={({match}) => <OfferWrapped
