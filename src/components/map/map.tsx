@@ -56,8 +56,9 @@ export default class Map extends React.PureComponent<Props, null> {
   }
 
   _highLightMarker(markerIndex) {
+    const {ICON_FOCUS, OFFER_ZOOM, CITY_ZOOM} = MapParams;
+    const {locations} = this.props;
     if (markerIndex) {
-      const {ICON_FOCUS} = MapParams;
 
       const newIcon = leaflet.icon({
         iconUrl: ICON_FOCUS.URL,
@@ -68,8 +69,19 @@ export default class Map extends React.PureComponent<Props, null> {
       this.markerGroup.getLayers().find((it) =>
         it.options.id === markerIndex).setIcon(newIcon);
 
+      const offerLocation = locations.find((it) =>
+        it.id === markerIndex);
+
+
+      this._map.setView([offerLocation.location.latitude,
+        offerLocation.location.longitude], OFFER_ZOOM);
       return;
     }
+
+    const cityLocation = Map._getCityLocation(locations);
+
+    this._map.setView([cityLocation.latitude,
+      cityLocation.longitude], CITY_ZOOM);
 
     return null;
   }
@@ -122,37 +134,17 @@ export default class Map extends React.PureComponent<Props, null> {
     this._renderMarkers();
     const cityLocation = Map._getCityLocation(locations);
 
-    if (mapId === `offerMap`) {
-      this._map.setView([cityLocation.latitude,
-        cityLocation.longitude], CITY_ZOOM);
-    } else {
-
-      this._map.setView([cityLocation.latitude,
-        cityLocation.longitude], CITY_ZOOM);
-    }
+    this._map.setView([cityLocation.latitude,
+      cityLocation.longitude], CITY_ZOOM);
   }
 
   componentDidUpdate () {
-    const {CITY_ZOOM, mapId} = MapParams;
-    const {locations, getActiveOffer} = this.props;
+    const {getActiveOffer} = this.props;
 
-
-    // Need to reset existing active offer
     this.markerGroup.clearLayers();
     this._renderMarkers();
 
     this._highLightMarker(getActiveOffer());
-
-    const cityLocation = Map._getCityLocation(locations);
-    if (mapId === `offerMap`) {
-
-      this._map.setView([cityLocation.latitude,
-        cityLocation.longitude], CITY_ZOOM);
-    } else {
-
-      this._map.setView([cityLocation.latitude,
-        cityLocation.longitude], CITY_ZOOM);
-    }
   }
 }
 
