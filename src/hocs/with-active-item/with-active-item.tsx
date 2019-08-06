@@ -6,9 +6,10 @@ interface State {
 }
 
 interface InjectedProps {
+  getActiveItem: () => number,
   activateItem: (i: number) => void,
   deactivateItem: () => void,
-  isActiveItem:(i: number, sortingTab: boolean) => void
+  isActiveItem:(i: number, isCityTab: boolean) => void
 }
 
 const withActiveItem = (Component) => {
@@ -25,19 +26,20 @@ const withActiveItem = (Component) => {
     }
 
     render() {
-
       return (<Component
         {...this.props}
+        getActiveItem={() => this.state.activeItem}
         activateItem={(i) => this.setState({activeItem: i})}
         deactivateItem={() => this.setState({activeItem: null})}
 
-        isActiveItem={(i, sortingTab = false) => {
+        isActiveItem={(i, isCityTab = false) => {
 
-          if (sortingTab) {
-            return i === this.state.activeItem;
+          if (isCityTab) {
+            return i === this.state.activeItem ||
+              (i === 0 && this.state.activeItem === null);
           }
-          return i === this.state.activeItem ||
-            (i === 0 && this.state.activeItem === null);
+
+          return i === this.state.activeItem;
         }}
       />);
     }

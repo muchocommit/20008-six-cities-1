@@ -33,6 +33,8 @@ interface Props {
       SubmitDataType, hotelId: number}) => void
   isCommentsDeployFailed: boolean,
   bookMarkClickHandler: (bookMarkObject: {bookMarkIndex: number, isFavorite: boolean}) => void
+
+  getActiveOffer: () => number
 }
 
 const withActiveOffer = (Component) => {
@@ -160,7 +162,9 @@ const withActiveOffer = (Component) => {
         bodyElement,
         comments,
         bookMarkClickHandler,
-        match
+        match,
+
+        getActiveOffer
       } = this.props;
 
       const offerId = +match.url.slice(1);
@@ -283,7 +287,7 @@ const withActiveOffer = (Component) => {
                 </div>
               </div>
               <section className="property__map map">
-                <Map mapId={`offerMap`} locations={currentLocations} />
+                <Map mapId={`offerMap`} locations={currentLocations} getActiveOffer={getActiveOffer}/>
               </section>
 
             </section>
@@ -364,7 +368,6 @@ const withActiveOffer = (Component) => {
 
           commentsError.style.display = `block`;
           submitButton.disabled = false;
-
         }
 
         if (credentials.id && !isCommentsDeployFailed) {

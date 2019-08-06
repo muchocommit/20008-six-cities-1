@@ -37,7 +37,6 @@ import withActiveOffer from './../../hocs/with-active-offer/with-active-offer';
 import withActiveSortingList from './../../hocs/with-active-sorting-list/with-active-sorting-list';
 
 const CitiesListWrapped = withActiveItem(withActiveCityTabs(CitiesList));
-const OffersListWrapped = withActiveItem(OffersList);
 const SortingListWrapped = withActiveItem(withActiveSortingList(SortingList));
 
 const OfferWrapped = withActiveOffer(Offer);
@@ -61,9 +60,10 @@ interface Props {
   onBookMarkButtonClick: (bookMarkObject: {
     bookMarkIndex: number, isFavorite: boolean}) => void,
 
+  getActiveOffer: () => number,
   activateOffer: () => void,
   deactivateOffer: () => void,
-  isActiveOffer:(i: number, sortingTab: boolean) => void,
+  isActiveOffer:(i: number, isCityTab: boolean) => void,
 
   isAuthorizationFailed: boolean,
   isAuthorizationRequired: boolean,
@@ -107,7 +107,9 @@ const withScreenSwitch = (Component) => {
     _getComponent({key, currentOffers = [],
                     cityNames = [], activateOffer = () => {}}) {
 
-      const {onHandleTabClick, onBookMarkButtonClick} = this.props;
+      const {onHandleTabClick,
+        onBookMarkButtonClick,
+        getActiveOffer} = this.props;
 
       switch (key) {
         case `LOCATIONS`:
@@ -116,6 +118,7 @@ const withScreenSwitch = (Component) => {
 
             return (
               <Map
+                getActiveOffer={getActiveOffer}
                 locations={locations}
                 mapId={`map`}
               />);
@@ -132,7 +135,7 @@ const withScreenSwitch = (Component) => {
         default:
 
           return (
-            <OffersListWrapped
+            <OffersList
 
               activateOffer={activateOffer}
               offers={currentOffers}
@@ -221,6 +224,8 @@ const withScreenSwitch = (Component) => {
         currentOffers,
         cityNames,
 
+        getActiveOffer,
+        isActiveOffer,
         activateOffer,
 
         onAuthorizationScreenSubmit,
@@ -242,6 +247,8 @@ const withScreenSwitch = (Component) => {
             bodyElement={bodyElement}
             offers={offers}
 
+            getActiveOffer={getActiveOffer}
+            isActiveOffer={isActiveOffer}
             bookMarkClickHandler={onBookMarkButtonClick}/>} />
 
           <Route path="/favorites" render={() => this._getFavoritesScreen({

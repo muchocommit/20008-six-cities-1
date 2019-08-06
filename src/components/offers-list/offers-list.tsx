@@ -1,11 +1,12 @@
 import * as React from 'react';
 
-import {Offer, CityName} from '../../types';
+import {Offer} from '../../types';
 import OfferCard from '../offer-card/offer-card';
 
 interface Props {
-  offers: Offer[] & CityName,
-  handleBookMarkClick: () => void,
+  // The actual CityName property is present in offers
+  offers: Offer[],
+  handleBookMarkClick: ({bookMarkIndex, isFavorite}) => void,
   activateOffer: () => void
 }
 

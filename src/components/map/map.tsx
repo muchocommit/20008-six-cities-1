@@ -4,11 +4,14 @@ import {MapParams} from '../../data';
 import {
   getLocationsCoordinates,
   getPureLocations, getLocationMean,
-  accumulateLocationsFromArray} from '../../reducers/data/data';
+  accumulateLocationsFromArray
+} from '../../reducers/data/data';
 
 import * as leaflet from 'leaflet';
 
 interface Props {
+  getActiveOffer: () => number,
+
   mapId: string,
   locations: {
     id: number,
@@ -52,10 +55,28 @@ export default class Map extends React.PureComponent<Props, null> {
     return getLocationMean(accumulatedLocation, locations.length);
   }
 
+  _highLightMarker(markerIndex) {
+    if (markerIndex) {
+      const {ICON_FOCUS} = MapParams;
+
+      const newIcon = leaflet.icon({
+        iconUrl: ICON_FOCUS.URL,
+        iconSize: ICON_FOCUS.SIZE,
+        id: markerIndex
+      });
+
+      this.markerGroup.getLayers().find((it) =>
+        it.options.id === markerIndex).setIcon(newIcon);
+
+      return;
+    }
+
+    return null;
+  }
+
   _renderMarkers() {
     const {locations} = this.props;
-
-    const {ICON, ICON_FOCUS, ZOOM, mapId} = MapParams;
+    const {ICON} = MapParams;
 
     const icon = leaflet.icon({
       iconUrl: ICON.URL,
@@ -63,36 +84,10 @@ export default class Map extends React.PureComponent<Props, null> {
       id: null
     });
 
-    const newIcon = leaflet.icon({
-      iconUrl: ICON_FOCUS.URL,
-      iconSize: ICON_FOCUS.SIZE,
-      id: null
-    });
-
-
     [...locations].forEach((it) => {
 
       return leaflet.marker(getLocationsCoordinates(it), {icon, id: it.id})
-        .addTo(this.markerGroup).on(`click`, (e) => {
-
-          const {target} = e;
-
-          if (target.getIcon().options.iconUrl === ICON_FOCUS.URL) {
-
-            target.setIcon(icon);
-          } else {
-
-            if (mapId === `offerMap`) {
-              this._map.setView([it.location.latitude,
-                it.location.longitude], ZOOM);
-            } else {
-              this._map.setView([it.location.latitude,
-                it.location.longitude], ZOOM);
-            }
-
-            target.setIcon(newIcon);
-          }
-        });
+        .addTo(this.markerGroup)
     });
   }
 
@@ -128,7 +123,6 @@ export default class Map extends React.PureComponent<Props, null> {
     const cityLocation = Map._getCityLocation(locations);
 
     if (mapId === `offerMap`) {
-
       this._map.setView([cityLocation.latitude,
         cityLocation.longitude], CITY_ZOOM);
     } else {
@@ -140,10 +134,14 @@ export default class Map extends React.PureComponent<Props, null> {
 
   componentDidUpdate () {
     const {CITY_ZOOM, mapId} = MapParams;
-    const {locations} = this.props;
+    const {locations, getActiveOffer} = this.props;
 
+
+    // Need to reset existing active offer
     this.markerGroup.clearLayers();
     this._renderMarkers();
+
+    this._highLightMarker(getActiveOffer());
 
     const cityLocation = Map._getCityLocation(locations);
     if (mapId === `offerMap`) {

@@ -68,7 +68,7 @@ const withActiveSortingList = (Component) => {
               sortingListHandler={(filterParam) => this._sortingListHandler(filterParam)}
 
               clickHandler={(filterParam) => onFilterCities({filterParam})}
-              isActiveItem={isActiveItem(key, true)}
+              isActiveItem={isActiveItem(key, false)}
               activateItem={() => activateItem(key)}
               deactivateItem={() => deactivateItem()}></SortingTab>);
           })}

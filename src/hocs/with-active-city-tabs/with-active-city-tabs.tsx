@@ -23,7 +23,7 @@ const withActiveCityTabs = (Component) => {
       return cityNames.map((it, i) =>
         <CityTabWrapped
           key={`city-${i}`}
-          isActive={isActiveItem(i, false)}
+          isActive={isActiveItem(i, true)}
 
           onCityTabButtonClick={() => {
             handleTabClick(i);

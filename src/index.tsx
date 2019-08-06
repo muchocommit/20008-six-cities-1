@@ -20,11 +20,13 @@ declare const __REDUX_DEVTOOLS_EXTENSION__: () => void;
 
 const transformItemToOffer = (props) => {
   const newProps = Object.assign({}, props, {
+    getActiveOffer: props.getActiveItem,
     activateOffer: props.activateItem,
     deactivateOffer: props.deactivateItem,
     isActiveOffer: props.isActiveItem
   });
 
+  delete newProps.getActiveItem;
   delete newProps.activateItem;
   delete newProps.deactivateItem;
   delete newProps.isActiveItem;
