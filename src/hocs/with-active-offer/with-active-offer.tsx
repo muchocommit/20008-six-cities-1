@@ -138,7 +138,6 @@ const withActiveOffer = (Component) => {
 
 
     _submitForm(e) {
-      // Add another state for comments post result
       e.preventDefault();
 
       const {commentsSubmitHandler, match} = this.props;
@@ -338,7 +337,6 @@ const withActiveOffer = (Component) => {
       }
 
       return null;
-
     }
 
     render() {

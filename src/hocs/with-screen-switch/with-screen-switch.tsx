@@ -235,6 +235,7 @@ const withScreenSwitch = (Component) => {
         bodyElement
       } = this.props;
 
+
       const storedCredentials = UserAction.getCredentials(credentials);
 
       /** TODO: Later add pushState for history manipulation and correct GET url without offer */
