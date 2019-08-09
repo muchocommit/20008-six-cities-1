@@ -119,6 +119,22 @@ const groupFavoriteOffersByCityName = (array) => {
   return groupByPropertyName(arrayConcatenated, `city`);
 };
 
+const getMapPointsDistance = (aLatLng, bLatLng) => {
+  const {lat: aLat, lng: aLng} = aLatLng;
+  const {lat: bLat, lng: bLng} = bLatLng;
+
+  // Math.PI / 180
+  const p = 0.017453292519943295;
+  const c = Math.cos;
+
+  const a = 0.5 - c((bLat - aLat) * p)/2 +
+    c(aLat * p) * c(bLat * p) *
+    (1 - c((bLng - aLng) * p))/2;
+
+  // 2 * R; R = 6 371 000 km
+  return 12742000 * Math.asin(Math.sqrt(a));
+};
+
 const getLocations = (offers) => {
   return offers.map((it) => {
     return {id: it.id, location: it.location};
@@ -210,6 +226,7 @@ export {
   sortOffersByCityName,
   getLocations,
   getLocationsCoordinates,
+  getMapPointsDistance,
   getFavoriteOffers,
   groupFavoriteOffersByCityName,
   getPureLocations,

@@ -4,7 +4,8 @@ import {MapParams} from '../../data';
 import {
   getLocationsCoordinates,
   getPureLocations, getLocationMean,
-  accumulateLocationsFromArray
+  accumulateLocationsFromArray,
+  getMapPointsDistance
 } from '../../reducers/data/data';
 
 import * as leaflet from 'leaflet';
@@ -61,6 +62,8 @@ export default class Map extends React.PureComponent<Props, null> {
     return markers.sort((a, b) => {
 
       const markerLatLng = marker.getLatLng();
+
+
       const aLatLng = a.getLatLng();
       const bLatLng = b.getLatLng();
 
@@ -86,8 +89,6 @@ export default class Map extends React.PureComponent<Props, null> {
 
       const markerToHighLight = markers.find(
         (it) => it.options.id === markerIndex);
-
-      console.log(this._getClosestOffers(markers, markerToHighLight));
 
       markerToHighLight.setIcon(newIcon);
 
