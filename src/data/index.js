@@ -41,3 +41,9 @@ export const SortingParams = {
   HIGH_TO_LOW: `Price: high to low`,
   TOP_RATED: `Top rated first`
 };
+
+export const ApiParams = {
+  BASE_URL: `https://es31-server.appspot.com/six-cities`,
+  TIME_OUT: 1000 * 5,
+  WITH_CREDENTIALS: true
+};

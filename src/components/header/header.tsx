@@ -2,6 +2,7 @@ import * as React from 'react';
 import {Link} from 'react-router-dom';
 
 import {Credentials} from '../../types';
+import {ApiParams} from './../../data';
 
 interface Props {
   credentials: Credentials
@@ -19,6 +20,9 @@ export default class Header extends React.PureComponent<Props, null> {
 
     if (credentials.id) {
       return (<Link className="header__nav-link header__nav-link--profile" to="/favorites">
+        <div className="header__avatar-wrapper user__avatar-wrapper">
+          <img className="header__avatar" src={ApiParams.BASE_URL + credentials[`avatar_url`]} alt={""}/>
+        </div>
         <span className="header__user-name user__name">{credentials.email}</span>
       </Link>);
     }

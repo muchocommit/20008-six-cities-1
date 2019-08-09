@@ -2,7 +2,6 @@ import * as React from 'react';
 import {compose} from 'recompose';
 import {connect} from 'react-redux';
 
-import {Link} from 'react-router-dom';
 import * as UserAction from '../../reducers/user/user';
 
 import {getOfferById, getLocations, getOffersByCityName} from '../../reducers/data/data';
@@ -12,6 +11,7 @@ import {getDateFromUTCString,
   getMonthYearFromUTCString} from '../../reducers/user/user';
 
 import Header from './../../components/header/header';
+import OfferCard from './../../components/offer-card/offer-card';
 import Map from './../../components/map/map';
 
 import {
@@ -32,9 +32,10 @@ interface Props {
   commentsSubmitHandler: (submitDataObject: {submitData:
       SubmitDataType, hotelId: number}) => void
   isCommentsDeployFailed: boolean,
-  bookMarkClickHandler: (bookMarkObject: {bookMarkIndex: number, isFavorite: boolean}) => void
+  bookMarkClickHandler: () => void,
 
-  getActiveOffer: () => number
+  getActiveOffer: () => number,
+  activateOffer: () => void
 }
 
 const withActiveOffer = (Component) => {
@@ -162,6 +163,7 @@ const withActiveOffer = (Component) => {
         comments,
         bookMarkClickHandler,
         match,
+        activateOffer,
 
         getActiveOffer
       } = this.props;
@@ -295,39 +297,14 @@ const withActiveOffer = (Component) => {
                 <h2 className="near-places__title">Other places in the neighbourhood</h2>
                 <div className="near-places__list places__list">
 
-                  {currentOffers.slice(0, 3).map((currentOffer, i) => <article className="near-places__card place-card" key={`currentOffer-${i}`}>
-                    <div className="near-places__image-wrapper place-card__image-wrapper">
-                      <Link to={`/${currentOffer.id}`}>
-                        <img className="place-card__image" src={currentOffer[`preview_image`]} width="260" height="200" alt="Place image" />
-                      </Link>
-                    </div>
-                    <div className="place-card__info">
-                      <div className="place-card__price-wrapper">
-                        <div className="place-card__price">
-                          <b className="place-card__price-value">&euro;{currentOffer.price}</b>
-                          <span className="place-card__price-text">&#47;&nbsp;night</span>
-                        </div>
-                        <button className={currentOffer[`is_favorite`] ?
-                          `place-card__bookmark-button place-card__bookmark-button--active button` : `place-card__bookmark-button button`}
-                                type="button" onClick={() => bookMarkClickHandler(
-                          {bookMarkIndex: currentOffer.id, isFavorite: currentOffer[`is_favorite`]})}>
-
-                          <svg className="place-card__bookmark-icon" width="17" height="18" viewBox="0 0 17 18" xmlns="http://www.w3.org/2000/svg"><path d="M3.993 2.185l.017-.092V2c0-.554.449-1 .99-1h10c.522 0 .957.41.997.923l-2.736 14.59-4.814-2.407-.39-.195-.408.153L1.31 16.44 3.993 2.185z"/></svg>
-                          <span className="visually-hidden">In bookmarks</span>
-                        </button>
-                      </div>
-                      <div className="place-card__rating rating">
-                        <div className="place-card__stars rating__stars">
-                          <span style={{width: `${getRating(currentOffer.rating)}%`}}></span>
-                          <span className="visually-hidden">Rating</span>
-                        </div>
-                      </div>
-                      <h2 className="place-card__name">
-                        <Link to={`/${currentOffer.id}`}>Wood and stone place</Link>
-                      </h2>
-                      <p className="place-card__type">Private room</p>
-                    </div>
-                  </article>)}
+                  {currentOffers.slice(0, 3).map((currentOffer, i) =>
+                      <OfferCard key={`currentOffer-${i}`}
+                                 offer={currentOffer}
+                                 index={currentOffer.id}
+                                 isFavorite={currentOffer[`is_favorite`]}
+                                 bookMarkClickHandler={bookMarkClickHandler}
+                                 activateOffer={activateOffer}/>
+                    )}
 
                 </div>
               </section>
@@ -345,7 +322,6 @@ const withActiveOffer = (Component) => {
         {...this.props}
         renderOffer={this._getScreen}/>);
     }
-
 
     componentDidMount() {
       const {match, getCommentsOnComponentMount} = this.props;

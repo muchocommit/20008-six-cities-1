@@ -1,21 +1,17 @@
 import axios from 'axios';
+import {ApiParams} from './data';
 
 export const createAPI = () => {
   const api = axios.create({
-    baseURL: `https://es31-server.appspot.com/six-cities`,
-    timeout: 1000 * 5,
-    withCredentials: true,
+    baseURL: ApiParams.BASE_URL,
+    timeout: ApiParams.TIME_OUT,
+    withCredentials: ApiParams.WITH_CREDENTIALS,
   });
 
   const onSuccess = (response) => {
-
     return response;
   };
   const onFail = (err) => {
-
-    // Need to return err.response in order to
-    // Handle it
-
     return err.response;
   };
 
