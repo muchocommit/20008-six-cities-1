@@ -4,7 +4,10 @@ import {connect} from 'react-redux';
 
 import * as UserAction from '../../reducers/user/user';
 
-import {getOfferById, getLocations, getOffersByCityName} from '../../reducers/data/data';
+import {
+  getOfferById,
+  getLocations,
+  getOffersByCityName, getMapPointsDistance} from '../../reducers/data/data';
 import {getRating} from '../../assets/handler';
 
 import {getDateFromUTCString,
@@ -155,6 +158,18 @@ const withActiveOffer = (Component) => {
         submitData: Offer._processForm(formData), hotelId: offerId});
     }
 
+    _getClosestOffers(offers, offer) {
+
+      return offers.sort((a, b) => {
+
+
+        const distanceA = getMapPointsDistance(a, offer);
+        const distanceB = getMapPointsDistance(b, offer);
+
+        return distanceA - distanceB;
+      })
+    }
+
     _getScreen() {
       const {
         offers,
@@ -174,9 +189,21 @@ const withActiveOffer = (Component) => {
       if (offers && offers.length > 0) {
 
         const offer = getOfferById([...offers], offerId)[0];
+
         const {images} = offer;
+        const location = {lat: null, lng: null};
+
+        location.lat = offer.location.latitude;
+        location.lng = offer.location.longitude;
+
+        console.log(location);
 
         const currentOffers = getOffersByCityName([...offers], offer.city.name).slice(0, 3);
+
+        // Then sort them, then slice by 3
+        console.log(getOffersByCityName([...offers], offer.city.name).map((it) => {
+          return {lat: it.location.latitude, lng: it.location.longitude}}));
+
         const currentLocations = getLocations(
           [...currentOffers]);
 
