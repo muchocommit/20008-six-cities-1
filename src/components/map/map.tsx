@@ -56,28 +56,14 @@ export default class Map extends React.PureComponent<Props, null> {
     return getLocationMean(accumulatedLocation, locations.length);
   }
 
-  // Sort offers, not markers !!!
-  _getClosestOffers(markers, marker) {
-
-    return markers.sort((a, b) => {
-
-      const markerLatLng = marker.getLatLng();
-
-
-      const aLatLng = a.getLatLng();
-      const bLatLng = b.getLatLng();
-
-      const distanceA = this._map.distance(aLatLng, markerLatLng);
-      const distanceB = this._map.distance(bLatLng, markerLatLng);
-
-      return distanceA - distanceB;
-    })
-  }
-
   _highLightMarker(markerIndex) {
     const {ICON_FOCUS, OFFER_ZOOM, CITY_ZOOM} = MapParams;
     const {locations} = this.props;
-    if (markerIndex) {
+
+    const offerLocation = locations.find((it) =>
+      it.id === markerIndex);
+
+    if (markerIndex && offerLocation) {
 
       const newIcon = leaflet.icon({
         iconUrl: ICON_FOCUS.URL,
@@ -86,15 +72,10 @@ export default class Map extends React.PureComponent<Props, null> {
       });
 
       const markers = this.markerGroup.getLayers();
-
       const markerToHighLight = markers.find(
         (it) => it.options.id === markerIndex);
 
       markerToHighLight.setIcon(newIcon);
-
-      const offerLocation = locations.find((it) =>
-        it.id === markerIndex);
-
 
       this._map.setView([offerLocation.location.latitude,
         offerLocation.location.longitude], OFFER_ZOOM);

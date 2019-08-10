@@ -159,7 +159,6 @@ const withActiveOffer = (Component) => {
     }
 
     _deleteCurrentOffer(offers, offerId) {
-
       for (let i=0; i < offers.length; i++) {
 
         if (offers[i].id === offerId) {
