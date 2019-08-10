@@ -158,13 +158,31 @@ const withActiveOffer = (Component) => {
         submitData: Offer._processForm(formData), hotelId: offerId});
     }
 
-    _getClosestOffers(offers, offer) {
+    _deleteCurrentOffer(offers, offerId) {
 
+      for (let i=0; i < offers.length; i++) {
+
+        if (offers[i].id === offerId) {
+
+          offers.splice(i, 1);
+        }
+      }
+
+      return offers;
+    }
+
+    _getClosestOffers(offers, offerLatLng) {
       return offers.sort((a, b) => {
 
+        const aLatLng = Object.assign({lat: null, lng: null},
+          {lat: a.location.latitude, lng: a.location.longitude});
 
-        const distanceA = getMapPointsDistance(a, offer);
-        const distanceB = getMapPointsDistance(b, offer);
+        const bLatLng = Object.assign({lat: null, lng: null},
+          {lat: b.location.latitude, lng: b.location.longitude});
+
+        const distanceA = getMapPointsDistance(aLatLng, offerLatLng);
+        const distanceB = getMapPointsDistance(bLatLng, offerLatLng);
+
 
         return distanceA - distanceB;
       })
@@ -188,24 +206,22 @@ const withActiveOffer = (Component) => {
 
       if (offers && offers.length > 0) {
 
-        const offer = getOfferById([...offers], offerId)[0];
+        const currentOffer = getOfferById([...offers], offerId)[0];
+        const {images} = currentOffer;
 
-        const {images} = offer;
-        const location = {lat: null, lng: null};
+        const currentOfferLocation = {lat: null, lng: null};
 
-        location.lat = offer.location.latitude;
-        location.lng = offer.location.longitude;
+        currentOfferLocation.lat = currentOffer.location.latitude;
+        currentOfferLocation.lng = currentOffer.location.longitude;
 
-        console.log(location);
+        const currentOffers = getOffersByCityName([...offers], currentOffer.city.name);
 
-        const currentOffers = getOffersByCityName([...offers], offer.city.name).slice(0, 3);
-
-        // Then sort them, then slice by 3
-        console.log(getOffersByCityName([...offers], offer.city.name).map((it) => {
-          return {lat: it.location.latitude, lng: it.location.longitude}}));
+        const currentOffersGrained = this._deleteCurrentOffer([...currentOffers], offerId);
+        const nearestOffers = this._getClosestOffers(
+          [...currentOffersGrained], currentOfferLocation).slice(0, 3);
 
         const currentLocations = getLocations(
-          [...currentOffers]);
+          [...nearestOffers]);
 
 //** TODO: Check for double sliced HeaderImages **//
         const headerImages = images.slice(0, 6);
@@ -219,7 +235,7 @@ const withActiveOffer = (Component) => {
 
                 <div className="property__gallery">
                   {headerImages.slice(0, 6).map((it, key) =>
-                    <div className="property__image-wrapper" key={`offer-${key}`}>
+                    <div className="property__image-wrapper" key={`currentOffer-${key}`}>
                       <img className="property__image" src={it} alt="Photo studio" />
                     </div>)}
                 </div>
@@ -228,10 +244,10 @@ const withActiveOffer = (Component) => {
               <div className="property__container container">
                 <div className="property__wrapper">
                   <div className="property__mark">
-                    <span>{Offer._getPropertyMark(offer[`is_premium`])}</span>
+                    <span>{Offer._getPropertyMark(currentOffer[`is_premium`])}</span>
                   </div>
                   <div className="property__name-wrapper">
-                    <h1 className="property__name">{offer.title}</h1>
+                    <h1 className="property__name">{currentOffer.title}</h1>
                     <button className="property__bookmark-button button" type="button">
                       <svg className="property__bookmark-icon" width="31" height="33">
                         <use xlinkHref="#icon-bookmark"></use>
@@ -241,31 +257,31 @@ const withActiveOffer = (Component) => {
                   </div>
                   <div className="property__rating rating">
                     <div className="property__stars rating__stars">
-                      <span style={{width: `${getRating(offer.rating)}%`}}></span>
+                      <span style={{width: `${getRating(currentOffer.rating)}%`}}></span>
                       <span className="visually-hidden">Rating</span>
                     </div>
-                    <span className="property__rating-value rating__value">{offer.rating}</span>
+                    <span className="property__rating-value rating__value">{currentOffer.rating}</span>
                   </div>
                   <ul className="property__features">
                     <li className="property__feature property__feature--entire">
-                      {offer.type}
+                      {currentOffer.type}
                     </li>
                     <li className="property__feature property__feature--bedrooms">
-                      {offer.bedrooms} Bedrooms
+                      {currentOffer.bedrooms} Bedrooms
                     </li>
                     <li className="property__feature property__feature--adults">
-                      Max {offer[`max_adults`]} adults
+                      Max {currentOffer[`max_adults`]} adults
                     </li>
                   </ul>
                   <div className="property__price">
-                    <b className="property__price-value">&euro;{offer.price}</b>
+                    <b className="property__price-value">&euro;{currentOffer.price}</b>
                     <span className="property__price-text">&nbsp;night</span>
                   </div>
                   <div className="property__inside">
                     <h2 className="property__inside-title">What&apos;s inside</h2>
                     <ul className="property__inside-list">
 
-                      {offer.goods.map((it, key) =>
+                      {currentOffer.goods.map((it, key) =>
                         <li className="property__inside-item" key={`property-item-${key}`}>{it}</li>)}
 
                     </ul>
@@ -274,14 +290,14 @@ const withActiveOffer = (Component) => {
                     <h2 className="property__host-title">Meet the host</h2>
                     <div className="property__host-user user">
                       <div className="property__avatar-wrapper property__avatar-wrapper--pro user__avatar-wrapper">
-                        <img className="property__avatar user__avatar" src={offer.host[`avatar_url`]} width="74" height="74"
+                        <img className="property__avatar user__avatar" src={currentOffer.host[`avatar_url`]} width="74" height="74"
                              alt="Host avatar" />
                       </div>
-                      <span className="property__user-name">{offer.host.name}</span>
-                      <span className="property__user-status">{offer.host[`is_pro`] ? `Pro` : ``}</span>
+                      <span className="property__user-name">{currentOffer.host.name}</span>
+                      <span className="property__user-status">{currentOffer.host[`is_pro`] ? `Pro` : ``}</span>
                     </div>
                     <div className="property__description">
-                      <p className="property__text">{offer.description}</p>
+                      <p className="property__text">{currentOffer.description}</p>
                     </div>
                   </div>
                   <section className="property__reviews reviews">
@@ -324,11 +340,11 @@ const withActiveOffer = (Component) => {
                 <h2 className="near-places__title">Other places in the neighbourhood</h2>
                 <div className="near-places__list places__list">
 
-                  {currentOffers.slice(0, 3).map((currentOffer, i) =>
-                      <OfferCard key={`currentOffer-${i}`}
-                                 offer={currentOffer}
-                                 index={currentOffer.id}
-                                 isFavorite={currentOffer[`is_favorite`]}
+                  {nearestOffers.slice(0, 3).map((nearestOffer, i) =>
+                      <OfferCard key={`nearestOffer-${i}`}
+                                 offer={nearestOffer}
+                                 index={nearestOffer.id}
+                                 isFavorite={nearestOffer[`is_favorite`]}
                                  bookMarkClickHandler={bookMarkClickHandler}
                                  activateOffer={activateOffer}/>
                     )}
