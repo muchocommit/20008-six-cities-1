@@ -14,13 +14,14 @@ interface Props {
   offers: Offer[] & CityName,
   credentials: Credentials,
   bodyElement: HTMLBodyElement,
-  activateOffer: () => void
+  activateOffer: () => void,
+  handleBookMarkClick: ({bookMarkIndex, isFavorite}) => void
 }
 
 export default class FavoritesList extends React.PureComponent<Props, null> {
 
   render() {
-    const {bodyElement, offers, credentials, activateOffer} = this.props;
+    const {bodyElement, offers, credentials, activateOffer, handleBookMarkClick} = this.props;
     bodyElement.className = `page`;
 
     const favoriteOffers = getFavoriteOffers(offers);
@@ -45,6 +46,7 @@ export default class FavoritesList extends React.PureComponent<Props, null> {
                         </a>
                       </div>
                     </div>
+
                     <div className="favorites__places">
                       {offersGroupedByCityNames[cityName].map((offer, key) => {
 
@@ -52,7 +54,10 @@ export default class FavoritesList extends React.PureComponent<Props, null> {
                           key={`favorite-${key}`}
                           isFavorite={offer[`is_favorite`]}
                           offer={offer}
-                          activateOffer={activateOffer}/>;
+                          index={offer.id}
+                          bookMarkClickHandler={handleBookMarkClick}
+                          activateOffer={activateOffer}
+                          />;
                       })}
                     </div>
                   </li>;

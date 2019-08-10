@@ -49,11 +49,13 @@ export default class OfferCard extends React.PureComponent<Props, null> {
             <button className={isFavorite ? `place-card__bookmark-button--active button` : `place-card__bookmark-button button`}
               type="button" onClick={() => bookMarkClickHandler({bookMarkIndex: index, isFavorite})}>
 
-              <svg className="place-card__bookmark-icon" width="18" height="19">
-                <use xlinkHref="#icon-bookmark"></use>
+              <svg className="place-card__bookmark-icon" width="17" height="18" viewBox="0 0 17 18" xmlns="http://www.w3.org/2000/svg">
+                <path d="M3.993 2.185l.017-.092V2c0-.554.449-1 .99-1h10c.522 0 .957.41.997.923l-2.736 14.59-4.814-2.407-.39-.195-.408.153L1.31 16.44 3.993 2.185z"/>
               </svg>
               <span className="visually-hidden">To bookmarks</span>
             </button>
+
+
           </div>
           <div className="place-card__rating rating">
             <div className="place-card__stars rating__stars">
