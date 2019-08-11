@@ -51,3 +51,9 @@ git clone SSH-адрес_вашего_форка
 
 [travis-image]: https://travis-ci.com/htmlacademy-react/20008-six-cities-1.svg?branch=master
 [travis-url]: https://travis-ci.com/htmlacademy-react/20008-six-cities-1
+
+
+#### 5.Deployment
+
+
+http://six-cities.s3-website.eu-north-1.amazonaws.com/
