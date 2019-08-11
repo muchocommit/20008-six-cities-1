@@ -53,6 +53,6 @@ git clone SSH-адрес_вашего_форка
 [travis-url]: https://travis-ci.com/htmlacademy-react/20008-six-cities-1
 
 
-#### 5.Deployment
+#### 5. Deployment
 
 <a href="http://six-cities.s3-website.eu-north-1.amazonaws.com"><img align="left" width="100" title="Six-cities on Amazon S3" src="http://six-cities.s3-website.eu-north-1.amazonaws.com/img/amazon-s3_preview.png"></a>

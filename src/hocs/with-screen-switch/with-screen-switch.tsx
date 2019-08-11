@@ -25,9 +25,9 @@ import {
   combineCityNames} from '../../reducers/data/selectors';
 
 import {
-  getAuthorizationAttempt,
+  getAuthorizationFailed,
   getCredentials,
-  getAuthorizationStatus
+  getAuthorizationRequired
 } from '../../reducers/user/selectors';
 
 import withActiveItem from './../../hocs/with-active-item/with-active-item';
@@ -184,6 +184,8 @@ const withScreenSwitch = (Component) => {
       isAuthorizationRequired,
       currentOffers, cityNames, activateOffer}) {
 
+      console.log(`main-screen`);
+
       return (<Component
         {...this.props}
         renderScreen={() => this._getScreen({
@@ -221,7 +223,6 @@ const withScreenSwitch = (Component) => {
     render() {
       const {
         credentials,
-        cities,
         city,
         offers,
         currentOffers,
@@ -240,7 +241,6 @@ const withScreenSwitch = (Component) => {
 
       const storedCredentials = UserAction.getCredentials(credentials);
 
-      /** TODO: Later add pushState for history manipulation and correct GET url without offer */
       return <BrowserRouter>
         <Switch>
           <Route path={`/([0-9][0-9]?[0-9]?)`} render={({match}) => <OfferWrapped
@@ -284,8 +284,8 @@ const mapStateToProps = (state, ownProps) => Object.assign(
       currentOffers: combineCurrentOffers(state),
 
       cityNames: combineCityNames(state),
-      isAuthorizationFailed: getAuthorizationAttempt(state),
-      isAuthorizationRequired: getAuthorizationStatus(state),
+      isAuthorizationFailed: getAuthorizationFailed(state),
+      isAuthorizationRequired: getAuthorizationRequired(state),
       credentials: getCredentials(state),
 });
 
@@ -298,6 +298,7 @@ const mapDispatchToProps = (dispatch) => ({
         dispatch(DataAction.Operation.loadCities());
       })
       .catch(() => {
+
         dispatch(UserAction.Operation.checkAuth());
       });
   },
@@ -312,20 +313,23 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(UserAction.Operation.sendCredentials(submitData))
       .then((result) => {
 
-        dispatch(UserAction.ActionCreator.getAuthorizationStatus(false));
+        dispatch(UserAction.ActionCreator.setAuthorizationRequired(false));
         dispatch(UserAction.ActionCreator.sendCredentials(result));
       }).catch(() => {
         // If user is not Authorized, then redirect
-        dispatch(UserAction.ActionCreator.getAuthorizationAttempt(true));
+        dispatch(UserAction.ActionCreator.setAuthorizationFailed(true));
       });
   },
 
   checkAuthOnComponentMount: () => {
     dispatch(UserAction.Operation.checkAuth()).then(
         () => {
-          dispatch(UserAction.ActionCreator.getAuthorizationStatus(false));
+          dispatch(UserAction.ActionCreator.setAuthorizationRequired(false));
         })
-        .catch(() => dispatch(UserAction.ActionCreator.getAuthorizationStatus(true)));
+        .catch(() => {
+
+          dispatch(UserAction.ActionCreator.setAuthorizationRequired(true));
+        });
   }
 });
 

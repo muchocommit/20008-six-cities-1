@@ -35,8 +35,8 @@ const transformItemToOffer = (props) => {
 };
 /** TODO: must decide whether withRouter is needed at all */
 
-const AppWrapped = withRouter(withActiveItem(
-  withTransformProps(transformItemToOffer)(withScreenSwitch(App))));
+const AppWrapped = withActiveItem(
+  withTransformProps(transformItemToOffer)(withScreenSwitch(App)));
 
 export const api = createAPI();
 export const store = createStore(

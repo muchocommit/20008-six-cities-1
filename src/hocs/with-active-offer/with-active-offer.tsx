@@ -1,8 +1,11 @@
 import * as React from 'react';
 import {compose} from 'recompose';
 import {connect} from 'react-redux';
+import {Redirect} from 'react-router-dom';
+
 
 import * as UserAction from '../../reducers/user/user';
+import * as DataAction from '../../reducers/data/data';
 
 import {
   getOfferById,
@@ -21,7 +24,7 @@ import {
   Offer as OfferProp, CityName,
   Credentials, Match, Comment, SubmitData as SubmitDataType} from '../../types';
 
-import {getComments, getCommentsDeployAttempt} from '../../reducers/user/selectors';
+import {getComments, getCommentsDeployAttempt, getBookMarkAdditionAttempt} from '../../reducers/user/selectors';
 
 interface Props {
   city: number,
@@ -35,10 +38,19 @@ interface Props {
   commentsSubmitHandler: (submitDataObject: {submitData:
       SubmitDataType, hotelId: number}) => void
   isCommentsDeployFailed: boolean,
-  bookMarkClickHandler: () => void,
+
+  bookMarkClickHandler: (bookMarkObject: {
+    bookMarkIndex: number, isFavorite: boolean}) => void,
+
+  // Need to handle the case with unauthorized user
+  onBookMarkButtonClick: (bookMarkObject: {
+    bookMarkIndex: number, isFavorite: boolean}) => void,
 
   getActiveOffer: () => number,
-  activateOffer: () => void
+  activateOffer: () => void,
+
+
+  isBookMarkAdditionFailed: boolean
 }
 
 const withActiveOffer = (Component) => {
@@ -147,8 +159,6 @@ const withActiveOffer = (Component) => {
       const {commentsSubmitHandler, match} = this.props;
       const offerId = +match.url.slice(1);
 
-      console.log(offerId);
-
       const form = this._formRef.current;
 
       const submitButton = form.querySelector<HTMLButtonElement>(`.form__submit`);
@@ -195,12 +205,22 @@ const withActiveOffer = (Component) => {
         credentials,
         bodyElement,
         comments,
-        bookMarkClickHandler,
         match,
         activateOffer,
 
-        getActiveOffer
+        getActiveOffer,
+        isBookMarkAdditionFailed,
+
+        bookMarkClickHandler,
+        onBookMarkButtonClick
       } = this.props;
+
+
+      console.log(`offer`)
+      if (isBookMarkAdditionFailed) {
+
+        return <Redirect to={`/login`}/>;
+      }
 
       const offerId = +match.url.slice(1);
       bodyElement.className = `page`;
@@ -209,6 +229,8 @@ const withActiveOffer = (Component) => {
 
         const currentOffer = getOfferById([...offers], offerId)[0];
         const {images} = currentOffer;
+
+        const isFavorite = currentOffer[`is_favorite`];
 
         const currentOfferLocation = {lat: null, lng: null};
 
@@ -230,6 +252,7 @@ const withActiveOffer = (Component) => {
         return (<>
           <Header credentials={credentials} />
 
+
           <main className="page__main page__main--property">
             <section className="property">
               <div className="property__gallery-container container">
@@ -249,9 +272,14 @@ const withActiveOffer = (Component) => {
                   </div>
                   <div className="property__name-wrapper">
                     <h1 className="property__name">{currentOffer.title}</h1>
-                    <button className="property__bookmark-button button" type="button">
-                      <svg className="property__bookmark-icon" width="31" height="33">
-                        <use xlinkHref="#icon-bookmark"></use>
+                    <button className={isFavorite ? `place-card__bookmark-button--active button` : `place-card__bookmark-button button`}
+                            type="button" onClick={() => {
+
+                      onBookMarkButtonClick({bookMarkIndex: offerId, isFavorite});
+                    }}>
+
+                      <svg className="place-card__bookmark-icon" width="17" height="18" viewBox="0 0 17 18" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M3.993 2.185l.017-.092V2c0-.554.449-1 .99-1h10c.522 0 .957.41.997.923l-2.736 14.59-4.814-2.407-.39-.195-.408.153L1.31 16.44 3.993 2.185z"/>
                       </svg>
                       <span className="visually-hidden">To bookmarks</span>
                     </button>
@@ -410,10 +438,25 @@ const withActiveOffer = (Component) => {
 const mapStateToProps = (state, ownProps) => Object.assign(
   {}, ownProps, {
     comments: getComments(state),
-    isCommentsDeployFailed: getCommentsDeployAttempt(state)
+    isCommentsDeployFailed: getCommentsDeployAttempt(state),
+    isBookMarkAdditionFailed: getBookMarkAdditionAttempt(state)
   });
 
 const mapDispatchToProps = (dispatch) => ({
+
+  onBookMarkButtonClick: ({bookMarkIndex, isFavorite}) => {
+    dispatch(DataAction.Operation.addBookMark({bookMarkIndex, isFavorite}))
+      .then(() => {
+
+        dispatch(DataAction.Operation.loadCities());
+      })
+      .catch(() => {
+
+        console.log(`bookmarkFailed`);
+        dispatch(UserAction.ActionCreator.setBookMarkAdditionFailure(true));
+      });
+  },
+
   getCommentsOnComponentMount: (hotelId) => {
 
     dispatch(UserAction.Operation.getComments(hotelId))

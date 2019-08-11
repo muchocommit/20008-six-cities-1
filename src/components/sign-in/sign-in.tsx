@@ -3,8 +3,8 @@ import {Redirect} from 'react-router-dom';
 import {connect} from 'react-redux';
 
 import {
-  getAuthorizationAttempt,
-  getAuthorizationStatus, getCredentials} from '../../reducers/user/selectors';
+  getAuthorizationFailed,
+  getAuthorizationRequired, getCredentials} from '../../reducers/user/selectors';
 
 import {SignIn, Credentials} from '../../types';
 
@@ -166,8 +166,8 @@ class SignInScreen extends React.PureComponent<Props, null> {
 const mapStateToProps = (state, ownProps) => Object.assign(
     {}, ownProps, {
       credentials: getCredentials(state),
-      isAuthorizationFailed: getAuthorizationAttempt(state),
-      isAuthorizationRequired: getAuthorizationStatus(state),
+      isAuthorizationFailed: getAuthorizationFailed(state),
+      isAuthorizationRequired: getAuthorizationRequired(state),
     });
 
 export default connect(mapStateToProps)(SignInScreen);

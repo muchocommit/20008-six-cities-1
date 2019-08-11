@@ -5,6 +5,7 @@ import {ActionType} from './../../data';
 const initialState = {
   // Auth is failed on login POST
   // attempt and error is displayed
+  isBookMarkAdditionFailed: false,
   isAuthorizationFailed: false,
   // The page is forbidden
   isAuthorizationRequired: false,
@@ -20,14 +21,21 @@ const initialState = {
 };
 
 const ActionCreator = {
-  getAuthorizationStatus: (status) => {
+  setBookMarkAdditionFailure: (status) => {
+    return {
+      type: ActionType.BOOKMARK_ADDITION_FAILED,
+      payload: status
+    };
+  },
+
+  setAuthorizationRequired: (status) => {
     return {
       type: ActionType.AUTHORIZATION_REQUIRED,
       payload: status
     };
   },
 
-  getAuthorizationAttempt: (status) => {
+  setAuthorizationFailed: (status) => {
     return {
       type: ActionType.AUTHORIZATION_FAILED,
       payload: status,
@@ -38,7 +46,7 @@ const ActionCreator = {
     return {
       type: ActionType.COMMENTS_DEPLOY_FAILED,
       payload: status
-    }
+    };
   },
 
   sendCredentials: (status) => {
@@ -59,7 +67,7 @@ const ActionCreator = {
     return {
       type: ActionType.RESET_COMMENTS_DEPLOY,
       payload: false
-    }
+    };
   }
 };
 
@@ -184,6 +192,13 @@ const reducer = (state = initialState, action) => {
       return Object.assign({}, state, {
         isCommentsDeployFailed: action.payload
       });
+
+    case ActionType.BOOKMARK_ADDITION_FAILED:
+      return Object.assign({}, state, {
+        isBookMarkAdditionFailed: action.payload
+      });
+
+
   }
 
   return state;

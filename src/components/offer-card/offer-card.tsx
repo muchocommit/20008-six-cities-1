@@ -7,9 +7,9 @@ import {getRating} from '../../assets/handler';
 interface Props {
   isFavorite: boolean,
   offer: Offer,
-  bookMarkClickHandler?: (bookMarkObject: {
+  bookMarkClickHandler: (bookMarkObject: {
     bookMarkIndex: number, isFavorite: boolean}) => void,
-  index?: number,
+  index: number,
   activateOffer: (i: number) => void
 }
 

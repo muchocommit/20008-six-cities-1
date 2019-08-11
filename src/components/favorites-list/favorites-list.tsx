@@ -15,12 +15,15 @@ interface Props {
   credentials: Credentials,
   bodyElement: HTMLBodyElement,
   activateOffer: () => void,
-  handleBookMarkClick: ({bookMarkIndex, isFavorite}) => void
+  handleBookMarkClick: (bookMarkObject: {
+    bookMarkIndex: number, isFavorite: boolean}) => void
 }
 
 export default class FavoritesList extends React.PureComponent<Props, null> {
 
   render() {
+
+    console.log(`favorites`);
     const {bodyElement, offers, credentials, activateOffer, handleBookMarkClick} = this.props;
     bodyElement.className = `page`;
 
