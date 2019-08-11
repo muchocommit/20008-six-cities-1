@@ -55,5 +55,4 @@ git clone SSH-адрес_вашего_форка
 
 #### 5.Deployment
 
-
-http://six-cities.s3-website.eu-north-1.amazonaws.com/
+<a href="http://six-cities.s3-website.eu-north-1.amazonaws.com"><img align="left" width="100" title="Six-cities on Amazon S3" src="http://six-cities.s3-website.eu-north-1.amazonaws.com/img/amazon-s3_preview.png"></a>
