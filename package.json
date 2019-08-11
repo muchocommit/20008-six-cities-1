@@ -8,7 +8,8 @@
     "test": "npm run eslint && jest",
     "build": "webpack --mode development",
     "start": "webpack-dev-server --open",
-    "deploy": "aws s3 sync public/ s3://six-cities --acl public-read"
+    "deploy": "aws s3 sync public/ s3://six-cities --acl public-read",
+    "produce": "npm run build && npm run deploy"
   },
   "devDependencies": {
     "@babel/core": "7.4.4",

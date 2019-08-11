@@ -147,6 +147,8 @@ const withActiveOffer = (Component) => {
       const {commentsSubmitHandler, match} = this.props;
       const offerId = +match.url.slice(1);
 
+      console.log(offerId);
+
       const form = this._formRef.current;
 
       const submitButton = form.querySelector<HTMLButtonElement>(`.form__submit`);
