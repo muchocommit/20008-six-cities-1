@@ -216,7 +216,7 @@ const withActiveOffer = (Component) => {
       } = this.props;
 
 
-      console.log(`offer`)
+      console.log(`offerScreen`)
       if (isBookMarkAdditionFailed) {
 
         return <Redirect to={`/login`}/>;
@@ -228,148 +228,149 @@ const withActiveOffer = (Component) => {
       if (offers && offers.length > 0) {
 
         const currentOffer = getOfferById([...offers], offerId)[0];
-        const {images} = currentOffer;
-
-        const isFavorite = currentOffer[`is_favorite`];
-
-        const currentOfferLocation = {lat: null, lng: null};
-
-        currentOfferLocation.lat = currentOffer.location.latitude;
-        currentOfferLocation.lng = currentOffer.location.longitude;
-
-        const currentOffers = getOffersByCityName([...offers], currentOffer.city.name);
-
-        const currentOffersGrained = this._deleteCurrentOffer([...currentOffers], offerId);
-        const nearestOffers = this._getClosestOffers(
-          [...currentOffersGrained], currentOfferLocation).slice(0, 3);
-
-        const currentLocations = getLocations(
-          [...nearestOffers]);
-
-//** TODO: Check for double sliced HeaderImages **//
-        const headerImages = images.slice(0, 6);
-
-        return (<>
-          <Header credentials={credentials} />
 
 
-          <main className="page__main page__main--property">
-            <section className="property">
-              <div className="property__gallery-container container">
+        if (currentOffer) {
+          const {images} = currentOffer;
+          const isFavorite = currentOffer[`is_favorite`];
 
-                <div className="property__gallery">
-                  {headerImages.slice(0, 6).map((it, key) =>
-                    <div className="property__image-wrapper" key={`currentOffer-${key}`}>
-                      <img className="property__image" src={it} alt="Photo studio" />
-                    </div>)}
+          const currentOfferLocation = {lat: null, lng: null};
+
+          currentOfferLocation.lat = currentOffer.location.latitude;
+          currentOfferLocation.lng = currentOffer.location.longitude;
+
+          const currentOffers = getOffersByCityName([...offers], currentOffer.city.name);
+
+          const currentOffersGrained = this._deleteCurrentOffer([...currentOffers], offerId);
+          const nearestOffers = this._getClosestOffers(
+            [...currentOffersGrained], currentOfferLocation).slice(0, 3);
+
+          const currentLocations = getLocations(
+            [...nearestOffers]);
+
+          const headerImages = images.slice(0, 6);
+
+          return (<>
+            <Header credentials={credentials} />
+
+
+            <main className="page__main page__main--property">
+              <section className="property">
+                <div className="property__gallery-container container">
+
+                  <div className="property__gallery">
+                    {headerImages.slice(0, 6).map((it, key) =>
+                      <div className="property__image-wrapper" key={`currentOffer-${key}`}>
+                        <img className="property__image" src={it} alt="Photo studio" />
+                      </div>)}
+                  </div>
+
                 </div>
-
-              </div>
-              <div className="property__container container">
-                <div className="property__wrapper">
-                  <div className="property__mark">
-                    <span>{Offer._getPropertyMark(currentOffer[`is_premium`])}</span>
-                  </div>
-                  <div className="property__name-wrapper">
-                    <h1 className="property__name">{currentOffer.title}</h1>
-                    <button className={isFavorite ? `place-card__bookmark-button--active button` : `place-card__bookmark-button button`}
-                            type="button" onClick={() => {
-
-                      onBookMarkButtonClick({bookMarkIndex: offerId, isFavorite});
-                    }}>
-
-                      <svg className="place-card__bookmark-icon" width="17" height="18" viewBox="0 0 17 18" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M3.993 2.185l.017-.092V2c0-.554.449-1 .99-1h10c.522 0 .957.41.997.923l-2.736 14.59-4.814-2.407-.39-.195-.408.153L1.31 16.44 3.993 2.185z"/>
-                      </svg>
-                      <span className="visually-hidden">To bookmarks</span>
-                    </button>
-                  </div>
-                  <div className="property__rating rating">
-                    <div className="property__stars rating__stars">
-                      <span style={{width: `${getRating(currentOffer.rating)}%`}}></span>
-                      <span className="visually-hidden">Rating</span>
+                <div className="property__container container">
+                  <div className="property__wrapper">
+                    <div className="property__mark">
+                      <span>{Offer._getPropertyMark(currentOffer[`is_premium`])}</span>
                     </div>
-                    <span className="property__rating-value rating__value">{currentOffer.rating}</span>
-                  </div>
-                  <ul className="property__features">
-                    <li className="property__feature property__feature--entire">
-                      {currentOffer.type}
-                    </li>
-                    <li className="property__feature property__feature--bedrooms">
-                      {currentOffer.bedrooms} Bedrooms
-                    </li>
-                    <li className="property__feature property__feature--adults">
-                      Max {currentOffer[`max_adults`]} adults
-                    </li>
-                  </ul>
-                  <div className="property__price">
-                    <b className="property__price-value">&euro;{currentOffer.price}</b>
-                    <span className="property__price-text">&nbsp;night</span>
-                  </div>
-                  <div className="property__inside">
-                    <h2 className="property__inside-title">What&apos;s inside</h2>
-                    <ul className="property__inside-list">
+                    <div className="property__name-wrapper">
+                      <h1 className="property__name">{currentOffer.title}</h1>
+                      <button className={isFavorite ? `place-card__bookmark-button--active button` : `place-card__bookmark-button button`}
+                              type="button" onClick={() => {
 
-                      {currentOffer.goods.map((it, key) =>
-                        <li className="property__inside-item" key={`property-item-${key}`}>{it}</li>)}
+                        onBookMarkButtonClick({bookMarkIndex: offerId, isFavorite});
+                      }}>
 
-                    </ul>
-                  </div>
-                  <div className="property__host">
-                    <h2 className="property__host-title">Meet the host</h2>
-                    <div className="property__host-user user">
-                      <div className="property__avatar-wrapper property__avatar-wrapper--pro user__avatar-wrapper">
-                        <img className="property__avatar user__avatar" src={currentOffer.host[`avatar_url`]} width="74" height="74"
-                             alt="Host avatar" />
+                        <svg className="place-card__bookmark-icon" width="17" height="18" viewBox="0 0 17 18" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M3.993 2.185l.017-.092V2c0-.554.449-1 .99-1h10c.522 0 .957.41.997.923l-2.736 14.59-4.814-2.407-.39-.195-.408.153L1.31 16.44 3.993 2.185z"/>
+                        </svg>
+                        <span className="visually-hidden">To bookmarks</span>
+                      </button>
+                    </div>
+                    <div className="property__rating rating">
+                      <div className="property__stars rating__stars">
+                        <span style={{width: `${getRating(currentOffer.rating)}%`}}></span>
+                        <span className="visually-hidden">Rating</span>
                       </div>
-                      <span className="property__user-name">{currentOffer.host.name}</span>
-                      <span className="property__user-status">{currentOffer.host[`is_pro`] ? `Pro` : ``}</span>
+                      <span className="property__rating-value rating__value">{currentOffer.rating}</span>
                     </div>
-                    <div className="property__description">
-                      <p className="property__text">{currentOffer.description}</p>
-                    </div>
-                  </div>
-                  <section className="property__reviews reviews">
-                    <h2 className="reviews__title">Reviews &middot; <span className="reviews__amount">{comments.length > 0 ? comments.length : ``}</span></h2>
-                    <ul className="reviews__list">
-                      {comments.length > 0 ? comments.map((it, key) =>
-                        <li className="reviews__item" key={`comment-${key}`}>
-                          <div className="reviews__user user">
-                            <div className="reviews__avatar-wrapper user__avatar-wrapper">
-                              <img className="reviews__avatar user__avatar" src={it.user[`avatar_url`]} width="54" height="54"
-                                   alt="Reviews avatar" />
-                            </div>
-                            <span className="reviews__user-name">{it.user.name}</span>
-                          </div>
-                          <div className="reviews__info">
-                            <div className="reviews__rating rating">
-                              <div className="reviews__stars rating__stars">
-                                <span style={{width: `${getRating(it.rating)}%`}}></span>
-                                <span className="visually-hidden">Rating</span>
-                              </div>
-                            </div>
-                            <p className="reviews__text">{it.comment}</p>
-                            <time className="reviews__time" dateTime={getDateFromUTCString(it.date)}>{getMonthYearFromUTCString(it.date)}</time>
-                          </div>
-                        </li>) : ``}
+                    <ul className="property__features">
+                      <li className="property__feature property__feature--entire">
+                        {currentOffer.type}
+                      </li>
+                      <li className="property__feature property__feature--bedrooms">
+                        {currentOffer.bedrooms} Bedrooms
+                      </li>
+                      <li className="property__feature property__feature--adults">
+                        Max {currentOffer[`max_adults`]} adults
+                      </li>
                     </ul>
+                    <div className="property__price">
+                      <b className="property__price-value">&euro;{currentOffer.price}</b>
+                      <span className="property__price-text">&nbsp;night</span>
+                    </div>
+                    <div className="property__inside">
+                      <h2 className="property__inside-title">What&apos;s inside</h2>
+                      <ul className="property__inside-list">
 
-                    {credentials.id ? this._renderForm() : ``}
+                        {currentOffer.goods.map((it, key) =>
+                          <li className="property__inside-item" key={`property-item-${key}`}>{it}</li>)}
 
-                  </section>
+                      </ul>
+                    </div>
+                    <div className="property__host">
+                      <h2 className="property__host-title">Meet the host</h2>
+                      <div className="property__host-user user">
+                        <div className="property__avatar-wrapper property__avatar-wrapper--pro user__avatar-wrapper">
+                          <img className="property__avatar user__avatar" src={currentOffer.host[`avatar_url`]} width="74" height="74"
+                               alt="Host avatar" />
+                        </div>
+                        <span className="property__user-name">{currentOffer.host.name}</span>
+                        <span className="property__user-status">{currentOffer.host[`is_pro`] ? `Pro` : ``}</span>
+                      </div>
+                      <div className="property__description">
+                        <p className="property__text">{currentOffer.description}</p>
+                      </div>
+                    </div>
+                    <section className="property__reviews reviews">
+                      <h2 className="reviews__title">Reviews &middot; <span className="reviews__amount">{comments.length > 0 ? comments.length : ``}</span></h2>
+                      <ul className="reviews__list">
+                        {comments.length > 0 ? comments.map((it, key) =>
+                          <li className="reviews__item" key={`comment-${key}`}>
+                            <div className="reviews__user user">
+                              <div className="reviews__avatar-wrapper user__avatar-wrapper">
+                                <img className="reviews__avatar user__avatar" src={it.user[`avatar_url`]} width="54" height="54"
+                                     alt="Reviews avatar" />
+                              </div>
+                              <span className="reviews__user-name">{it.user.name}</span>
+                            </div>
+                            <div className="reviews__info">
+                              <div className="reviews__rating rating">
+                                <div className="reviews__stars rating__stars">
+                                  <span style={{width: `${getRating(it.rating)}%`}}></span>
+                                  <span className="visually-hidden">Rating</span>
+                                </div>
+                              </div>
+                              <p className="reviews__text">{it.comment}</p>
+                              <time className="reviews__time" dateTime={getDateFromUTCString(it.date)}>{getMonthYearFromUTCString(it.date)}</time>
+                            </div>
+                          </li>) : ``}
+                      </ul>
+
+                      {credentials.id ? this._renderForm() : ``}
+
+                    </section>
+                  </div>
                 </div>
-              </div>
-              <section className="property__map map">
-                <Map mapId={`offerMap`} locations={currentLocations} getActiveOffer={getActiveOffer}/>
+                <section className="property__map map">
+                  <Map mapId={`offerMap`} locations={currentLocations} getActiveOffer={getActiveOffer}/>
+                </section>
+
               </section>
+              <div className="container">
+                <section className="near-places places">
+                  <h2 className="near-places__title">Other places in the neighbourhood</h2>
+                  <div className="near-places__list places__list">
 
-            </section>
-            <div className="container">
-              <section className="near-places places">
-                <h2 className="near-places__title">Other places in the neighbourhood</h2>
-                <div className="near-places__list places__list">
-
-                  {nearestOffers.slice(0, 3).map((nearestOffer, i) =>
+                    {nearestOffers.slice(0, 3).map((nearestOffer, i) =>
                       <OfferCard key={`nearestOffer-${i}`}
                                  offer={nearestOffer}
                                  index={nearestOffer.id}
@@ -378,11 +379,16 @@ const withActiveOffer = (Component) => {
                                  activateOffer={activateOffer}/>
                     )}
 
-                </div>
-              </section>
-            </div>
-          </main>
-        </>);
+                  </div>
+                </section>
+              </div>
+            </main>
+          </>);
+
+        }
+
+        return <Redirect to={`/`}/>
+
       }
 
       return null;
