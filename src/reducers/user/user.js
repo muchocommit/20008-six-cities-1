@@ -71,11 +71,14 @@ const ActionCreator = {
   }
 };
 
+const getTimeStampFromUTCString = (stamp) =>
+  moment(`${stamp}`).utc().format(`x`);
+
 const getDateFromUTCString = (string) =>
   moment(`${string}`).utc().format(`YYYY-MM-DD`);
 
 const getMonthYearFromUTCString = (string) =>
-  moment(`2019-06-27T20:42:47.038Z`).utc().format(`MMMM YYYY`);
+  moment(`${string}`).utc().format(`MMMM YYYY`);
 
 
 const getCredentials = (credentials) => {
@@ -210,5 +213,6 @@ export {
   Operation,
   getCredentials,
   getDateFromUTCString,
-  getMonthYearFromUTCString
+  getMonthYearFromUTCString,
+  getTimeStampFromUTCString
 };

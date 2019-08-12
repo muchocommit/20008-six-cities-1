@@ -13,8 +13,10 @@ import {
   getOffersByCityName, getMapPointsDistance} from '../../reducers/data/data';
 import {getRating} from '../../assets/handler';
 
-import {getDateFromUTCString,
-  getMonthYearFromUTCString} from '../../reducers/user/user';
+import {
+  getDateFromUTCString,
+  getMonthYearFromUTCString,
+  getTimeStampFromUTCString} from '../../reducers/user/user';
 
 import Header from './../../components/header/header';
 import OfferCard from './../../components/offer-card/offer-card';
@@ -24,7 +26,9 @@ import {
   Offer as OfferProp, CityName,
   Credentials, Match, Comment, SubmitData as SubmitDataType} from '../../types';
 
-import {getComments, getCommentsDeployAttempt, getBookMarkAdditionAttempt} from '../../reducers/user/selectors';
+import {
+  getComments,
+  getCommentsDeployAttempt, getBookMarkAdditionAttempt} from '../../reducers/user/selectors';
 
 interface Props {
   city: number,
@@ -48,7 +52,6 @@ interface Props {
 
   getActiveOffer: () => number,
   activateOffer: () => void,
-
 
   isBookMarkAdditionFailed: boolean
 }
@@ -215,10 +218,9 @@ const withActiveOffer = (Component) => {
         onBookMarkButtonClick
       } = this.props;
 
+      console.log(comments);
 
-      console.log(`offerScreen`)
       if (isBookMarkAdditionFailed) {
-
         return <Redirect to={`/login`}/>;
       }
 
@@ -333,7 +335,13 @@ const withActiveOffer = (Component) => {
                     <section className="property__reviews reviews">
                       <h2 className="reviews__title">Reviews &middot; <span className="reviews__amount">{comments.length > 0 ? comments.length : ``}</span></h2>
                       <ul className="reviews__list">
-                        {comments.length > 0 ? comments.map((it, key) =>
+                        {comments.length > 0 ? [...comments].sort((a, b) => {
+
+                          const aTimeStamp = getTimeStampFromUTCString(a.date);
+                          const bTimeStamp = getTimeStampFromUTCString(b.date);
+
+                          return bTimeStamp - aTimeStamp;
+                        }).map((it, key) =>
                           <li className="reviews__item" key={`comment-${key}`}>
                             <div className="reviews__user user">
                               <div className="reviews__avatar-wrapper user__avatar-wrapper">
@@ -458,7 +466,6 @@ const mapDispatchToProps = (dispatch) => ({
       })
       .catch(() => {
 
-        console.log(`bookmarkFailed`);
         dispatch(UserAction.ActionCreator.setBookMarkAdditionFailure(true));
       });
   },

@@ -23,7 +23,6 @@ export default class FavoritesList extends React.PureComponent<Props, null> {
 
   render() {
 
-    console.log(`favorites`);
     const {bodyElement, offers, credentials, activateOffer, handleBookMarkClick} = this.props;
     bodyElement.className = `page`;
 
