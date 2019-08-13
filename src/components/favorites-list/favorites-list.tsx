@@ -1,7 +1,6 @@
 import * as React from 'react';
 import {Link} from 'react-router-dom';
 import Header from './../../components/header/header';
-import {Redirect} from 'react-router-dom';
 
 import {
   getFavoriteOffers,
@@ -17,7 +16,8 @@ interface Props {
   bodyElement: HTMLBodyElement,
   activateOffer: () => void,
   handleBookMarkClick: (bookMarkObject: {
-    bookMarkIndex: number, isFavorite: boolean}) => void
+    bookMarkIndex: number, isFavorite: boolean}) => void,
+  isAuthorizationRequired: boolean
 }
 
 export default class FavoritesList extends React.PureComponent<Props, null> {
@@ -28,7 +28,7 @@ export default class FavoritesList extends React.PureComponent<Props, null> {
       bodyElement,
       offers,
       credentials,
-      activateOffer, handleBookMarkClick} = this.props;
+      activateOffer, handleBookMarkClick, isAuthorizationRequired} = this.props;
 
     bodyElement.className = `page`;
 
@@ -38,7 +38,10 @@ export default class FavoritesList extends React.PureComponent<Props, null> {
       const offersGroupedByCityNames = groupFavoriteOffersByCityName(favoriteOffers);
 
       return (<>
-        <Header credentials={credentials} />
+        <Header
+          credentials={credentials}
+          isAuthorizationRequired={isAuthorizationRequired}/>
+
         <main className="page__main page__main--favorites">
           <div className="page__favorites-container container">
             <section className="favorites">

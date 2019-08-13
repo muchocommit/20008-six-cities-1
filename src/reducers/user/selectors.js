@@ -18,7 +18,7 @@ export const getComments = (state) => {
   return state[NAME_SPACE].comments;
 };
 
-export const getCommentsDeployAttempt = (state) => {
+export const getCommentsDeployFailed = (state) => {
   return state[NAME_SPACE].isCommentsDeployFailed;
 };
 

@@ -4,7 +4,7 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import thunk from 'redux-thunk';
 import {compose} from 'recompose';
-import {BrowserRouter, withRouter} from 'react-router-dom';
+import {BrowserRouter} from 'react-router-dom';
 
 import {App} from './components/app/app';
 import withScreenSwitch from './hocs/with-screen-switch/with-screen-switch';
@@ -16,7 +16,6 @@ import {Operation as DataOperation} from './reducers/data/data';
 import withActiveItem from './hocs/with-active-item/with-active-item';
 import withTransformProps from './hocs/with-transform-props/with-transform-props';
 
-declare const __REDUX_DEVTOOLS_EXTENSION__: () => void;
 
 const transformItemToOffer = (props) => {
   const newProps = Object.assign({}, props, {
@@ -33,7 +32,6 @@ const transformItemToOffer = (props) => {
 
   return newProps;
 };
-/** TODO: must decide whether withRouter is needed at all */
 
 const AppWrapped = withActiveItem(
   withTransformProps(transformItemToOffer)(withScreenSwitch(App)));
@@ -43,9 +41,7 @@ export const store = createStore(
   reducer,
 
   compose(
-    applyMiddleware(thunk.withExtraArgument(api)),
-    __REDUX_DEVTOOLS_EXTENSION__ &&
-    __REDUX_DEVTOOLS_EXTENSION__()
+    applyMiddleware(thunk.withExtraArgument(api))
   ));
 
 const init = () => {

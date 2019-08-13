@@ -42,7 +42,7 @@ const ActionCreator = {
     };
   },
 
-  getCommentsDeployAttempt: (status) => {
+  setCommentsDeployFailed: (status) => {
     return {
       type: ActionType.COMMENTS_DEPLOY_FAILED,
       payload: status
@@ -100,34 +100,19 @@ const Operation = {
     return (dispatch, _getState, api) => {
 
       return api.post(`/comments/${hotelId}`, submitData)
-        .then((response) => {
-          if (response.status === 200) {
-
-            return response.data;
-          }
-
-          // Response with code 400 (Bad request)
-          // is thrown
-          throw response;
-        });
+        .then((response) => response.data);
     };
   },
 
   getComments: (hotelId) => {
     return (dispatch, _getState, api) => {
       return api.get(`/comments/${hotelId}`)
-        .then((response) => {
 
-          if (response.status === 200) {
-            return response.data;
-          }
-
-          throw response;
-        });
+        .then((response) => response.data);
     };
   },
 
-  setCredentials: (submitData) =>
+  postCredentials: (submitData) =>
     (dispatch, _getState, api) => {
       return api.post(`/login`, submitData)
         .then((response) => {
@@ -141,7 +126,6 @@ const Operation = {
 
   checkAuth: () => {
     return (dispatch, _getState, api) => {
-
       return api
         .get(`/login`)
         .then((response) => {

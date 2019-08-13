@@ -5,7 +5,8 @@ import {Credentials} from '../../types';
 import {ApiParams} from './../../data';
 
 interface Props {
-  credentials: Credentials
+  credentials: Credentials,
+  isAuthorizationRequired: boolean
 }
 
 export default class Header extends React.PureComponent<Props, null> {
@@ -16,9 +17,9 @@ export default class Header extends React.PureComponent<Props, null> {
   }
 
   _getUser() {
-    const {credentials} = this.props;
+    const {credentials, isAuthorizationRequired} = this.props;
 
-    if (credentials.id) {
+    if (credentials.id && !isAuthorizationRequired) {
       return (<Link className="header__nav-link header__nav-link--profile" to="/favorites">
         <div className="header__avatar-wrapper user__avatar-wrapper">
           <img className="header__avatar" src={ApiParams.BASE_URL + credentials[`avatar_url`]} alt={""}/>
@@ -28,8 +29,8 @@ export default class Header extends React.PureComponent<Props, null> {
     }
 
     return (
-      <button className="login__submit form__submit button"
-        type="submit">Sign in</button>
+      <Link className="login__submit form__submit button"
+        to={`/login`}>Sign in</Link>
     );
   }
 

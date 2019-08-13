@@ -28,7 +28,7 @@ import {
 
 import {
   getComments,
-  getCommentsDeployAttempt, getBookMarkAdditionAttempt} from '../../reducers/user/selectors';
+  getCommentsDeployFailed, getBookMarkAdditionAttempt} from '../../reducers/user/selectors';
 
 interface Props {
   city: number,
@@ -53,6 +53,7 @@ interface Props {
   getActiveOffer: () => number,
   activateOffer: () => void,
 
+  isAuthorizationRequired: boolean,
   isBookMarkAdditionFailed: boolean
 }
 
@@ -230,6 +231,7 @@ const withActiveOffer = (Component) => {
 
         getActiveOffer,
         isBookMarkAdditionFailed,
+        isAuthorizationRequired,
 
         bookMarkClickHandler,
         onBookMarkButtonClick
@@ -268,7 +270,10 @@ const withActiveOffer = (Component) => {
           const headerImages = images.slice(0, 6);
 
           return (<>
-            <Header credentials={credentials} />
+            <Header
+              credentials={credentials}
+              isAuthorizationRequired={isAuthorizationRequired}
+            />
 
 
             <main className="page__main page__main--property">
@@ -378,7 +383,7 @@ const withActiveOffer = (Component) => {
                           </li>) : ``}
                       </ul>
 
-                      {credentials.id ? this._renderForm() : ``}
+                      {!isAuthorizationRequired ? this._renderForm() : ``}
 
                     </section>
                   </div>
@@ -418,7 +423,6 @@ const withActiveOffer = (Component) => {
     }
 
     render() {
-
       return (<Component
         {...this.props}
         renderOffer={this._getScreen}/>);
@@ -432,11 +436,11 @@ const withActiveOffer = (Component) => {
     }
 
     componentDidUpdate() {
-      const {credentials, isCommentsDeployFailed} = this.props;
+      const {isCommentsDeployFailed} = this.props;
 
       if (this._formRef.current) {
 
-        if (credentials.id && isCommentsDeployFailed) {
+        if (isCommentsDeployFailed) {
           const form = this._formRef.current;
           const submitButton = form.querySelector<HTMLButtonElement>(`.form__submit`);
           const commentsError = form.querySelector<HTMLSpanElement>(`.login__error`);
@@ -445,7 +449,7 @@ const withActiveOffer = (Component) => {
           submitButton.disabled = false;
         }
 
-        if (credentials.id && !isCommentsDeployFailed) {
+        if (!isCommentsDeployFailed) {
 
           const form = this._formRef.current;
           const submitButton = form.querySelector<HTMLButtonElement>(`.form__submit`);
@@ -467,7 +471,7 @@ const withActiveOffer = (Component) => {
 const mapStateToProps = (state, ownProps) => Object.assign(
   {}, ownProps, {
     comments: getComments(state),
-    isCommentsDeployFailed: getCommentsDeployAttempt(state),
+    isCommentsDeployFailed: getCommentsDeployFailed(state),
     isBookMarkAdditionFailed: getBookMarkAdditionAttempt(state)
   });
 
@@ -480,7 +484,6 @@ const mapDispatchToProps = (dispatch) => ({
         dispatch(DataAction.Operation.loadCities());
       })
       .catch(() => {
-
         dispatch(UserAction.ActionCreator.setBookMarkAdditionFailure(true));
       });
   },
@@ -504,7 +507,7 @@ const mapDispatchToProps = (dispatch) => ({
         dispatch(UserAction.ActionCreator.resetCommentsDeploy());
       })
       .catch(() => {
-        dispatch(UserAction.ActionCreator.getCommentsDeployAttempt(true));
+        dispatch(UserAction.ActionCreator.setCommentsDeployFailed(true));
       });
   },
 });

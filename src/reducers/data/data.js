@@ -14,24 +14,16 @@ const Operation = {
 
     return api.get(`/hotels`)
       .then((response) => {
-
         dispatch(ActionCreator.loadCities(response.data));
       });
   },
 
   addBookMark: ({bookMarkIndex, isFavorite}) =>
     (dispatch, _getState, api) => {
-
       isFavorite = +!isFavorite;
       return api.post(`/favorite/${bookMarkIndex}/${isFavorite}`)
-      .then((response) => {
 
-        if (response.status === 200) {
-          return response.data;
-        }
-
-        throw response;
-      });
+        .then((response) => response.data);
     }
 };
 
@@ -50,41 +42,18 @@ const ActionCreator = {
     };
   },
 
-  updateOffers: (offers) => {
-    return {
-      type: ActionType.UPDATE_OFFERS,
-      payload: offers
-    };
-  },
-
-  updateCurrentOffers: (currentOffers) => {
-
-    return {
-      type: ActionType.UPDATE_CURRENT_OFFERS,
-      payload: currentOffers
-    };
-  },
-
   getFilterParam: (filterParam) => {
-
     return {
       type: ActionType.FILTER_PARAM,
       payload: filterParam
     };
   },
-
-  updateCityNames: (cityNames) => {
-    return {
-      type: ActionType.UPDATE_CITY_NAMES
-    };
-  }
 };
 
 const getOfferById = (array, id) => {
   return array.map((it) => {
 
     return it.find((item) => item.id === id);
-
   }).filter((it) => it !== void (0));
 };
 
@@ -154,7 +123,8 @@ const getLocationMean = (accumulatedObject, arrayLength) => {
   const latitude = accumulatedObject.latitude / arrayLength;
   const longitude = accumulatedObject.longitude / arrayLength;
 
-  return Object.assign({}, accumulatedObject, {latitude, longitude});
+  return Object.assign({}, accumulatedObject,
+    {latitude, longitude});
 };
 
 const getLocationsCoordinates = (locationObject) =>
@@ -198,7 +168,6 @@ const reducer = (state = initialState, action) => {
       });
 
     case ActionType.UPDATE_CURRENT_OFFERS:
-
       return Object.assign({}, state, {
         currentOffers: action.payload
       });

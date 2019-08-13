@@ -145,14 +145,14 @@ const withScreenSwitch = (Component) => {
       }
     }
 
-    _getHeader(credentials) {
+    _getHeader({credentials, isAuthorizationRequired}) {
       return <Header
         credentials={credentials}
+        isAuthorizationRequired={isAuthorizationRequired}
       />;
     }
 
-    _getScreen({credentials,
-      isAuthorizationRequired,
+    _getScreen({isAuthorizationRequired,
       currentOffers, cityNames, activateOffer}) {
 
       const {
@@ -186,10 +186,11 @@ const withScreenSwitch = (Component) => {
       return (<Component
         {...this.props}
         renderScreen={() => this._getScreen({
-          credentials, isAuthorizationRequired,
-          currentOffers, cityNames, activateOffer})}
+          isAuthorizationRequired, currentOffers,
+          cityNames, activateOffer})}
 
-        renderHeader={() => this._getHeader(credentials)}
+        renderHeader={() => this._getHeader({
+          credentials, isAuthorizationRequired})}
       />);
     }
 
@@ -203,9 +204,10 @@ const withScreenSwitch = (Component) => {
     }
 
     _getFavoritesScreen({credentials, bodyElement, offers,
-                          activateOffer, onBookMarkButtonClick, isAuthorizationRequired}) {
+                          activateOffer, onBookMarkButtonClick,
+                          isAuthorizationRequired}) {
 
-      if (isAuthorizationRequired || credentials.id === null) {
+      if (isAuthorizationRequired) {
         return <Redirect to="/login"/>;
       }
 
@@ -215,7 +217,8 @@ const withScreenSwitch = (Component) => {
         credentials={credentials}
         activateOffer={activateOffer}
         handleBookMarkClick={({bookMarkIndex, isFavorite}) =>
-          onBookMarkButtonClick({bookMarkIndex, isFavorite})}/>;
+          onBookMarkButtonClick({bookMarkIndex, isFavorite})}
+        isAuthorizationRequired={isAuthorizationRequired}/>;
     }
 
     render() {
@@ -246,6 +249,8 @@ const withScreenSwitch = (Component) => {
             credentials={credentials}
             bodyElement={bodyElement}
             offers={offers}
+            isAuthorizationRequired={isAuthorizationRequired}
+
 
             getActiveOffer={getActiveOffer}
             isActiveOffer={isActiveOffer}
@@ -255,6 +260,7 @@ const withScreenSwitch = (Component) => {
           <Route path="/favorites/" exact render={() => this._getFavoritesScreen({
             credentials: storedCredentials, bodyElement,
             offers, activateOffer, onBookMarkButtonClick, isAuthorizationRequired})}/>
+
           <Route path="/" exact render={() => this._getMainScreen({
             credentials: storedCredentials, isAuthorizationRequired,
             currentOffers, cityNames, activateOffer})} />
@@ -292,23 +298,21 @@ const mapDispatchToProps = (dispatch) => ({
   onBookMarkButtonClick: ({bookMarkIndex, isFavorite}) => {
     dispatch(DataAction.Operation.addBookMark({bookMarkIndex, isFavorite}))
       .then(() => {
-
         dispatch(DataAction.Operation.loadCities());
       })
       .catch(() => {
 
-        dispatch(UserAction.Operation.checkAuth());
+        dispatch(UserAction.ActionCreator.setAuthorizationRequired(true));
       });
   },
 
-  // Here dispatch change to currentOffersDefault
   onHandleTabClick: (activeCity) => {
     return new Promise((resolve) =>
       resolve(dispatch(DataAction.ActionCreator.changeCity(activeCity))));
   },
 
   onAuthorizationScreenSubmit: (submitData) => {
-    dispatch(UserAction.Operation.setCredentials(submitData))
+    dispatch(UserAction.Operation.postCredentials(submitData))
       .then((result) => {
 
         dispatch(UserAction.ActionCreator.setAuthorizationRequired(false));
