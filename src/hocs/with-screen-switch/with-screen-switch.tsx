@@ -326,7 +326,9 @@ const mapDispatchToProps = (dispatch) => ({
 
   checkAuthOnComponentMount: () => {
     dispatch(UserAction.Operation.checkAuth()).then(
-        () => {
+        (result) => {
+
+          dispatch(UserAction.ActionCreator.setCredentials(result));
           dispatch(UserAction.ActionCreator.setAuthorizationRequired(false));
         })
         .catch(() => {
