@@ -68,6 +68,7 @@ const withActiveOffer = (Component) => {
       this._formRef = React.createRef();
       this._submitForm = this._submitForm.bind(this);
       this._getScreen = this._getScreen.bind(this);
+      this._handleChange = this._handleChange.bind(this);
     }
 
     static _getPropertyMark(isPremium) {
@@ -107,6 +108,19 @@ const withActiveOffer = (Component) => {
       return entry;
     }
 
+    _handleChange(e) {
+
+      const submitButton = this._formRef.current.
+      querySelector<HTMLButtonElement>(`.form__submit`);
+      submitButton.disabled = true;
+
+      const {value} = e.target;
+
+      if (value.length >= 50) {
+        submitButton.disabled = false;
+      }
+    }
+
     _renderForm() {
       return (<form className="reviews__form form" action="#" method="post" ref={this._formRef}>
         <label className="reviews__label form__label" htmlFor="review">Your review</label>
@@ -143,7 +157,11 @@ const withActiveOffer = (Component) => {
           </label>
         </div>
         <textarea className="reviews__textarea form__textarea" id="review" name="review"
-                  placeholder="Tell how was your stay, what you like and what can be improved"></textarea>
+                  placeholder="Tell how was your stay, what you like and what can be improved"
+        onChange={this._handleChange}
+        maxLength={300}>
+
+        </textarea>
         <div className="reviews__button-wrapper">
           <p className="reviews__help">
             To submit review please make sure to set <span className="reviews__star">rating</span> and
@@ -177,7 +195,6 @@ const withActiveOffer = (Component) => {
       for (let i=0; i < offers.length; i++) {
 
         if (offers[i].id === offerId) {
-
           offers.splice(i, 1);
         }
       }
@@ -217,8 +234,6 @@ const withActiveOffer = (Component) => {
         bookMarkClickHandler,
         onBookMarkButtonClick
       } = this.props;
-
-      console.log(comments);
 
       if (isBookMarkAdditionFailed) {
         return <Redirect to={`/login`}/>;

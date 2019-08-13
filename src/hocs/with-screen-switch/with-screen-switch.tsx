@@ -203,9 +203,10 @@ const withScreenSwitch = (Component) => {
         credentials={credentials} />);
     }
 
-    _getFavoritesScreen({credentials, bodyElement, offers, activateOffer, onBookMarkButtonClick}) {
+    _getFavoritesScreen({credentials, bodyElement, offers,
+                          activateOffer, onBookMarkButtonClick, isAuthorizationRequired}) {
 
-      if (credentials.id === null) {
+      if (isAuthorizationRequired || credentials.id === null) {
         return <Redirect to="/login"/>;
       }
 
@@ -254,7 +255,8 @@ const withScreenSwitch = (Component) => {
             activateOffer={activateOffer} />} />
 
           <Route path="/favorites/" exact render={() => this._getFavoritesScreen({
-            credentials: storedCredentials, bodyElement, offers, activateOffer, onBookMarkButtonClick})}/>
+            credentials: storedCredentials, bodyElement,
+            offers, activateOffer, onBookMarkButtonClick, isAuthorizationRequired})}/>
           <Route path="/" exact render={() => this._getMainScreen({
             credentials: storedCredentials, isAuthorizationRequired,
             currentOffers, cityNames, activateOffer})} />

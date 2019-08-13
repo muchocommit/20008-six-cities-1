@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {Link} from 'react-router-dom';
 import Header from './../../components/header/header';
+import {Redirect} from 'react-router-dom';
 
 import {
   getFavoriteOffers,
@@ -23,7 +24,12 @@ export default class FavoritesList extends React.PureComponent<Props, null> {
 
   render() {
 
-    const {bodyElement, offers, credentials, activateOffer, handleBookMarkClick} = this.props;
+    const {
+      bodyElement,
+      offers,
+      credentials,
+      activateOffer, handleBookMarkClick} = this.props;
+
     bodyElement.className = `page`;
 
     const favoriteOffers = getFavoriteOffers(offers);
