@@ -137,7 +137,6 @@ const withScreenSwitch = (Component) => {
 
           return (
             <OffersList
-
               activateOffer={activateOffer}
               offers={currentOffers}
               handleBookMarkClick={({bookMarkIndex, isFavorite}) =>
@@ -160,7 +159,7 @@ const withScreenSwitch = (Component) => {
         city,
         bodyElement} = this.props;
 
-      if (isAuthorizationRequired || credentials.id === null) {
+      if (isAuthorizationRequired) {
         return <Redirect to="/login"/>;
       }
 
@@ -195,12 +194,12 @@ const withScreenSwitch = (Component) => {
     }
 
     _getSignInScreen(
-        {onAuthorizationScreenSubmit, bodyElement, credentials}) {
+        {onAuthorizationScreenSubmit, bodyElement}) {
 
       return (<SignInScreen
         handleSubmit={(submitData) => onAuthorizationScreenSubmit(submitData)}
         bodyElement={bodyElement}
-        credentials={credentials} />);
+      />);
     }
 
     _getFavoritesScreen({credentials, bodyElement, offers,
@@ -237,7 +236,6 @@ const withScreenSwitch = (Component) => {
         bodyElement
       } = this.props;
 
-
       const storedCredentials = UserAction.getCredentials(credentials);
 
       return <BrowserRouter>
@@ -262,7 +260,7 @@ const withScreenSwitch = (Component) => {
             currentOffers, cityNames, activateOffer})} />
 
           <Route path="/login" exact render={() => this._getSignInScreen(
-              {onAuthorizationScreenSubmit, bodyElement, credentials: storedCredentials})} />
+              {onAuthorizationScreenSubmit, bodyElement})} />
         </Switch>
       </BrowserRouter>;
     }
@@ -310,12 +308,13 @@ const mapDispatchToProps = (dispatch) => ({
   },
 
   onAuthorizationScreenSubmit: (submitData) => {
-    dispatch(UserAction.Operation.sendCredentials(submitData))
+    dispatch(UserAction.Operation.setCredentials(submitData))
       .then((result) => {
 
         dispatch(UserAction.ActionCreator.setAuthorizationRequired(false));
-        dispatch(UserAction.ActionCreator.sendCredentials(result));
+        dispatch(UserAction.ActionCreator.setCredentials(result));
       }).catch(() => {
+
         // If user is not Authorized, then redirect
         dispatch(UserAction.ActionCreator.setAuthorizationFailed(true));
       });
@@ -327,7 +326,6 @@ const mapDispatchToProps = (dispatch) => ({
           dispatch(UserAction.ActionCreator.setAuthorizationRequired(false));
         })
         .catch(() => {
-
           dispatch(UserAction.ActionCreator.setAuthorizationRequired(true));
         });
   }

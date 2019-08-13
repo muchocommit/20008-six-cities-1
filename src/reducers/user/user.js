@@ -49,9 +49,9 @@ const ActionCreator = {
     };
   },
 
-  sendCredentials: (status) => {
+  setCredentials: (status) => {
     return {
-      type: ActionType.SEND_CREDENTIALS,
+      type: ActionType.SET_CREDENTIALS,
       payload: status
     };
   },
@@ -127,20 +127,15 @@ const Operation = {
     };
   },
 
-  sendCredentials: (submitData) =>
+  setCredentials: (submitData) =>
     (dispatch, _getState, api) => {
       return api.post(`/login`, submitData)
         .then((response) => {
 
-          if (response.status === 200) {
+          localStorage.setItem(`credentials`,
+            JSON.stringify(response.data));
 
-            localStorage.setItem(`credentials`, JSON.stringify(response.data));
-            return response.data;
-          }
-
-          // Response with code 400 (Bad request)
-          // is thrown
-          throw response;
+          return response.data;
         });
     },
 
@@ -151,13 +146,7 @@ const Operation = {
         .get(`/login`)
         .then((response) => {
 
-          if (response.status === 200) {
-            return response.data;
-          }
-
-          // Response with code 403 (Forbidden)
-          // is thrown
-          throw response;
+          return response.data;
         });
     };
   }
@@ -171,7 +160,7 @@ const reducer = (state = initialState, action) => {
         isAuthorizationFailed: action.payload,
       });
 
-    case ActionType.SEND_CREDENTIALS:
+    case ActionType.SET_CREDENTIALS:
       return Object.assign({}, state, {
         credentials: action.payload
       });

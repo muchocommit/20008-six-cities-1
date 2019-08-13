@@ -14,12 +14,8 @@ const Operation = {
 
     return api.get(`/hotels`)
       .then((response) => {
-        if (response) {
 
-          dispatch(ActionCreator.loadCities(response.data));
-          return;
-        }
-        throw response;
+        dispatch(ActionCreator.loadCities(response.data));
       });
   },
 

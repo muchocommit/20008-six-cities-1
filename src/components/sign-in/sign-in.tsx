@@ -71,20 +71,19 @@ class SignInScreen extends React.PureComponent<Props, null> {
   }
 
   render() {
-    const {credentials,
+    const {
       bodyElement,
       isAuthorizationFailed,
       isAuthorizationRequired} = this.props;
 
 
+    if (!isAuthorizationRequired) {
+      return <Redirect to="/"/>;
+    }
+
     if (isAuthorizationFailed) {
       const formError = this._formRef.current.querySelector<HTMLSpanElement>(`.login__error`);
       formError.style.display = `block`;
-    }
-
-
-    if (credentials.id && !isAuthorizationRequired) {
-      return <Redirect to="/"/>;
     }
 
     bodyElement.className = `page page--gray page--login`;
