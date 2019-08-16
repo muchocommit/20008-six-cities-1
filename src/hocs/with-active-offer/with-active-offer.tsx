@@ -3,7 +3,6 @@ import {compose} from 'recompose';
 import {connect} from 'react-redux';
 import {Redirect} from 'react-router-dom';
 
-
 import * as UserAction from '../../reducers/user/user';
 import * as DataAction from '../../reducers/data/data';
 
@@ -72,7 +71,7 @@ const withActiveOffer = (Component) => {
       this._handleChange = this._handleChange.bind(this);
     }
 
-    static _getPropertyMark(isPremium) {
+    static getPropertyMark(isPremium) {
       return isPremium ? `Premium` : `Mid-price`;
     }
 
@@ -89,7 +88,7 @@ const withActiveOffer = (Component) => {
       };
     }
 
-    static _processForm(formData) {
+    static processForm(formData) {
       const entry = {
         'rating': null,
         'comment': ``
@@ -107,6 +106,17 @@ const withActiveOffer = (Component) => {
       }
 
       return entry;
+    }
+
+    static _deleteCurrentOffer(offers, offerId) {
+      for (let i=0; i < offers.length; i++) {
+
+        if (offers[i].id === offerId) {
+          offers.splice(i, 1);
+        }
+      }
+
+      return offers;
     }
 
     _handleChange(e) {
@@ -189,19 +199,9 @@ const withActiveOffer = (Component) => {
       const formData = new FormData(this._formRef.current);
 
       commentsSubmitHandler({
-        submitData: Offer._processForm(formData), hotelId: offerId});
+        submitData: Offer.processForm(formData), hotelId: offerId});
     }
 
-    _deleteCurrentOffer(offers, offerId) {
-      for (let i=0; i < offers.length; i++) {
-
-        if (offers[i].id === offerId) {
-          offers.splice(i, 1);
-        }
-      }
-
-      return offers;
-    }
 
     _getClosestOffers(offers, offerLatLng) {
       return offers.sort((a, b) => {
@@ -260,7 +260,7 @@ const withActiveOffer = (Component) => {
 
           const currentOffers = getOffersByCityName([...offers], currentOffer.city.name);
 
-          const currentOffersGrained = this._deleteCurrentOffer([...currentOffers], offerId);
+          const currentOffersGrained = Offer._deleteCurrentOffer([...currentOffers], offerId);
           const nearestOffers = this._getClosestOffers(
             [...currentOffersGrained], currentOfferLocation).slice(0, 3);
 
@@ -291,7 +291,7 @@ const withActiveOffer = (Component) => {
                 <div className="property__container container">
                   <div className="property__wrapper">
                     <div className="property__mark">
-                      <span>{Offer._getPropertyMark(currentOffer[`is_premium`])}</span>
+                      <span>{Offer.getPropertyMark(currentOffer[`is_premium`])}</span>
                     </div>
                     <div className="property__name-wrapper">
                       <h1 className="property__name">{currentOffer.title}</h1>
@@ -404,7 +404,8 @@ const withActiveOffer = (Component) => {
                                  index={nearestOffer.id}
                                  isFavorite={nearestOffer[`is_favorite`]}
                                  bookMarkClickHandler={bookMarkClickHandler}
-                                 activateOffer={activateOffer}/>
+                                 activateOffer={activateOffer}
+                                 isAuthorizationRequired={isAuthorizationRequired}/>
                     )}
 
                   </div>

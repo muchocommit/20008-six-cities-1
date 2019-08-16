@@ -4,10 +4,13 @@ import {Offer} from '../../types';
 import OfferCard from '../offer-card/offer-card';
 
 interface Props {
-  // The actual CityName property is present in offers
+  // The actual CityName property is added into offers
   offers: Offer[],
+  isAuthorizationRequired: boolean,
   handleBookMarkClick: (bookMarkObject: {
-    bookMarkIndex: number, isFavorite: boolean}) => void,
+    bookMarkIndex: number,
+    isFavorite: boolean,
+    isAuthorizationRequired: boolean}) => void,
   activateOffer: () => void
 }
 
@@ -17,7 +20,9 @@ class OffersList extends React.PureComponent<Props, null> {
   }
 
   _getOffers() {
-    const {offers, handleBookMarkClick, activateOffer} = this.props;
+    const {
+      offers,
+      handleBookMarkClick, activateOffer, isAuthorizationRequired} = this.props;
 
     return offers.map((it, i) => {
 
@@ -26,6 +31,7 @@ class OffersList extends React.PureComponent<Props, null> {
         offer={it}
         index={it.id}
         isFavorite={it[`is_favorite`]}
+        isAuthorizationRequired={isAuthorizationRequired}
         bookMarkClickHandler={handleBookMarkClick}
         activateOffer={activateOffer}
       />;

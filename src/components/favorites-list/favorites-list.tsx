@@ -16,7 +16,9 @@ interface Props {
   bodyElement: HTMLBodyElement,
   activateOffer: () => void,
   handleBookMarkClick: (bookMarkObject: {
-    bookMarkIndex: number, isFavorite: boolean}) => void,
+    bookMarkIndex: number,
+    isFavorite: boolean,
+    isAuthorizationRequired: boolean}) => void,
   isAuthorizationRequired: boolean
 }
 
@@ -68,6 +70,7 @@ export default class FavoritesList extends React.PureComponent<Props, null> {
                           index={offer.id}
                           bookMarkClickHandler={handleBookMarkClick}
                           activateOffer={activateOffer}
+                          isAuthorizationRequired={isAuthorizationRequired}
                           />;
                       })}
                     </div>

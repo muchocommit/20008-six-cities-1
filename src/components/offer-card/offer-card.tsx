@@ -7,8 +7,11 @@ import {getRating} from '../../assets/handler';
 interface Props {
   isFavorite: boolean,
   offer: Offer,
+  isAuthorizationRequired: boolean,
   bookMarkClickHandler: (bookMarkObject: {
-    bookMarkIndex: number, isFavorite: boolean}) => void,
+    bookMarkIndex: number,
+    isFavorite: boolean,
+    isAuthorizationRequired: boolean}) => void,
   index: number,
   activateOffer: (i: number) => void
 }
@@ -30,7 +33,7 @@ export default class OfferCard extends React.PureComponent<Props, null> {
   }
 
   _getCardScreen() {
-    const {isFavorite, offer, bookMarkClickHandler, index} = this.props;
+    const {isFavorite, offer, bookMarkClickHandler, index, isAuthorizationRequired} = this.props;
 
       return (<article className="cities__place-card place-card">
         <div className="place-card__mark">
@@ -47,7 +50,7 @@ export default class OfferCard extends React.PureComponent<Props, null> {
               <span className="place-card__price-text">&#47;&nbsp;night</span>
             </div>
             <button className={isFavorite ? `place-card__bookmark-button--active button` : `place-card__bookmark-button button`}
-              type="button" onClick={() => bookMarkClickHandler({bookMarkIndex: index, isFavorite})}>
+              type="button" onClick={() => bookMarkClickHandler({bookMarkIndex: index, isFavorite, isAuthorizationRequired})}>
 
               <svg className="place-card__bookmark-icon" width="17" height="18" viewBox="0 0 17 18" xmlns="http://www.w3.org/2000/svg">
                 <path d="M3.993 2.185l.017-.092V2c0-.554.449-1 .99-1h10c.522 0 .957.41.997.923l-2.736 14.59-4.814-2.407-.39-.195-.408.153L1.31 16.44 3.993 2.185z"/>

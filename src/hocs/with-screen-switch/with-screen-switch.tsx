@@ -58,7 +58,9 @@ interface Props {
   bodyElement: HTMLBodyElement,
   credentials: Credentials,
   onBookMarkButtonClick: (bookMarkObject: {
-    bookMarkIndex: number, isFavorite: boolean}) => void,
+    bookMarkIndex: number,
+    isFavorite: boolean,
+    isAuthorizationRequired: boolean}) => void,
 
   getActiveOffer: () => number,
   activateOffer: () => void,
@@ -88,7 +90,8 @@ const withScreenSwitch = (Component) => {
       return (<div className="cities__places-container container">
         <section className="cities__places places">
           <h2 className="visually-hidden">Places</h2>
-          <b className="places__found">{`${currentOffers ? `${currentOffers.length} places to stay in ${cityName}` : ``}`}</b>
+          <b className="places__found">{`${currentOffers ? `${currentOffers.length}
+           places to stay in ${cityName}` : ``}`}</b>
 
 
           <SortingListWrapped />
@@ -109,7 +112,7 @@ const withScreenSwitch = (Component) => {
 
       const {onHandleTabClick,
         onBookMarkButtonClick,
-        getActiveOffer, deactivateOffer} = this.props;
+        getActiveOffer, deactivateOffer, isAuthorizationRequired} = this.props;
 
       switch (key) {
         case `LOCATIONS`:
@@ -139,8 +142,9 @@ const withScreenSwitch = (Component) => {
             <OffersList
               activateOffer={activateOffer}
               offers={currentOffers}
-              handleBookMarkClick={({bookMarkIndex, isFavorite}) =>
-                onBookMarkButtonClick({bookMarkIndex, isFavorite})}
+              isAuthorizationRequired={isAuthorizationRequired}
+              handleBookMarkClick={({bookMarkIndex, isFavorite, isAuthorizationRequired}) =>
+                onBookMarkButtonClick({bookMarkIndex, isFavorite, isAuthorizationRequired})}
             />);
       }
     }
@@ -216,8 +220,8 @@ const withScreenSwitch = (Component) => {
         offers={offers}
         credentials={credentials}
         activateOffer={activateOffer}
-        handleBookMarkClick={({bookMarkIndex, isFavorite}) =>
-          onBookMarkButtonClick({bookMarkIndex, isFavorite})}
+        handleBookMarkClick={({bookMarkIndex, isFavorite, isAuthorizationRequired}) =>
+          onBookMarkButtonClick({bookMarkIndex, isFavorite, isAuthorizationRequired})}
         isAuthorizationRequired={isAuthorizationRequired}/>;
     }
 
@@ -295,7 +299,13 @@ const mapStateToProps = (state, ownProps) => Object.assign(
 
 const mapDispatchToProps = (dispatch) => ({
 
-  onBookMarkButtonClick: ({bookMarkIndex, isFavorite}) => {
+  onBookMarkButtonClick: ({bookMarkIndex, isFavorite, isAuthorizationRequired}) => {
+
+    if (isAuthorizationRequired) {
+
+      dispatch(UserAction.ActionCreator.setAuthorizationRequired(true));
+      return;
+    }
     dispatch(DataAction.Operation.addBookMark({bookMarkIndex, isFavorite}))
       .then(() => {
         dispatch(DataAction.Operation.loadCities());
