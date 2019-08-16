@@ -57,10 +57,6 @@ interface Props {
   onHandleTabClick: (cityIndex: number) => void,
   bodyElement: HTMLBodyElement,
   credentials: Credentials,
-  onBookMarkButtonClick: (bookMarkObject: {
-    bookMarkIndex: number,
-    isFavorite: boolean,
-    isAuthorizationRequired: boolean}) => void,
 
   getActiveOffer: () => number,
   activateOffer: () => void,
@@ -111,8 +107,7 @@ const withScreenSwitch = (Component) => {
                     cityNames = [], activateOffer = () => {}}) {
 
       const {onHandleTabClick,
-        onBookMarkButtonClick,
-        getActiveOffer, deactivateOffer, isAuthorizationRequired} = this.props;
+        getActiveOffer, deactivateOffer} = this.props;
 
       switch (key) {
         case `LOCATIONS`:
@@ -142,9 +137,6 @@ const withScreenSwitch = (Component) => {
             <OffersList
               activateOffer={activateOffer}
               offers={currentOffers}
-              isAuthorizationRequired={isAuthorizationRequired}
-              handleBookMarkClick={({bookMarkIndex, isFavorite, isAuthorizationRequired}) =>
-                onBookMarkButtonClick({bookMarkIndex, isFavorite, isAuthorizationRequired})}
             />);
       }
     }
@@ -208,7 +200,7 @@ const withScreenSwitch = (Component) => {
     }
 
     _getFavoritesScreen({credentials, bodyElement, offers,
-                          activateOffer, onBookMarkButtonClick,
+                          activateOffer,
                           isAuthorizationRequired}) {
 
       if (isAuthorizationRequired) {
@@ -220,9 +212,8 @@ const withScreenSwitch = (Component) => {
         offers={offers}
         credentials={credentials}
         activateOffer={activateOffer}
-        handleBookMarkClick={({bookMarkIndex, isFavorite, isAuthorizationRequired}) =>
-          onBookMarkButtonClick({bookMarkIndex, isFavorite, isAuthorizationRequired})}
-        isAuthorizationRequired={isAuthorizationRequired}/>;
+        isAuthorizationRequired={isAuthorizationRequired}
+        />;
     }
 
     render() {
@@ -239,7 +230,7 @@ const withScreenSwitch = (Component) => {
 
         onAuthorizationScreenSubmit,
         isAuthorizationRequired,
-        onBookMarkButtonClick,
+
         bodyElement
       } = this.props;
 
@@ -253,17 +244,14 @@ const withScreenSwitch = (Component) => {
             credentials={credentials}
             bodyElement={bodyElement}
             offers={offers}
-            isAuthorizationRequired={isAuthorizationRequired}
-
 
             getActiveOffer={getActiveOffer}
             isActiveOffer={isActiveOffer}
-            bookMarkClickHandler={onBookMarkButtonClick}
             activateOffer={activateOffer} />} />
 
           <Route path="/favorites/" exact render={() => this._getFavoritesScreen({
             credentials: storedCredentials, bodyElement,
-            offers, activateOffer, onBookMarkButtonClick, isAuthorizationRequired})}/>
+            offers, activateOffer, isAuthorizationRequired})}/>
 
           <Route path="/" exact render={() => this._getMainScreen({
             credentials: storedCredentials, isAuthorizationRequired,
@@ -298,25 +286,8 @@ const mapStateToProps = (state, ownProps) => Object.assign(
 });
 
 const mapDispatchToProps = (dispatch) => ({
-
-  onBookMarkButtonClick: ({bookMarkIndex, isFavorite, isAuthorizationRequired}) => {
-
-    if (isAuthorizationRequired) {
-
-      dispatch(UserAction.ActionCreator.setAuthorizationRequired(true));
-      return;
-    }
-    dispatch(DataAction.Operation.addBookMark({bookMarkIndex, isFavorite}))
-      .then(() => {
-        dispatch(DataAction.Operation.loadCities());
-      })
-      .catch(() => {
-
-        dispatch(UserAction.ActionCreator.setAuthorizationRequired(true));
-      });
-  },
-
   onHandleTabClick: (activeCity) => {
+
     return new Promise((resolve) =>
       resolve(dispatch(DataAction.ActionCreator.changeCity(activeCity))));
   },

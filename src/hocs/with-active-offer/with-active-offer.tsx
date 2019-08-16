@@ -21,6 +21,8 @@ import Header from './../../components/header/header';
 import OfferCard from './../../components/offer-card/offer-card';
 import Map from './../../components/map/map';
 
+import withActiveOfferCard from './../../hocs/with-active-offer-card/with-active-offer-card';
+
 import {
   Offer as OfferProp, CityName,
   Credentials, Match, Comment, SubmitData as SubmitDataType} from '../../types';
@@ -42,10 +44,7 @@ interface Props {
       SubmitDataType, hotelId: number}) => void
   isCommentsDeployFailed: boolean,
 
-  bookMarkClickHandler: (bookMarkObject: {
-    bookMarkIndex: number, isFavorite: boolean}) => void,
 
-  // Need to handle the case with unauthorized user
   onBookMarkButtonClick: (bookMarkObject: {
     bookMarkIndex: number, isFavorite: boolean}) => void,
 
@@ -55,6 +54,8 @@ interface Props {
   isAuthorizationRequired: boolean,
   isBookMarkAdditionFailed: boolean
 }
+
+const OfferCardWrapped = withActiveOfferCard(OfferCard);
 
 const withActiveOffer = (Component) => {
 
@@ -233,7 +234,6 @@ const withActiveOffer = (Component) => {
         isBookMarkAdditionFailed,
         isAuthorizationRequired,
 
-        bookMarkClickHandler,
         onBookMarkButtonClick
       } = this.props;
 
@@ -399,13 +399,12 @@ const withActiveOffer = (Component) => {
                   <div className="near-places__list places__list">
 
                     {nearestOffers.slice(0, 3).map((nearestOffer, i) =>
-                      <OfferCard key={`nearestOffer-${i}`}
+                      <OfferCardWrapped key={`nearestOffer-${i}`}
                                  offer={nearestOffer}
                                  index={nearestOffer.id}
                                  isFavorite={nearestOffer[`is_favorite`]}
-                                 bookMarkClickHandler={bookMarkClickHandler}
                                  activateOffer={activateOffer}
-                                 isAuthorizationRequired={isAuthorizationRequired}/>
+                      />
                     )}
 
                   </div>
@@ -482,6 +481,7 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(DataAction.Operation.addBookMark({bookMarkIndex, isFavorite}))
       .then(() => {
 
+        dispatch(UserAction.ActionCreator.setBookMarkAdditionFailure(false));
         dispatch(DataAction.Operation.loadCities());
       })
       .catch(() => {

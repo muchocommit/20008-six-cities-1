@@ -7,6 +7,7 @@ import {
   groupFavoriteOffersByCityName} from '../../reducers/data/data';
 
 import OfferCard from './../../components/offer-card/offer-card';
+import withActiveOfferCard from './../../hocs/with-active-offer-card/with-active-offer-card';
 
 import {Offer, Credentials, CityName} from '../../types';
 
@@ -15,12 +16,11 @@ interface Props {
   credentials: Credentials,
   bodyElement: HTMLBodyElement,
   activateOffer: () => void,
-  handleBookMarkClick: (bookMarkObject: {
-    bookMarkIndex: number,
-    isFavorite: boolean,
-    isAuthorizationRequired: boolean}) => void,
+
   isAuthorizationRequired: boolean
 }
+
+const OfferCardWrapped = withActiveOfferCard(OfferCard);
 
 export default class FavoritesList extends React.PureComponent<Props, null> {
 
@@ -30,7 +30,8 @@ export default class FavoritesList extends React.PureComponent<Props, null> {
       bodyElement,
       offers,
       credentials,
-      activateOffer, handleBookMarkClick, isAuthorizationRequired} = this.props;
+      activateOffer,
+      isAuthorizationRequired} = this.props;
 
     bodyElement.className = `page`;
 
@@ -63,14 +64,12 @@ export default class FavoritesList extends React.PureComponent<Props, null> {
                     <div className="favorites__places">
                       {offersGroupedByCityNames[cityName].map((offer, key) => {
 
-                        return <OfferCard
+                        return <OfferCardWrapped
                           key={`favorite-${key}`}
                           isFavorite={offer[`is_favorite`]}
                           offer={offer}
                           index={offer.id}
-                          bookMarkClickHandler={handleBookMarkClick}
                           activateOffer={activateOffer}
-                          isAuthorizationRequired={isAuthorizationRequired}
                           />;
                       })}
                     </div>
